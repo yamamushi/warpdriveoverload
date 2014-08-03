@@ -3,53 +3,46 @@
 // entity classes for various critters and players.
 
 
-#include<cstdlib>
-#include<iostream>
-#include<stringstream>
-#include<algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <stringstream>
+#include <algorithm>
+#include <string>
 
 
 class Player : public Entity {
 
 public:
-		Player( std::string name ) {
-			playerName = name;
-			isAlive = true;
-			health = 100;
-			maxHP = 100;
-			stamina= 1.0;
-			encumbrance = 1;
-			skillPiloting = 5;
-			skillGunnery = 5;
-			skillEngineering = 5;
-			skillMedicine = 5;
-			skillScience = 5;
-			skillMarksman = 5;
-		}
-		void learn( int& pcskill std::string name );
-		damageEvent( float Finit, float Fstam );
-		move();
-	private:
-		void die();
-		void takeDamage( int dmg );
-		void repairDamage( int rep );
 
-		int xPos;
-		int yPos;
-		int zPos;
-		std::string playerName;
-		bool isAlive;
-		int health;
-		int maxHP;
-		float stamina;
-		int encumbrance;
-		int skillPiloting;
-		int skillGunnery;
-		int skillEngineering;
-		int skillMedicine;
-		int skillScience;
-		int skillMarksman;
-		int skillTactics;
+	Player( std::string name );
+	void learn( int& pcskill std::string name );
+	damageEvent( float Finit, float Fstam );
+	move();
+
+
+private:
+
+	void die();
+	void takeDamage( int dmg );
+	void repairDamage( int rep );
+
+	int m_xPos;
+	int m_yPos;
+	int m_zPos;
+	std::string m_playerName;
+	bool m_isAlive;
+	int m_health;
+	int m_maxHP;
+	float m_stamina;
+	int m_encumbrance;
+	int m_skillPiloting;
+	int m_skillGunnery;
+	int m_skillEngineering;
+	int m_skillMedicine;
+	int m_skillScience;
+	int m_skillMarksman;
+	int m_skillTactics;
+
 };
 
 
