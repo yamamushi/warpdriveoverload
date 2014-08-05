@@ -1,11 +1,11 @@
 class Ship : protected entity {
         public:
-                ship( std::string shipName, std::string fshipClass );
-        private:
+                Ship( std::string shipName, std::string fshipClass );
+        protected:
 		void takeDamage( int dXPos, int dYPos, int dZPos, int dmg );
 		void setClassDefaults( std::string shipClass );
 		int m_scanStrength;
-		int m_sigRadius;
+		float m_sigRadius;
 		int m_vol;
 		void addPart( int slot, int mass );
 		int m_mass;
