@@ -42,6 +42,6 @@ bool sqliteDB::openDB(std::string pathname){
     }
     
     
-    return false;
+    return true;
     
 }

@@ -7,8 +7,10 @@
 //
 
 #include <stdio.h>
-#include <sqlite3.h>
+#include <iostream>
+#include "sqlite.h"
 
+/*
 static int callback(void *NotUsed, int argc, char **argv, char **azColName){
     int i;
     for(i=0; i<argc; i++){
@@ -16,9 +18,15 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName){
     }
     printf("\n");
     return 0;
-}
+} */
 
 int main(int argc, char **argv){
+    
+    if(sqliteDB::instance()->openDB("test.db")){
+        std::cout << "Success!" << std::endl;
+    }
+    
+    /*
     sqlite3 *db;
     char *zErrMsg = 0;
     int rc;
@@ -39,5 +47,8 @@ int main(int argc, char **argv){
         sqlite3_free(zErrMsg);
     }
     sqlite3_close(db);
+    */
+    
     return 0;
+    
 }

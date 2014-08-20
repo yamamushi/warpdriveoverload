@@ -19,7 +19,8 @@ public:
     
     static sqliteDB* instance();
     
-    
+    bool openDB(std::string pathname);
+    bool checkForDB(std::string dbName);
     
 private:
     
@@ -30,8 +31,7 @@ private:
     static sqliteDB* m_pInstance;
 
     
-    bool openDB(std::string pathname);
-    bool checkForDB(std::string dbName);
+
     
     sqlite3 *m_db;
     
