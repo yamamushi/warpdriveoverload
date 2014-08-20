@@ -51,7 +51,7 @@ protected:
     // Callback
 
     static int dbcallback(void *NotUsed, int argc, char **argv, char **azColName);
-    void resultcontainer(std::vector<std::pair<std::string, std::string> > output){m_dataContainer = output;}
+    void resultcontainer(std::vector<std::pair<std::string, std::string> > output);
 
     std::vector<std::pair<std::string, std::string> > m_dataContainer;
     

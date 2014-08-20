@@ -51,7 +51,7 @@ int sqliteDB::dbcallback(void *callback, int argc, char **argv, char **azColName
             output.push_back(l_pair);
         }
     }
-    printf("\n");
+    //printf("\n");
     l_db->resultcontainer(output);
     return 0;
     
@@ -75,9 +75,8 @@ void sqliteDB::initDB(){
     }
     else{
         //executeStatement("insert into \"main\".\"global_users\" ( \"username\", \"email\") values ( 'test', 'test');");
-        executeStatement("SELECT * FROM global_users;");
-        std::cout << m_dataContainer.size() << std::endl;
-
+        //executeStatement("SELECT * FROM global_users;");
+        
         for(int x = 0; x < m_dataContainer.size(); x++){
             std::cout << m_dataContainer.at(x).first << std::endl;
             std::cout << m_dataContainer.at(x).second << std::endl;
@@ -128,4 +127,16 @@ bool sqliteDB::openDB(std::string pathname){
     return true;
     
 }
+
+
+
+void sqliteDB::resultcontainer(std::vector<std::pair<std::string, std::string> > output){
+    
+    for(int x = 0; x < output.size(); x++){
+        m_dataContainer.push_back(output.at(x));
+    }
+    
+    
+}
+
 
