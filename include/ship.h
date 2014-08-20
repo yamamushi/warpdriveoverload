@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 
 #include "entity.h"
 
@@ -7,6 +8,8 @@ class Ship : public Entity {
 public:
     
     Ship( std::string shipName, std::string fshipClass );
+    
+    std::string getName(){return m_shipName;}
     
 private:
     

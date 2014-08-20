@@ -21,6 +21,7 @@ public:
 	void damageEvent( float Finit, float Fstam );
 	bool move();
 
+    std::string getName(){return m_playerName;}
 
 private:
 

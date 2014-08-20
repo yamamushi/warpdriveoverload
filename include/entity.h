@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 
 class Entity {
@@ -8,6 +9,8 @@ public:
     
     bool updatePos( int newX, int newY, int newZ );
     bool move( int headX, int headY, int headZ, int speed, int duration ){return false;}
+    
+    virtual std::string getName(){return "";}
     
 private:
     

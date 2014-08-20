@@ -1,15 +1,46 @@
+//
+//  room.h
+//  warpdriveoverloaded
+//
+//  Created by Jonathan Rumion on 8/19/14.
+//  Copyright (c) 2014 TAP. All rights reserved.
+//
+
+#ifndef __warpdriveoverloaded__room__
+#define __warpdriveoverloaded__room__
+
+#include <string>
+#include <vector>
+#include <memory>
+
+#include "entity.h"
+
 class Room {
-
+    
 public:
-
-Room(int x, int y, int z) : m_x(x), m_y(y), m_z(z){};
-~Room();
-
+    
+    Room(int x, int y, int z) : m_x(x), m_y(y), m_z(z){};
+    
+    void enterDescription(std::string description){m_description = description;}
+    std::string getDescription();
+    
+    void addEntity(std::shared_ptr<Entity> target);
+    
+    
 private:
-
-// Dimensions in meters.
-int m_x;
-int m_y;
-int m_z;
-
+    
+    // Dimensions in meters.
+    int m_x;
+    int m_y;
+    int m_z;
+    
+    // Text Data
+    
+    std::string m_description;
+    
+    std::vector<std::shared_ptr<Entity> > m_entities;
+    
 };
+
+
+#endif /* defined(__warpdriveoverloaded__room__) */
