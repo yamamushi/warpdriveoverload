@@ -4,7 +4,7 @@
 #include<cstdlib>
 #include<iostream>
 
-#include "Ship.h" 
+#include "ship.h"
 
 Ship::Ship( std::string shipName, std::string fshipClass ) {
     

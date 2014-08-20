@@ -17,22 +17,23 @@ class sqliteDB {
     
 public:
     
-    static sqliteDB* db();
+    static sqliteDB* instance();
     
     
     
 private:
     
-    sqliteDB(){};
+    sqliteDB();
     
     sqliteDB(sqliteDB const&);
     sqliteDB& operator=(sqliteDB const&);
     static sqliteDB* m_pInstance;
 
     
-    bool checkForDB(std::string pathname);
+    bool openDB(std::string pathname);
+    bool checkForDB(std::string dbName);
     
-    
+    sqlite3 *m_db;
     
 };
 
