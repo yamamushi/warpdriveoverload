@@ -15,12 +15,12 @@ std::string Room::getDescription(){
     
     output += m_description;
     output += "\n\n";
-    output += "You see here: ";
+    output += "You see here: \033[1;31m";
     
     for(int x = 0; x < m_entities.size(); x++){
         output += m_entities.at(x)->getName();
         if(x == m_entities.size() - 1){
-            output += ". ";
+            output += ". \033[0m";
         }
         else{
             output += ", ";
