@@ -11,6 +11,8 @@
 
 #include <sqlite3.h>
 #include <string>
+#include <tuple>
+#include <vector>
 
 
 class sqliteDB {
@@ -49,9 +51,9 @@ protected:
     // Callback
 
     static int dbcallback(void *NotUsed, int argc, char **argv, char **azColName);
-    void resultcontainer(bool empty){m_emptyCheck = empty;}
+    void resultcontainer(std::vector<std::pair<std::string, std::string> > output){m_dataContainer = output;}
 
-    bool m_emptyCheck;
+    std::vector<std::pair<std::string, std::string> > m_dataContainer;
     
 };
 

@@ -8,6 +8,8 @@
 
 #include "sqlite.h"
 #include <iostream>
+#include <sstream>
+
 
 sqliteDB* sqliteDB::m_pInstance = NULL;
 
@@ -26,19 +28,31 @@ sqliteDB* sqliteDB::instance(){
 sqliteDB::sqliteDB(){
     
     m_dbOpen = false;
-    m_emptyCheck = false;
     initDB();
     
 }
 
 
-int sqliteDB::dbcallback(void *NotUsed, int argc, char **argv, char **azColName){
+int sqliteDB::dbcallback(void *callback, int argc, char **argv, char **azColName){
     
-    int i;
-    for(i=0; i<argc; i++){
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+    sqliteDB* l_db = reinterpret_cast<sqliteDB*>(callback);
+    
+    std::vector<std::pair<std::string, std::string> > output;
+
+
+    for(int i=0; i<argc; i++){
+        //printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+        if(argv[i]){
+            std::pair<std::string, std::string> l_pair((std::string(azColName[i])), std::string(argv[i]));
+            output.push_back(l_pair);
+        }
+        else{
+            std::pair<std::string, std::string> l_pair((std::string(azColName[i])), "NULL");
+            output.push_back(l_pair);
+        }
     }
     printf("\n");
+    l_db->resultcontainer(output);
     return 0;
     
 }
@@ -59,6 +73,17 @@ void sqliteDB::initDB(){
         }
         
     }
+    else{
+        //executeStatement("insert into \"main\".\"global_users\" ( \"username\", \"email\") values ( 'test', 'test');");
+        executeStatement("SELECT * FROM global_users;");
+        std::cout << m_dataContainer.size() << std::endl;
+
+        for(int x = 0; x < m_dataContainer.size(); x++){
+            std::cout << m_dataContainer.at(x).first << std::endl;
+            std::cout << m_dataContainer.at(x).second << std::endl;
+        }
+
+    }
     
 }
 
@@ -69,7 +94,7 @@ bool sqliteDB::executeStatement(std::string statement){
         
         char *zErrMsg = 0;
         
-        int status = sqlite3_exec(m_db, statement.c_str(), dbcallback, 0, &zErrMsg);
+        int status = sqlite3_exec(m_db, statement.c_str(), dbcallback, this, &zErrMsg);
         
         if( status!=SQLITE_OK ){
             fprintf(stderr, "SQL error: %s\n", zErrMsg);
