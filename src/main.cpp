@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 
+#include "term_control.h"
 #include "player.h"
 #include "room.h"
 
@@ -16,7 +17,26 @@ int main(){
     
     room_one.addEntity(one_player);
     
-    std::cout << room_one.getDescription() << std::endl;
+    
+    
+    while(true){
+        
+        std::string command;
+        std::cout << term_reset + "> ";
+        
+        std::cin >> command;
+        
+        if(command == "l" || command == "look"){
+            std::cout << room_one.getDescription() << std::endl;
+        }
+        else if(command == "h" || command == "help"){
+            std::cout << "Valid Commands are: look, help" << std::endl;
+        }
+        else{
+            std::cout << "Unknown Command: " + command << std::endl;
+        }
+        
+    }
     
     return 0;
     

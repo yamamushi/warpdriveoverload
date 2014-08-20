@@ -20,6 +20,8 @@ class Room {
 public:
     
     Room(int x, int y, int z) : m_x(x), m_y(y), m_z(z){};
+    Room(){};
+
     
     void enterDescription(std::string description){m_description = description;}
     std::string getDescription();
