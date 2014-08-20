@@ -1,8 +1,9 @@
-project("Warp Drive Overloaded")
+cmake_minimum_required(VERSION 2.8)
 
-add_executables(server main.cpp
-			ship.cpp
-			player.cpp
-			room.cpp)
+
+project(WPOServer)
+
+subdirs(src)
+
 
 

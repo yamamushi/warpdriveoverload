@@ -20,6 +20,8 @@
 *.out
 *.app
 build/
+bin/
+server
 
 # Apple Stuff
 *.xcodeproj
