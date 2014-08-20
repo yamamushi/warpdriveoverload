@@ -31,7 +31,7 @@ std::string Room::getDescription(){
     return output;
 }
 
-void Room::addEntity(std::shared_ptr<Entity> target){
+void Room::addEntity(_SharedPtr<Entity> target){
     
     m_entities.push_back(target);
     
