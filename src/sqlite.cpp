@@ -24,7 +24,7 @@ sqliteDB* sqliteDB::instance(){
 
 sqliteDB::sqliteDB(){
     
-    checkForDB("server");
+    //checkForDB("server");
     
 }
 

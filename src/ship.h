@@ -3,6 +3,7 @@
 
 
 #include "room.h"
+#include "tr1_wrapper.h"
 
 class Ship : public Room {
     

@@ -14,6 +14,9 @@
 #include <memory>
 
 #include "entity.h"
+#include "tr1_wrapper.h"
+
+
 
 class Room {
     
@@ -26,7 +29,7 @@ public:
     void enterDescription(std::string description){m_description = description;}
     std::string getDescription();
     
-    void addEntity(std::shared_ptr<Entity> target);
+    void addEntity(_SharedPtr<Entity> target);
     
     
 private:
@@ -40,7 +43,7 @@ private:
     
     std::string m_description;
     
-    std::vector<std::shared_ptr<Entity> > m_entities;
+    std::vector<_SharedPtr<Entity> > m_entities;
     
 };
 
