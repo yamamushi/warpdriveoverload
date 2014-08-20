@@ -22,9 +22,7 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName){
 
 int main(int argc, char **argv){
     
-    if(sqliteDB::instance()->openDB("test.db")){
-        std::cout << "Success!" << std::endl;
-    }
+    sqliteDB::instance()->run();
     
     /*
     sqlite3 *db;
