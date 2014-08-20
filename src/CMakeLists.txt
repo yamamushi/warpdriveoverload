@@ -9,3 +9,5 @@ add_executable(server main.cpp
 			player.cpp
 			room.cpp)
 
+
+set (CMAKE_CXX_FLAGS "-lsqlite3")

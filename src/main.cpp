@@ -1,43 +1,43 @@
-// BootStrap
+//
+//  main.cpp
+//  warpdriveoverloaded
+//
+//  Created by Jonathan Rumion on 8/19/14.
+//  Copyright (c) 2014 TAP. All rights reserved.
+//
 
-#include <iostream>
-#include <string>
-#include <memory>
+#include <stdio.h>
+#include <sqlite3.h>
 
-#include "term_control.h"
-#include "player.h"
-#include "room.h"
-
-int main(){
-    
-    std::shared_ptr<Player> one_player = std::make_shared<Player>("Fred");
-    
-    Room room_one = Room(5,5,5);
-    room_one.enterDescription("A cold dark room with no windows");
-    
-    room_one.addEntity(one_player);
-    
-    
-    
-    while(true){
-        
-        std::string command;
-        std::cout << term_reset + "> ";
-        
-        std::cin >> command;
-        
-        if(command == "l" || command == "look"){
-            std::cout << room_one.getDescription() << std::endl;
-        }
-        else if(command == "h" || command == "help"){
-            std::cout << "Valid Commands are: look, help" << std::endl;
-        }
-        else{
-            std::cout << "Unknown Command: " + command << std::endl;
-        }
-        
+static int callback(void *NotUsed, int argc, char **argv, char **azColName){
+    int i;
+    for(i=0; i<argc; i++){
+        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
     }
-    
+    printf("\n");
     return 0;
+}
+
+int main(int argc, char **argv){
+    sqlite3 *db;
+    char *zErrMsg = 0;
+    int rc;
     
+    if( argc!=3 ){
+        fprintf(stderr, "Usage: %s DATABASE SQL-STATEMENT\n", argv[0]);
+        return(1);
+    }
+    rc = sqlite3_open(argv[1], &db);
+    if( rc ){
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return(1);
+    }
+    rc = sqlite3_exec(db, argv[2], callback, 0, &zErrMsg);
+    if( rc!=SQLITE_OK ){
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+    sqlite3_close(db);
+    return 0;
 }

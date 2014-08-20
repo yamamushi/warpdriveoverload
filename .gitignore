@@ -23,6 +23,9 @@ build/
 bin/
 server
 
+# Sqlite stuff
+*.db
+
 # Apple Stuff
 *.xcodeproj
 .DS_Store
