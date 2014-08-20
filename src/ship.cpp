@@ -4,7 +4,10 @@
 #include<cstdlib>
 #include<iostream>
 
-ship::ship( std::string shipName, std::string fshipClass ) {
+#include "Ship.h" 
+
+Ship::Ship( std::string shipName, std::string fshipClass ) : Entity("Ship") {
+    
 	m_shipClass = fshipClass;
 	m_shipName = shipName;
 	if( fshipClass == "Wolf" ) {
@@ -22,6 +25,8 @@ ship::ship( std::string shipName, std::string fshipClass ) {
 		m_sensorSlots.resize(1);
 		m_commSlots.resize(2);
 		m_armorSlots.resize(2);
+        
+        /*
 		m_reactorSlots[0] = 110;
 		m_sensorSlots[0] = 510;
 		for( int i = 0; i < 4; i++ ) {
@@ -35,6 +40,8 @@ ship::ship( std::string shipName, std::string fshipClass ) {
 			m_commSlots[i] = 610;
 			m_armorSlots[i] = 710;
 		}
+         
+         */
 		m_maxHull = 200;
 		m_hullHP = m_maxHull;
 		m_pGridMax = 50;
@@ -42,6 +49,6 @@ ship::ship( std::string shipName, std::string fshipClass ) {
 	}
 }
 
-void ship::setClassDefaults( std::string shipClass ) {
-	switch
+void Ship::setClassDefaults( std::string shipClass ) {
+    ;
 }

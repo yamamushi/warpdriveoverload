@@ -1,6 +1,6 @@
 #include "player.h"
 
-void Player::Player(std::string name ) 
+Player::Player(std::string name) : Entity("player")
 {
         m_playerName = name;
         m_isAlive = true;
@@ -18,13 +18,13 @@ void Player::Player(std::string name )
 
 
 
-void Player::learn(int& pcskill std::string name)
+void Player::learn(int& pcskill, std::string name)
 {
         if( pcskill < 1001 ) {
                 pcskill++;
         }
         else {
-                std::cout << "Skill " << name << " already at maximum." << std::endl;
+                std::cout << "Skill " + name + " already at maximum." << std::endl;
         }
 }
 

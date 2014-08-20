@@ -1,13 +1,15 @@
-// entity.h
+// player.h
 //
-// entity classes for various critters and players.
-
 
 #include <cstdlib>
 #include <iostream>
-#include <stringstream>
+#include <sstream>
 #include <algorithm>
 #include <string>
+
+#include "entity.h"
+
+
 
 
 class Player : public Entity {
@@ -15,9 +17,9 @@ class Player : public Entity {
 public:
 
 	Player( std::string name );
-	void learn( int& pcskill std::string name );
-	damageEvent( float Finit, float Fstam );
-	move();
+	void learn( int& pcskill, std::string name );
+	void damageEvent( float Finit, float Fstam );
+	bool move();
 
 
 private:
