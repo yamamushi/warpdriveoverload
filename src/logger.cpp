@@ -1,28 +1,28 @@
 #include"logger.h"
 #include<cstdlib>
+#include<string>
 #include<iostream>
 #include<sstream>
 #include<fstream>
 #include<ctime>
-#ifdef __linux__
 #include<sys/types.h>
 #include<unistd.h>
 #include<boost/lexical_cast.hpp>
 #include<boost/thread.hpp>
+#ifndef _GetPid
 #define _GetPid getpid
 #endif
 
-
-logger::logger( const int &llvl, const std::string &lfile ) {
+logger::logger( const std::string lfile, const int llvl ) {
 	L_logfile = lfile;
 	L_loglevel = llvl;
 	logToFile( "Warp Drive Overload Logging utility has started.", 6 );
 }
 
-void logger::logToFile( const std::string &text, const int &msglvl ) {
+void logger::logToFile( const std::string text, const int msglvl ) {
 	L_pid = _GetPid();
 	int TID = getThreadID();
-	std::string date = time();
+	std::string date = tStamp();
 	std::stringstream mstream;
 	mstream << date << " [" << L_pid << "] (" << TID << ") [";
 	switch ( msglvl ) {
@@ -45,7 +45,7 @@ void logger::logToFile( const std::string &text, const int &msglvl ) {
 			mstream << "FATAL] :";
 			break;
 		case 6:
-			mstream << "INFO] :"
+			mstream << "INFO] :";
 			break;
 		default:
 			mstream << "FATAL] : No message level passed to logger. Shutting down." << std::endl;
@@ -65,11 +65,11 @@ void logger::logToFile( const std::string &text, const int &msglvl ) {
 unsigned long logger::getThreadID() {
 	std::string threadID = boost::lexical_cast<std::string>(boost::this_thread::get_id() );
 	unsigned long threadnum = 0;
-	sscanf( threadID.str(), "%lx", &threadNumber );
-	return threadNumber;
+	sscanf( threadID.c_str(), "%lx", &threadnum );
+	return threadnum;
 }
 
-void logger::logException( const int &errno, const std::string &ctext ) {
+void logger::logException( const int errno, const std::string ctext ) {
 	std::stringstream exstream;
 	int elvl;
 	switch( errno ) {
@@ -97,7 +97,18 @@ void logger::logException( const int &errno, const std::string &ctext ) {
 	}
 }
 
-void logger::writeToFile( const std::string &filetext ) {
+std::string logger::tStamp() {
+	time_t now = time(0);
+	struct tm tstruct;
+	char buf[80];
+	tstruct = *localtime( &now );
+	strftime( buf, sizeof(buf), "%Y-%m-%d %X", &tstruct );
+	std::stringstream stampstream(buf);
+	std::string tstamp = stampstream.str();
+	return tstamp;
+}
+
+void logger::writeToFile( const std::string filetext ) {
 	std::ofstream log_file( L_logfile, std::ofstream::app );
-	log_file << filtext;
+	log_file << filetext;
 }
