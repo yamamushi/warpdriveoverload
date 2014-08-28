@@ -28,6 +28,7 @@ void ncursesMenu::move(int ypos, int xpos){
 void ncursesMenu::render(){
     
     int charCounter = 0;
+    if(!m_hidden){
     if(m_parent){
         if(m_horizontal){
             for(size_t x = 0; x < m_menuList.size(); x++){
@@ -65,18 +66,12 @@ void ncursesMenu::render(){
             }
         }
     }
+    }
 
     
 }
 
 
-void ncursesMenu::hide(){
-    
-}
-
-void ncursesMenu::show(){
-    
-}
 
 void ncursesMenu::close(){
     

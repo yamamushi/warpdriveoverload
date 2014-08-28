@@ -138,6 +138,7 @@ bool Shell::init(){
     _SharedPtr<ncursesMenu> menuEngineering(new ncursesMenu(menuList, "ENG", m_panels.at(2)->getChild()));
     menuEngineering->render();
     _SharedPtr<ncursesMenu> menuMain(new ncursesMenu(menuList, "MAIN", m_panels.at(0)->getChild(), true));
+    menuMain->hide();
     menuMain->render();
     
     int c;

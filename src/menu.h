@@ -33,8 +33,8 @@ public:
     void setHorizontal(bool option){m_horizontal = option;}
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
     
-    void hide();
-    void show();
+    void hide(){m_hidden = true;}
+    void show(){m_hidden = false;}
     
     void close();
     
