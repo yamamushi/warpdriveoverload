@@ -21,19 +21,35 @@
 #include "game_engine.h"
 #include "tr1_wrapper.h"
 
+#include <string>
+#include <ncurses.h>
+#include <iostream>
 
 
 class Shell {
     
 public:
-    Shell(_SharedPtr<Nostradamus> parent) : m_parent(parent){}
+    Shell(_SharedPtr<Nostradamus> parent) : m_parent(parent){m_running = false;}
     ~Shell(){}
+    
+    bool running(){return m_running;}
+    
+    void boot();
+    
     
     
 private:
     
+    
+    bool init();
+    
     void SetStdinEcho(bool enable = true);
     _SharedPtr<Nostradamus> m_parent;
+    
+    bool m_running;
+    
+    const std::string m_terminal_colors = ansi_back_black + ansi_fore_green;
+    
 };
 
 

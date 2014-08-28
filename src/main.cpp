@@ -15,10 +15,22 @@
 
 int main(int argc, char **argv){
     
+    term_clear();
+
+    
     sqliteDB::instance()->run();
     
     _SharedPtr<Nostradamus> nostradamus(new Nostradamus);
     Shell shell(nostradamus);
+
+    shell.boot();
+    
+    while(shell.running()){
+        
+        
+        
+    }
+    std::cout << ansi_term_reset << std::endl;
     
     return 0;
     

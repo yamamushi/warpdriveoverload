@@ -7,6 +7,7 @@
 //
 
 #include "shell.h"
+#include "version.h"
 
 
 void Shell::SetStdinEcho(bool enable){
@@ -34,4 +35,29 @@ void Shell::SetStdinEcho(bool enable){
     (void) tcsetattr(STDIN_FILENO, TCSANOW, &tty);
 #endif
     
+}
+
+
+
+void Shell::boot(){
+    
+    std::cout << "Welcome to Warp Core Overloaded" << std::endl;
+    sleep(1);
+    std::cout << "Please standby for Nostradamus OS boot" << std::endl;
+    sleep(5);
+    term_clear();
+    init();
+    
+}
+
+
+bool Shell::init(){
+    
+    initscr();
+    printw(">");
+    refresh();
+    getch();
+    endwin();
+    
+    return true;
 }

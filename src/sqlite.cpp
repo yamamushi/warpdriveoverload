@@ -78,8 +78,8 @@ void sqliteDB::initDB(){
         //executeStatement("SELECT * FROM global_users;");
         
         for(int x = 0; x < m_dataContainer.size(); x++){
-            std::cout << m_dataContainer.at(x).first << std::endl;
-            std::cout << m_dataContainer.at(x).second << std::endl;
+            //std::cout << m_dataContainer.at(x).first << std::endl;
+            //std::cout << m_dataContainer.at(x).second << std::endl;
         }
 
     }

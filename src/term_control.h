@@ -11,29 +11,30 @@
 #define warpdriveoverloaded_term_control_h
 
 #include <string>
-
+#include <unistd.h>
+#include <term.h>
 
 const std::string ansi_escape = "\033[";
-const std::string term_reset = "\033[0m";
+const std::string ansi_term_reset = "\033[0m";
 
 
-const std::string cursor_up = "A";
-const std::string cursor_down = "B";
-const std::string cursor_forward = "C";
-const std::string cursor_back = "D";
-const std::string cursor_nextline = "E";
-const std::string cursor_previousline = "F";;
-const std::string cursor_horizontalabs = "G";
-const std::string cursor_position = "H";
-const std::string erase_display = "J";
-const std::string erase_inline = "K";
-const std::string scroll_up = "S";
-const std::string scroll_down = "T";
-const std::string horizontal_vertpos = "f";
+const std::string ansi_cursor_up = "A";
+const std::string ansi_cursor_down = "B";
+const std::string ansi_cursor_forward = "C";
+const std::string ansi_cursor_back = "D";
+const std::string ansi_cursor_nextline = "E";
+const std::string ansi_cursor_previousline = "F";;
+const std::string ansi_cursor_horizontalabs = "G";
+const std::string ansi_cursor_position = "H";
+const std::string ansi_erase_display = "J";
+const std::string ansi_erase_inline = "K";
+const std::string ansi_scroll_up = "S";
+const std::string ansi_scroll_down = "T";
+const std::string ansi_horizontal_vertpos = "f";
 
 
 
-const std::string select_graphicrendition = "m";
+const std::string ansi_select_graphicrendition = "m";
 const std::string ansi_bold =  ansi_escape + "1m";
 const std::string ansi_faint = ansi_escape + "2m";
 const std::string ansi_italic = ansi_escape + "3m";
@@ -59,7 +60,7 @@ const std::string ansi_back_cyan = ansi_escape + "46m";
 const std::string ansi_back_white = ansi_escape + "47m";
 
 
-
+void term_clear();
 
 
 #endif

@@ -21,7 +21,7 @@ std::string Room::getDescription(){
     for(int x = 0; x < m_entities.size(); x++){
         output += m_entities.at(x)->getName();
         if(x == m_entities.size() - 1){
-            output += term_reset + ". ";
+            output += ansi_term_reset + ". ";
         }
         else{
             output += ", ";

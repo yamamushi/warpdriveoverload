@@ -12,7 +12,8 @@ add_executable(server main.cpp
             logger.cpp
             shell.cpp
             game_engine.cpp
+            term_control.cpp
             )
 
 
-set (CMAKE_CXX_FLAGS "-lsqlite3 -lboost_system")
+set (CMAKE_CXX_FLAGS "-lsqlite3 -lboost_system -ltermcap -lncurses")
