@@ -19,3 +19,14 @@
 *.exe
 *.out
 *.app
+build/
+bin/
+server
+client
+
+# Sqlite stuff
+*.db
+
+# Apple Stuff
+*.xcodeproj
+.DS_Store
