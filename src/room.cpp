@@ -16,7 +16,7 @@ std::string Room::getDescription(){
     
     output += m_description;
     output += "\n\n";
-    output += "You see here: " + ascii_bold + ascii_red;
+    output += "You see here: " + ansi_bold + ansi_fore_red;
     
     for(int x = 0; x < m_entities.size(); x++){
         output += m_entities.at(x)->getName();

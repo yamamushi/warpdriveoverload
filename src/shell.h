@@ -9,7 +9,17 @@
 #ifndef __warpdriveoverloaded__shell__
 #define __warpdriveoverloaded__shell__
 
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <termios.h>
+#include <unistd.h>
+#endif
+
+
 #include "term_control.h"
+
+
 
 
 class Shell {
@@ -21,6 +31,7 @@ public:
     
 private:
     
+    void SetStdinEcho(bool enable = true);
     
 };
 
