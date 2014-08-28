@@ -10,6 +10,11 @@
 #define __warpdriveoverloaded__window__
 
 #include <ncurses.h>
+#include <vector>
+#include "menu.h"
+#include "tr1_wrapper.h"
+
+class ncursesMenu;
 
 class ncursesWindow {
     
@@ -19,12 +24,14 @@ public:
     WINDOW * get(){return m_window;}
     void close();
     
+    void addMenu(_SharedPtr<ncursesMenu> target){m_menuList.push_back(target);}
+    
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
     
 private:
     
     WINDOW *m_window;
-    
+    std::vector<_SharedPtr<ncursesMenu>> m_menuList;
     
     
 };

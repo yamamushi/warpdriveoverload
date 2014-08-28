@@ -122,11 +122,21 @@ bool Shell::init(){
 
     m_panels.at(1)->setName("Navigation");
     GraphChart graphController(m_windows.at(1));
-//    graphController.fill();
-//    mvwprintw(m_panels.at(1)->getChild()->get(), 1, (m_cols - m_panels.at(1)->getName().size())/2, "%s", m_panels.at(1)->getName().c_str());
+ //   graphController.fill();
+ //   mvwprintw(m_panels.at(1)->getChild()->get(), 1, (m_cols - m_panels.at(1)->getName().size())/2, "%s", m_panels.at(1)->getName().c_str());
 //    wrefresh(m_panels.at(1)->getChild()->get());
     
     m_panels.at(2)->setName("Engineering");
+    
+    std::vector<std::string> menuList;
+    menuList.push_back("First");
+    menuList.push_back("Second");
+    menuList.push_back("Third");
+    menuList.push_back("Fourth");
+    menuList.push_back("Exit");
+    
+    _SharedPtr<ncursesMenu> menu(new ncursesMenu(menuList, "Menu", m_panels.at(2)->getChild()));
+    menu->render();
     
     int c;
     while(1)
@@ -149,6 +159,13 @@ bool Shell::init(){
                 graphController.fill();
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
                 top_panel(m_panels.at(1)->getPanel());
+                break;
+            case 'e':
+                top = m_panels.at(2);
+                wclear(top->getChild()->get());
+                menu->render();
+                mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
+                top_panel(m_panels.at(2)->getPanel());
                 break;
             case 9:
                 top = top->getNext();
