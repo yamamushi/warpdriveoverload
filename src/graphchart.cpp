@@ -25,7 +25,7 @@ void GraphChart::fill(){
                 wrefresh(m_parent->get());
 
             }
-            else if(!(y% 2)){
+            else if(!(y% 2) && y != height-2){
                 mvwprintw(m_parent->get(), y, x,"%c", '_');
                 m_parent->setborder('|', '|', '=', '=', '+', '+', '+', '+');
                 wrefresh(m_parent->get());

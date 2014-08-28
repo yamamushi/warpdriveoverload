@@ -9,6 +9,7 @@
 #include "shell.h"
 #include "window.h"
 #include "version.h"
+#include "ncursespanel.h"
 #include "graphchart.h"
 
 
@@ -70,20 +71,20 @@ bool Shell::init(){
     start_color();			/* Start color 			*/
     curs_set(0);
     refresh();
-    init_pair(1, COLOR_GREEN, COLOR_BLACK);
     
     getmaxyx(stdscr,m_rows,m_cols);
-    
-    int startx;
-    int starty;
-    starty = 0;	/* Calculating for a center placement */
-	startx = 0;	/* of the window		*/
-    
 
-    m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, starty, startx));
-    m_windows.push_back(m_mainWindow);
-    wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
-    //box(m_mainWindow->get(), 0,0);
+    createWindow(m_rows, m_cols); // Create our root window
+    m_mainWindow = m_windows.at(0); // Assign it here
+    
+    addToPanelList(m_mainWindow); // Add our window to the panel list manually
+    update_panels();
+
+    m_panels.at(0)->setName("Main Window");
+    
+    init_pair(1, COLOR_GREEN, COLOR_BLACK); // A default Background Color
+    wbkgd(m_mainWindow->get(), COLOR_PAIR(1)); // Set the background color accordingly
+
     std::string welcome = "Welcome to Nostradamus OS";
     
     attroff(A_BOLD);
@@ -94,39 +95,72 @@ bool Shell::init(){
     std::string pleasecontinue = "Press any key to Continue";
     mvwprintw(m_mainWindow->get(), m_rows-5,(m_cols - pleasecontinue.size())/2,"%s", pleasecontinue.c_str());
     wattroff(m_mainWindow->get(), A_BLINK);
+   
     wrefresh(m_mainWindow->get());
     refresh();
     getch();
-
-    int c;
     keypad(m_mainWindow->get(), TRUE);		/* We get F1, F2 etc..		*/
 
-	//mvwprintw( m_mainWindow->get(), 1, 1, "F1 to Exit");
     wrefresh(m_mainWindow->get());
-
 	refresh();
-    
-    GraphChart graphController(m_mainWindow);
-    graphController.fill();
-    
 
+    
+    
+    createWindow(m_rows, m_cols);
+    addToPanelList(m_windows.at(1));
+    
+    createWindow(m_rows, m_cols);
+    addToPanelList(m_windows.at(2));
+
+    _SharedPtr<ncursesPanel> top = m_panels.at(0);
+
+    wclear(top->getChild()->get());
+    mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
+    top_panel(top->getPanel());
+//    wrefresh(top->getChild()->get());
+  //  refresh();
+
+    m_panels.at(1)->setName("Navigation");
+    GraphChart graphController(m_windows.at(1));
+//    graphController.fill();
+//    mvwprintw(m_panels.at(1)->getChild()->get(), 1, (m_cols - m_panels.at(1)->getName().size())/2, "%s", m_panels.at(1)->getName().c_str());
+//    wrefresh(m_panels.at(1)->getChild()->get());
+    
+    m_panels.at(2)->setName("Engineering");
+    
+    int c;
     while(1)
 	{
-        c = wgetch(m_mainWindow->get());
+        wrefresh(top->getChild()->get());
+        refresh();
+        update_panels();
+        doupdate();
+        
+        c = getch();//wgetch(m_mainWindow->get());
 		switch(c)
 		{
-            case KEY_DOWN:
-		        //menu_driver(my_menu, REQ_DOWN_ITEM);
+            case 'a':
+                wclear(top->getChild()->get());
+                mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
+                break;
+            case 'n':
+                top = m_panels.at(1);
+                wclear(top->getChild()->get());
+                graphController.fill();
+                mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
+                top_panel(m_panels.at(1)->getPanel());
+                break;
+            case 9:
+                top = top->getNext();
+                wclear(top->getChild()->get());
+                mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
+                top_panel(top->getPanel());
+
 				break;
-			case KEY_UP:
-				//menu_driver(my_menu, REQ_UP_ITEM);
-                break;
-            default:
-                break;
 
 		}
-        //wrefresh(m_mainWindow->get());
-        refresh();
+
+        //refresh();
 	}
     
     
@@ -140,11 +174,16 @@ bool Shell::init(){
      mvwprintw(m_mainWindow, 2, 2, "%s", mes.c_str());
      mvwprintw(m_mainWindow, m_rows-2,0,"%s", "> ");
      */
+    
     wrefresh(m_mainWindow->get());
     
+    
+    /*
     std::string input;
     char instring[80];
-    getstr(instring);
+    getstr(instring); 
+     */
+    
     
     /*
     mvwprintw(m_mainWindow->get(), m_rows-2, 1, "The command entered is: ");
@@ -157,6 +196,38 @@ bool Shell::init(){
     return true;
 }
 
+
+
+void Shell::addToPanelList(_SharedPtr<ncursesWindow> targetWindow){
+    size_t panelListSize = m_panels.size();
+    
+    _SharedPtr<ncursesPanel> l_panel(new ncursesPanel(targetWindow));
+    
+    m_panels.push_back(l_panel);
+    
+    if(panelListSize > 0){
+        set_panel_userptr(m_panels.at(panelListSize-1)->getPanel(), m_panels.back()->getPanel());
+        set_panel_userptr(m_panels.back()->getPanel(), m_panels.front()->getPanel());
+        
+        m_panels.at(panelListSize-1)->addNext(m_panels.back());
+        m_panels.back()->addPrev(m_panels.at(panelListSize-1));
+        m_panels.back()->addNext(m_panels.at(0));
+
+    }
+
+    update_panels();
+    doupdate();
+
+
+}
+
+
+void Shell::createWindow(int ysize, int xsize){
+    
+    _SharedPtr<ncursesWindow> new_window = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, 0, 0)); // Initialize our root window
+    m_windows.push_back(new_window); // Add to the list of Windows for the window manager.
+
+}
 
 
 

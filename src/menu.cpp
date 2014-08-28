@@ -7,3 +7,10 @@
 //
 
 #include "menu.h"
+
+
+ncursesMenu::ncursesMenu(std::vector<std::string> menuList, ncursesWindow *m_parent, bool horizontal) : m_menuList(menuList), m_horizontal(horizontal){
+    
+    
+    
+}

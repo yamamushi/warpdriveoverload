@@ -21,13 +21,16 @@
 #include "game_engine.h"
 #include "tr1_wrapper.h"
 #include "window.h"
+#include "ncursespanel.h"
 
 #include <string>
 #include <ncurses.h>
+#include <panel.h>
 #include <iostream>
 #include <vector>
 #include <panel.h>
 
+class ncursesPanel;
 
 class Shell {
     
@@ -36,10 +39,10 @@ public:
     ~Shell(){shutdown();}
     
     bool running(){return m_running;}
-    
     void boot();
     
     
+    void panelRefresh(){update_panels();}
     
 private:
     
@@ -47,6 +50,9 @@ private:
     bool init();
     void shutdown();
     
+    void createWindow(int ysize, int xsize);
+    
+    void addToPanelList(_SharedPtr<ncursesWindow> targetWindow);
     void close_win(_SharedPtr<ncursesWindow> target_window);
     
     
@@ -59,8 +65,11 @@ private:
     int m_cols;
     
     _SharedPtr<ncursesWindow> m_mainWindow;
-
+    
     std::vector<_SharedPtr<ncursesWindow> > m_windows;
+    std::vector<_SharedPtr<ncursesPanel> > m_panels;
+
+    
 };
 
 

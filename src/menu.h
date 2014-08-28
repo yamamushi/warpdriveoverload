@@ -19,15 +19,19 @@
 class ncursesMenu {
     
 public:
-    ncursesMenu(std::vector<std::string> menuList, ncursesWindow *m_parent);
+    ncursesMenu(std::vector<std::string> menuList, ncursesWindow *m_parent, bool horizontal = false);
     
     WINDOW * getParent(){return m_parent;}
+    
+    void setHorizontal(bool option){m_horizontal = option;}
     void close();
     
     
 private:
     
     WINDOW *m_parent;
+    bool m_horizontal;
+    std::vector<std::string> m_menuList;
     
     
 };
