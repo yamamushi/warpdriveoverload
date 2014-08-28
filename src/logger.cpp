@@ -9,6 +9,7 @@
 #include<unistd.h>
 #include<boost/lexical_cast.hpp>
 #include<boost/thread.hpp>
+#include <boost/thread/thread.hpp>
 #ifndef _GetPid
 #define _GetPid getpid
 #endif

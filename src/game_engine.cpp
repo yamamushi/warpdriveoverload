@@ -21,7 +21,7 @@ void Nostradamus::init(){
     
     for(int x = 0; x < 10 ; x++){
         _SharedPtr<Room> l_room(new Room);
-        l_room->enterDescription("Room: " + std::to_string(x));
+        l_room->enterDescription("Room: " + x);
         m_rooms.push_back(l_room);
     }
     

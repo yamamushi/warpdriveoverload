@@ -48,8 +48,6 @@ private:
     
     bool m_running;
     
-    const std::string m_terminal_colors = ansi_back_black + ansi_fore_green;
-    
 };
 
 

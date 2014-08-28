@@ -16,4 +16,4 @@ add_executable(server main.cpp
             )
 
 
-set (CMAKE_CXX_FLAGS "-lsqlite3 -lboost_system -ltermcap -lncurses")
+set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lboost_thread-mt -ltermcap -lncurses")
