@@ -21,7 +21,7 @@ logger::logger( const std::string lfile, const int llvl ) {
 
 void logger::logToFile( const std::string text, const int msglvl ) {
 	L_pid = _GetPid();
-	int TID = getThreadID();
+	unsigned long TID = getThreadID();
 	std::string date = tStamp();
 	std::stringstream mstream;
 	mstream << date << " [" << L_pid << "] (" << TID << ") [";
@@ -69,10 +69,10 @@ unsigned long logger::getThreadID() {
 	return threadnum;
 }
 
-void logger::logException( const int errno, const std::string ctext ) {
+void logger::logException( const int errornumber, const std::string ctext ) {
 	std::stringstream exstream;
 	int elvl;
-	switch( errno ) {
+	switch( errornumber ) {
 		case 1000:
 			exstream << "Error 1000: Invalid data passed to function, but was handled. " << ctext; // ctext should say something like "In function ___, line ___'
 			elvl = 2;

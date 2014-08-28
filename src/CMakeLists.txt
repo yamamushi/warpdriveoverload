@@ -9,7 +9,8 @@ add_executable(server main.cpp
 			player.cpp
 			room.cpp
             sqlite.cpp
+            logger.cpp
             )
 
 
-set (CMAKE_CXX_FLAGS "-lsqlite3")
+set (CMAKE_CXX_FLAGS "-lsqlite3 -lboost_system")
