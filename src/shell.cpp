@@ -12,6 +12,8 @@
 #include "ncursespanel.h"
 #include "graphchart.h"
 
+#include "asciicodes.h"
+
 
 void Shell::SetStdinEcho(bool enable){
     
@@ -183,6 +185,10 @@ bool Shell::init(){
                 top_panel(top->getPanel());
 
 				break;
+                
+            case KEY_ESC:  // quit
+                return 0;
+                break;
 
 		}
 
