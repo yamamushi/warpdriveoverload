@@ -9,6 +9,7 @@
 #include "shell.h"
 #include "window.h"
 #include "version.h"
+#include "graphchart.h"
 
 
 void Shell::SetStdinEcho(bool enable){
@@ -70,13 +71,14 @@ bool Shell::init(){
     curs_set(0);
     refresh();
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
-
+    
     getmaxyx(stdscr,m_rows,m_cols);
     
     int startx;
     int starty;
     starty = 0;	/* Calculating for a center placement */
 	startx = 0;	/* of the window		*/
+    
 
     m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, starty, startx));
     m_windows.push_back(m_mainWindow);
@@ -87,78 +89,76 @@ bool Shell::init(){
     attroff(A_BOLD);
     mvwprintw(m_mainWindow->get(), (m_rows/2)-1, (m_cols - welcome.size())/2, "%s", welcome.c_str());
     mvwprintw(m_mainWindow->get(), m_rows/2,(m_cols - global_version_string.size())/2,"%s", global_version_string.c_str());
-    
+
     wattron(m_mainWindow->get(), A_BLINK);
     std::string pleasecontinue = "Press any key to Continue";
-
     mvwprintw(m_mainWindow->get(), m_rows-5,(m_cols - pleasecontinue.size())/2,"%s", pleasecontinue.c_str());
-
     wattroff(m_mainWindow->get(), A_BLINK);
-
     wrefresh(m_mainWindow->get());
-    
-    int ch;
-    while((ch = getch()) != KEY_F(1))
-	{
-        switch(ch)
-		{
-            case KEY_LEFT:
-				close_win(m_mainWindow);
-                m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, starty, --startx));
-                wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
-                wrefresh(m_mainWindow->get());
-                
-				break;
-			case KEY_RIGHT:
-				close_win(m_mainWindow);
-                m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, starty, ++startx));
-                wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
-                wrefresh(m_mainWindow->get());
+    refresh();
+    getch();
 
+    int c;
+    keypad(m_mainWindow->get(), TRUE);		/* We get F1, F2 etc..		*/
+
+	//mvwprintw( m_mainWindow->get(), 1, 1, "F1 to Exit");
+    wrefresh(m_mainWindow->get());
+
+	refresh();
+    
+    GraphChart graphController(m_mainWindow);
+    graphController.fill();
+    
+
+    while(1)
+	{
+        c = wgetch(m_mainWindow->get());
+		switch(c)
+		{
+            case KEY_DOWN:
+		        //menu_driver(my_menu, REQ_DOWN_ITEM);
 				break;
 			case KEY_UP:
-				close_win(m_mainWindow);
-                m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, --starty, startx));
-                wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
-                wrefresh(m_mainWindow->get());
+				//menu_driver(my_menu, REQ_UP_ITEM);
+                break;
+            default:
+                break;
 
-				break;
-			case KEY_DOWN:
-				close_win(m_mainWindow);
-                m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, ++starty, startx));
-                wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
-                wrefresh(m_mainWindow->get());
-
-				break;
 		}
+        //wrefresh(m_mainWindow->get());
+        refresh();
 	}
     
-
+    
     /*
-    m_mainWindow = newwin(m_rows-2, m_cols-2, 0, 0);
-    box(m_mainWindow, 0,0);
-    wrefresh(m_mainWindow);
-    attron(A_BOLD);
-    std::string mes = "Press enter a command to continue";
-    attroff(A_BOLD);
-    mvwprintw(m_mainWindow, 2, 2, "%s", mes.c_str());
-    mvwprintw(m_mainWindow, m_rows-2,0,"%s", "> ");
-*/
+     m_mainWindow = newwin(m_rows-2, m_cols-2, 0, 0);
+     box(m_mainWindow, 0,0);
+     wrefresh(m_mainWindow);
+     attron(A_BOLD);
+     std::string mes = "Press enter a command to continue";
+     attroff(A_BOLD);
+     mvwprintw(m_mainWindow, 2, 2, "%s", mes.c_str());
+     mvwprintw(m_mainWindow, m_rows-2,0,"%s", "> ");
+     */
     wrefresh(m_mainWindow->get());
-
+    
     std::string input;
     char instring[80];
     getstr(instring);
     
-        mvwprintw(m_mainWindow->get(), m_rows-2, 1, "The command entered is: ");
-		attron(A_BOLD | A_BLINK);
-		wprintw(m_mainWindow->get(), "%s", instring);
-		attroff(A_BOLD | A_BLINK);
+    /*
+    mvwprintw(m_mainWindow->get(), m_rows-2, 1, "The command entered is: ");
+    attron(A_BOLD | A_BLINK);
+    wprintw(m_mainWindow->get(), "%s", instring);
+    attroff(A_BOLD | A_BLINK);
     wrefresh(m_mainWindow->get());
     getch();
-    
+    */
     return true;
 }
+
+
+
 
 
 void Shell::shutdown(){
@@ -168,7 +168,7 @@ void Shell::shutdown(){
         
     }
     endwin();
-
+    
 }
 
 
@@ -177,5 +177,5 @@ void Shell::close_win(_SharedPtr<ncursesWindow> target_window){
     
     target_window->close();
     
-
+    
 }
