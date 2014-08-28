@@ -7,6 +7,7 @@
 //
 
 #include "shell.h"
+#include "window.h"
 #include "version.h"
 
 
@@ -54,30 +55,106 @@ void Shell::boot(){
 bool Shell::init(){
     
     initscr();
+    
+    if(has_colors() == FALSE)
+	{	endwin();
+		printf("Your terminal does not support color\n");
+		exit(1);
+	}
+    
     raw(); // disable line buffering
+    cbreak();			// Line buffering disabled, Pass on
     keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
-    //noecho();			/* Don't echo() while we do getch */
+    noecho();			/* Don't echo() while we do getch */
+    start_color();			/* Start color 			*/
     curs_set(0);
-    int row, col;
-    getmaxyx(stdscr,row,col);
+    refresh();
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+
+    getmaxyx(stdscr,m_rows,m_cols);
+    
+    int startx;
+    int starty;
+    starty = 0;	/* Calculating for a center placement */
+	startx = 0;	/* of the window		*/
+
+    m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, starty, startx));
+    m_windows.push_back(m_mainWindow);
+    wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
+    //box(m_mainWindow->get(), 0,0);
+    std::string welcome = "Welcome to Nostradamus OS";
+    
+    attroff(A_BOLD);
+    mvwprintw(m_mainWindow->get(), (m_rows/2)-1, (m_cols - welcome.size())/2, "%s", welcome.c_str());
+    mvwprintw(m_mainWindow->get(), m_rows/2,(m_cols - global_version_string.size())/2,"%s", global_version_string.c_str());
+    
+    wattron(m_mainWindow->get(), A_BLINK);
+    std::string pleasecontinue = "Press any key to Continue";
+
+    mvwprintw(m_mainWindow->get(), m_rows-5,(m_cols - pleasecontinue.size())/2,"%s", pleasecontinue.c_str());
+
+    wattroff(m_mainWindow->get(), A_BLINK);
+
+    wrefresh(m_mainWindow->get());
+    
+    int ch;
+    while((ch = getch()) != KEY_F(1))
+	{
+        switch(ch)
+		{
+            case KEY_LEFT:
+				close_win(m_mainWindow);
+                m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, starty, --startx));
+                wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
+                wrefresh(m_mainWindow->get());
+                
+				break;
+			case KEY_RIGHT:
+				close_win(m_mainWindow);
+                m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, starty, ++startx));
+                wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
+                wrefresh(m_mainWindow->get());
+
+				break;
+			case KEY_UP:
+				close_win(m_mainWindow);
+                m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, --starty, startx));
+                wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
+                wrefresh(m_mainWindow->get());
+
+				break;
+			case KEY_DOWN:
+				close_win(m_mainWindow);
+                m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, ++starty, startx));
+                wbkgd(m_mainWindow->get(), COLOR_PAIR(1));
+                wrefresh(m_mainWindow->get());
+
+				break;
+		}
+	}
+    
+
+    /*
+    m_mainWindow = newwin(m_rows-2, m_cols-2, 0, 0);
+    box(m_mainWindow, 0,0);
+    wrefresh(m_mainWindow);
     attron(A_BOLD);
     std::string mes = "Press enter a command to continue";
     attroff(A_BOLD);
-    mvprintw(0, 0, "%s", mes.c_str());
-    mvprintw(row-1,0,"%s", "> ");
-
-    refresh();
+    mvwprintw(m_mainWindow, 2, 2, "%s", mes.c_str());
+    mvwprintw(m_mainWindow, m_rows-2,0,"%s", "> ");
+*/
+    wrefresh(m_mainWindow->get());
 
     std::string input;
     char instring[80];
     getstr(instring);
     
-
-        mvprintw(row-2, 0, "The command entered is: ");
+        mvwprintw(m_mainWindow->get(), m_rows-2, 1, "The command entered is: ");
 		attron(A_BOLD | A_BLINK);
-		printw("%s", instring);
+		wprintw(m_mainWindow->get(), "%s", instring);
 		attroff(A_BOLD | A_BLINK);
-    refresh();
+    wrefresh(m_mainWindow->get());
     getch();
     
     return true;
@@ -86,6 +163,19 @@ bool Shell::init(){
 
 void Shell::shutdown(){
     
+    for(size_t x = 0; x < m_windows.size(); x++){
+        m_windows.at(x)->close();
+        
+    }
     endwin();
+
+}
+
+
+
+void Shell::close_win(_SharedPtr<ncursesWindow> target_window){
+    
+    target_window->close();
+    
 
 }

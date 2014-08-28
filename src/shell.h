@@ -20,10 +20,12 @@
 #include "term_control.h"
 #include "game_engine.h"
 #include "tr1_wrapper.h"
+#include "window.h"
 
 #include <string>
 #include <ncurses.h>
 #include <iostream>
+#include <vector>
 
 
 class Shell {
@@ -44,12 +46,20 @@ private:
     bool init();
     void shutdown();
     
+    void close_win(_SharedPtr<ncursesWindow> target_window);
+    
     
     void SetStdinEcho(bool enable = true);
     _SharedPtr<Nostradamus> m_parent;
     
     bool m_running;
     
+    int m_rows;
+    int m_cols;
+    
+    _SharedPtr<ncursesWindow> m_mainWindow;
+
+    std::vector<_SharedPtr<ncursesWindow> > m_windows;
 };
 
 
