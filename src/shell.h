@@ -18,21 +18,22 @@
 
 
 #include "term_control.h"
-
+#include "game_engine.h"
+#include "tr1_wrapper.h"
 
 
 
 class Shell {
     
 public:
-    Shell(){}
+    Shell(_SharedPtr<Nostradamus> parent) : m_parent(parent){}
     ~Shell(){}
     
     
 private:
     
     void SetStdinEcho(bool enable = true);
-    
+    _SharedPtr<Nostradamus> m_parent;
 };
 
 

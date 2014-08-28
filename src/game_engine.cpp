@@ -7,3 +7,24 @@
 //
 
 #include "game_engine.h"
+
+#include <iostream>
+
+Nostradamus::Nostradamus(){
+        
+    init();
+    
+}
+
+void Nostradamus::init(){
+    
+    
+    for(int x = 0; x < 10 ; x++){
+        _SharedPtr<Room> l_room(new Room);
+        l_room->enterDescription("Room: " + std::to_string(x));
+        m_rooms.push_back(l_room);
+    }
+    
+    std::cout << "Rooms Generated" << std::endl;
+    
+}

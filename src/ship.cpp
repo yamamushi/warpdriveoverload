@@ -18,6 +18,9 @@ Ship::Ship( std::string shipName, std::string fshipClass ) {
 		m_maxPartSize = 2;
 		m_shipSizeClass = 2; // "Frigate" size. 1 is a single-man fighter. a frigate is the smallest multi-man ship.
 		m_armorHP = m_maxArmorHP;
+        
+        // I imagine this is here for memory allocation purposes - left scratching my head - Yamamushi
+        
 		m_reactorSlots.resize(1);
 		m_thrusterSlots.resize(4);
 		m_weaponSlots.resize(3);

@@ -11,6 +11,7 @@ add_executable(server main.cpp
             sqlite.cpp
             logger.cpp
             shell.cpp
+            game_engine.cpp
             )
 
 

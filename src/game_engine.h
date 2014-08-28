@@ -10,8 +10,27 @@
 #define __warpdriveoverloaded__game_engine__
 
 #include "sqlite.h"
+#include "room.h"
+#include "tr1_wrapper.h"
+
+#include <vector>
+#include <string>
 
 
+class Nostradamus {
+    
+public:
+    
+    Nostradamus();
+    
+    
+private:
+    
+    void init();
+    
+    std::vector<_SharedPtr<Room> > m_rooms;
+    
+};
 
 
 
