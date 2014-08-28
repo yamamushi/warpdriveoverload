@@ -26,11 +26,8 @@ int main(int argc, char **argv){
     shell.boot();
     
     while(shell.running()){
-        
-        
-        
+    
     }
-    std::cout << ansi_term_reset << std::endl;
     
     return 0;
     

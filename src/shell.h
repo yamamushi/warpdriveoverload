@@ -30,7 +30,7 @@ class Shell {
     
 public:
     Shell(_SharedPtr<Nostradamus> parent) : m_parent(parent){m_running = false;}
-    ~Shell(){}
+    ~Shell(){shutdown();}
     
     bool running(){return m_running;}
     
@@ -42,6 +42,8 @@ private:
     
     
     bool init();
+    void shutdown();
+    
     
     void SetStdinEcho(bool enable = true);
     _SharedPtr<Nostradamus> m_parent;

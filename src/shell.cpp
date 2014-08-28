@@ -44,7 +44,7 @@ void Shell::boot(){
     std::cout << "Welcome to Warp Core Overloaded" << std::endl;
     sleep(1);
     std::cout << "Please standby for Nostradamus OS boot" << std::endl;
-    sleep(5);
+    sleep(1);
     term_clear();
     init();
     
@@ -54,10 +54,38 @@ void Shell::boot(){
 bool Shell::init(){
     
     initscr();
-    printw(">");
+    raw(); // disable line buffering
+    keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
+    //noecho();			/* Don't echo() while we do getch */
+    curs_set(0);
+    int row, col;
+    getmaxyx(stdscr,row,col);
+    attron(A_BOLD);
+    std::string mes = "Press enter a command to continue";
+    attroff(A_BOLD);
+    mvprintw(0, 0, "%s", mes.c_str());
+    mvprintw(row-1,0,"%s", "> ");
+
+    refresh();
+
+    std::string input;
+    char instring[80];
+    getstr(instring);
+    
+
+        mvprintw(row-2, 0, "The command entered is: ");
+		attron(A_BOLD | A_BLINK);
+		printw("%s", instring);
+		attroff(A_BOLD | A_BLINK);
     refresh();
     getch();
-    endwin();
     
     return true;
+}
+
+
+void Shell::shutdown(){
+    
+    endwin();
+
 }
