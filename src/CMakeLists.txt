@@ -10,6 +10,7 @@ add_executable(server main.cpp
 			room.cpp
             sqlite.cpp
             logger.cpp
+            shell.cpp
             )
 
 
