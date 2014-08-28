@@ -50,6 +50,7 @@ private:
     
     std::string m_name;
     
+    void drawborder();
     
 };
 #endif /* defined(__warpdriveoverloaded__menu__) */

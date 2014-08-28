@@ -135,8 +135,10 @@ bool Shell::init(){
     menuList.push_back("Fourth");
     menuList.push_back("Exit");
     
-    _SharedPtr<ncursesMenu> menu(new ncursesMenu(menuList, "Menu", m_panels.at(2)->getChild()));
-    menu->render();
+    _SharedPtr<ncursesMenu> menuEngineering(new ncursesMenu(menuList, "ENG", m_panels.at(2)->getChild()));
+    menuEngineering->render();
+    _SharedPtr<ncursesMenu> menuMain(new ncursesMenu(menuList, "MAIN", m_panels.at(0)->getChild(), true));
+    menuMain->render();
     
     int c;
     while(1)
@@ -163,9 +165,16 @@ bool Shell::init(){
             case 'e':
                 top = m_panels.at(2);
                 wclear(top->getChild()->get());
-                menu->render();
+                menuEngineering->render();
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
                 top_panel(m_panels.at(2)->getPanel());
+                break;
+            case 'm':
+                top = m_panels.at(0);
+                wclear(top->getChild()->get());
+                menuMain->render();
+                mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
+                top_panel(m_panels.at(0)->getPanel());
                 break;
             case 9:
                 top = top->getNext();

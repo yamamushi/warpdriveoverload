@@ -32,9 +32,17 @@ void ncursesMenu::render(){
         if(m_horizontal){
             for(size_t x = 0; x < m_menuList.size(); x++){
         
-                mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter, "%s", m_menuList.at(x).c_str());
+                if(x == 0){
+                    mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%s", m_name.c_str());
+                    charCounter += m_name.length()+1;
+
+                }
+                else{
+                    mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%s", m_menuList.at(x).c_str());
+                    charCounter += m_menuList.at(x).length()+1;
+
+                }
         
-                charCounter++;
             }
         }
         else{
