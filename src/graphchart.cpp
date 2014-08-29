@@ -7,6 +7,8 @@
 //
 
 #include "graphchart.h"
+#include <stdlib.h>
+
 
 GraphChart::GraphChart(_SharedPtr<ncursesWindow> parent, int xSize, int ySize) : Widget(parent), m_xSize(xSize), m_ySize(ySize){
     
@@ -50,6 +52,7 @@ void GraphChart::render(){
     generateChart();
     mvwprintw(getParent()->get(), 5, 2,"%d", m_rows);
     mvwprintw(getParent()->get(), 8, 2,"%d", m_cols);
+    randDirection();
     placeAllPoints();
     
 }
@@ -114,10 +117,8 @@ void GraphChart::placeAllPoints(){
                 for(int y = 0; y < m_height; y++){
                     if( (y % m_ySize+1) && (x % m_xSize)){
                         if(y != m_height-1 && x < m_width-1){
-                            
                             if((x > m_xSize*pointX) && (x < (m_xSize*pointX)+m_xSize+1)){
                                 if((y > m_ySize*pointY) && (y < (m_ySize*pointY)+m_ySize+1)){
-                                    
                                     if(m_showBorder){
                                         if( y > 0){
                                             wattrset(m_parent->get(), COLOR_PAIR(m_chartPoints.at(chartX)->m_color));
@@ -126,12 +127,6 @@ void GraphChart::placeAllPoints(){
                                             
                                         }
                                     }
-                                }
-                                
-                                else{
-                                    wattrset(m_parent->get(), m_chartPoints.at(chartX)->m_color);
-                                    //mvwprintw(getParent()->get(), y, x,"%s", m_chartPoints.at(chartX)->m_symbol.c_str());
-                                    wattrset(m_parent->get(), m_parent->getNormalColor());
                                 }
                             }
                         }
@@ -169,7 +164,7 @@ void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
                                 }
                             }
                             else{
-                                if(y == ((m_ySize*pointY)+m_ySize))
+                                if(y == ((m_ySize*pointY)+m_ySize) || y == m_height-1)
                                     mvwprintw(getParent()->get(), y, x,"%c", '=');
                                 
                             }
@@ -179,8 +174,7 @@ void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
             }
         }
     }
-    
-    
+    wrefresh(getParent()->get());
 }
 
 void GraphChart::addChartPoint(_SharedPtr<GraphChartPoint> point){
@@ -228,7 +222,7 @@ void GraphChart::handleKeys(int input){
             
         case KEY_RIGHT:
             removePoint(m_chartPoints.at(0));
-            if(m_chartPoints.at(0)->m_X > 0)
+            if(m_chartPoints.at(0)->m_X < m_cols)
                 m_chartPoints.at(0)->m_X++;
             break;
         case '\n':
@@ -236,4 +230,69 @@ void GraphChart::handleKeys(int input){
             break;
     }
     
+}
+
+
+void GraphChart::randDirection(){
+    
+    int lottery = rand() % 1000000;
+    _SharedPtr<GraphChartPoint> point1 = m_chartPoints.at(0);
+    if(lottery > 999000){
+        if(point1){
+            int direction = rand() % 9 + 1;
+            switch(direction){
+                case 1:
+                    removePoint(point1);
+                    if(point1->m_X > 0)
+                        point1->m_X--;
+                    if(point1->m_Y < 11)
+                        point1->m_Y++;
+                    break;
+                case 2:
+                    removePoint(point1);
+                    if(point1->m_Y < 11)
+                        point1->m_Y++;
+                    break;
+                case 3:
+                    removePoint(point1);
+                    if(point1->m_X < 11)
+                        point1->m_X++;
+                    if(point1->m_Y < 11)
+                        point1->m_Y++;
+                    break;
+                case 4:
+                    removePoint(point1);
+                    if(point1->m_X > 0)
+                        point1->m_X--;
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    removePoint(point1);
+                    if(point1->m_X < 11)
+                        point1->m_X++;
+                    break;
+                case 7:
+                    removePoint(point1);
+                    if(point1->m_X > 0)
+                        point1->m_X--;
+                    if(point1->m_Y > 0)
+                        point1->m_Y--;
+                    break;
+                case 8:
+                    removePoint(point1);
+                    if(point1->m_Y > 0)
+                        point1->m_Y--;
+                    break;
+                case 9:
+                    removePoint(point1);
+                    if(point1->m_X < 11)
+                        point1->m_X++;
+                    if(point1->m_Y > 0)
+                        point1->m_Y--;
+                    break;
+            }
+            
+        }
+    }
 }

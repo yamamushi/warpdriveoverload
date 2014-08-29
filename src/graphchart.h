@@ -56,13 +56,14 @@ public:
     
     void handleKeys(int input);
 
+    void removePoint(_SharedPtr<GraphChartPoint> point);
+    void placePoint(_SharedPtr<GraphChartPoint> point);
+    void placeAllPoints();
+
 private:
     
     void generateChart();
     void fill();
-    void placePoint(_SharedPtr<GraphChartPoint> point);
-    void placeAllPoints();
-    void removePoint(_SharedPtr<GraphChartPoint> point);
     
     int m_rows;
     int m_cols;
@@ -77,6 +78,10 @@ private:
     bool m_showBorder;
     
     std::vector<_SharedPtr<GraphChartPoint> > m_chartPoints;
+
+    // Testing
+    void randDirection();
+
 };
 
 

@@ -23,6 +23,7 @@
 #include "window.h"
 #include "ncursespanel.h"
 #include "widget.h"
+#include "graphchart.h"
 
 #include <string>
 #include <ncurses.h>
@@ -31,7 +32,10 @@
 #include <vector>
 #include <panel.h>
 
+struct GraphChartPoint;
+
 class ncursesPanel;
+
 
 class Shell {
     
@@ -83,8 +87,8 @@ private:
     void doNothing(){};
     void printDebug();
     
-    
     _SharedPtr<Widget> graphController;
+    
 };
 
 

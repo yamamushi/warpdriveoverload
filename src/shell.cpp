@@ -13,6 +13,7 @@
 #include "graphchart.h"
 #include "tr1_threading.h"
 
+
 #include "asciicodes.h"
 
 
@@ -205,7 +206,7 @@ void Shell::populatePanels(){
     graphController->setParent(m_windows.at(1));
     
     init_pair(3, COLOR_RED, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point1(new GraphChartPoint(5,8,3,"*"));
+    point1 = _SharedPtr<GraphChartPoint>(new GraphChartPoint(5,8,3,"*"));
     
     _SharedPtr<GraphChart> temp = std::dynamic_pointer_cast<GraphChart>(graphController);
     temp->addChartPoint(point1);
@@ -380,7 +381,6 @@ void Shell::shutdown(){
     endwin();
     
 }
-
 
 
 void Shell::close_win(_SharedPtr<ncursesWindow> target_window){
