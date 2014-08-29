@@ -201,7 +201,7 @@ void Shell::populatePanels(){
     
     m_panels.at(1)->setName("Navigation");
     
-    graphController = _SharedPtr<GraphChart>(new GraphChart(m_windows.at(1), 3, 2));
+    graphController = _SharedPtr<GraphChart>(new GraphChart(m_windows.at(1), 2, 1));
     m_windows.at(1)->addWidget(graphController);
     graphController->setParent(m_windows.at(1));
     
@@ -222,6 +222,8 @@ void Shell::populatePanels(){
     temp->addChartPoint(point3);
     temp->addChartPoint(point4);
     temp->addChartPoint(point5);
+    _SharedPtr<GraphChartPoint> point6(new GraphChartPoint(8,1,11,"@"));
+    temp->addRawChartPoint(point6);
     temp->hideBars();
 
     
