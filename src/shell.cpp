@@ -145,9 +145,20 @@ bool Shell::init(){
     std::pair<std::string, _STD_FUNCTION(void())> item5("Exit", _STD_BIND(&Shell::quit, this));
     menuList.push_back(item5);
     
+    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList;
+    std::pair<std::string, _STD_FUNCTION(void())> subItem1("Sub1", _STD_BIND(&Shell::doNothing, this));
+    std::pair<std::string, _STD_FUNCTION(void())> subItem2("Sub2", _STD_BIND(&Shell::doNothing, this));
+    subMenuList.push_back(subItem1);
+    subMenuList.push_back(subItem2);
+
+    _SharedPtr<ncursesMenu> subList(new ncursesMenu(subMenuList, "Sub", m_panels.at(2)->getChild()));
+    
     _SharedPtr<ncursesMenu> menuEngineering(new ncursesMenu(menuList, "ENG", m_panels.at(2)->getChild()));
     menuEngineering->showTitle(true);
     menuEngineering->highlightTitle(true);
+    menuEngineering->move(10,10);
+    menuEngineering->addSubMenu(subList, 2);
+    
     init_pair(1, COLOR_RED, COLOR_BLACK); // A default Background Color
     menuEngineering->setSelectedColor(COLOR_PAIR(1));
     menuEngineering->render();
@@ -210,6 +221,16 @@ bool Shell::init(){
                 
             case KEY_UP:
                 menuEngineering->selectPrev();
+                menuEngineering->render();
+                break;
+                
+            case KEY_LEFT:
+                menuEngineering->closeSubMenu();
+                menuEngineering->render();
+                break;
+                
+            case KEY_RIGHT:
+                menuEngineering->execute();
                 menuEngineering->render();
                 break;
                 

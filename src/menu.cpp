@@ -22,6 +22,7 @@ ncursesMenu::ncursesMenu(std::vector<std::pair<std::string, _STD_FUNCTION(void()
     m_menuSize = menuList.size();
     m_showTitle = true;
     m_highlightTitle = true;
+    m_subMenuOpen = 0;
     
     init_pair(1, COLOR_GREEN, COLOR_BLACK); // A default Background Color
     setBGColor(COLOR_BLACK);
@@ -85,8 +86,21 @@ void ncursesMenu::render(){
     
     int charCounter = 0;
     
+    for(size_t x = 0; x < m_subMenuList.size(); x++){
+        if(!m_subMenuList.at(x).first->getHidden()){
+            m_subMenuOpen = m_subMenuList.at(x).second;
+            m_subMenuList.at(x).first->render();
+        }
+    }
+    
     if(!m_hidden){
+        
+        // Parent Window!!
+        
+        
         if(m_parent){
+            
+            
             if(m_horizontal){
                 
                 for(size_t x = 0; x < m_menuList.size(); x++){
@@ -113,6 +127,8 @@ void ncursesMenu::render(){
                     
                 }
             }
+            
+            
             else{
                 wattrset(m_parent->get(), m_normalColor);
                 for(size_t x = 0; x < m_menuList.size()+1; x++){
@@ -141,7 +157,7 @@ void ncursesMenu::render(){
                         for(size_t line = 0; line < m_width; line++){
                             if(m_showTitle){
                                 if((line < (m_xpos + ((m_width)/2) - (m_name.length()/2))) || (line > (m_xpos + ((m_width)/2) + (m_name.length()/2))) ) {
-                                    mvwprintw(m_parent->get(), m_ypos, line, "%c", m_border->m_ts);
+                                    mvwprintw(m_parent->get(), m_ypos, line+m_xpos, "%c", m_border->m_ts);
                                 }
                             }
                             else{
@@ -194,45 +210,49 @@ void ncursesMenu::render(){
                         wattrset(m_parent->get(), m_normalColor);
                         if(m_showBorder){
                             for(size_t line = 0; line < m_width; line++){
-                                mvwprintw(m_parent->get(), m_ypos+m_height, line+1, "%c", m_border->m_bs);
+                                mvwprintw(m_parent->get(), m_ypos+m_height, line+1+m_xpos, "%c", m_border->m_bs);
                             }
                             mvwprintw(m_parent->get(), m_ypos+m_height, m_xpos, "%c", m_border->m_bl);
-                            mvwprintw(m_parent->get(), m_ypos+m_height, m_width, "%c", m_border->m_br);
+                            mvwprintw(m_parent->get(), m_ypos+m_height, m_xpos+m_width, "%c", m_border->m_br);
                         }
-                        
                     }
-                    
                 }
+                
+                
             }
         }
         
+        
+        
+        // No Parent Window!!!
+        
+        
         else{
+            ;
             
-            if(m_horizontal){
-                
-                for(size_t x = 0; x < m_menuList.size(); x++){
-                    
-                    mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter, "%s", m_menuList.at(x).first.c_str());
-                    
-                    if(m_showBorder){
-                        mvwprintw(m_parent->get(), m_ypos, m_width, "%c", m_border->m_bl);
-                        mvwprintw(m_parent->get(), m_ypos, m_width, "%c", m_border->m_br);
-                        for(size_t line = 0; line < m_width; line++){
-                            mvwprintw(m_parent->get(), m_ypos, line+1, "%c", m_border->m_bs);
-                        }
-                    }
-                }
-            }
         }
     }
-    
     
 }
 
 
 void ncursesMenu::execute(){
     
-    _STD_FUNCTION(void()) command = m_menuList.at(m_selected-1).second;
+    if(m_selected == 0){
+        return;
+    }
+    _STD_FUNCTION(void()) command;
+    
+    for(size_t x = 0; x < m_subMenuList.size(); x++){
+        if(m_subMenuList.at(x).second == m_selected-1){
+            m_subMenuList.at(x).first->toggleHide();
+            m_subMenuList.at(x).first->render();
+            m_subMenuOpen = 0;
+            m_subMenuControl = m_subMenuList.at(x).second;
+            return;
+        }
+    }
+    command = m_menuList.at(m_selected-1).second;
     command();
     
 }
@@ -251,6 +271,23 @@ int ncursesMenu::getCurrentItem(){
     
 }
 
+void ncursesMenu::addSubMenu(_SharedPtr<ncursesMenu> menu, int keyID){
+    
+    
+    std::pair<_SharedPtr<ncursesMenu>, int> item(menu, keyID-1);
+
+    for(size_t x = 0; x < m_subMenuList.size(); x++){
+        if(m_subMenuList.at(x).second == keyID-1){
+            m_subMenuList.erase(m_subMenuList.begin()+x);
+        }
+    }
+    menu->hide();
+    menu->move(m_ypos+keyID-1, m_xpos+m_width+1);
+    menu->setSubMenuStatus(true);
+    m_subMenuList.push_back(item);
+    
+}
+
 void ncursesMenu::toggleItem(int itemID){
     
     std::vector<int>::iterator it = std::find(m_selectedList.begin(), m_selectedList.end(), itemID);
@@ -265,6 +302,11 @@ void ncursesMenu::toggleItem(int itemID){
 
 void ncursesMenu::selectNext(){
     
+    if(m_subMenuOpen){
+        m_subMenuList.at(m_subMenuControl-1).first->selectNext();
+        return;
+    }
+    
     if(m_selected < m_menuSize){
         m_selected++;
     }
@@ -272,7 +314,12 @@ void ncursesMenu::selectNext(){
         m_selected = 1;
     }
 }
+
 void ncursesMenu::selectPrev(){
+    if(m_subMenuOpen){
+        m_subMenuList.at(m_subMenuControl-1).first->selectPrev();
+        return;
+    }
     if(m_selected > 1){
         m_selected--;
     }
@@ -280,11 +327,28 @@ void ncursesMenu::selectPrev(){
         m_selected = m_menuSize;
     }
 }
+
 void ncursesMenu::selectNone(){
     m_selected = 0;
 }
 
+void ncursesMenu::closeSubMenu(){
+    
+    if(m_subMenuOpen){
+        
+        m_subMenuList.at(m_subMenuControl-1).first->hide();
+        m_subMenuOpen = 0;
+        m_subMenuControl = 0;
+        wclear(m_parent->get());
+    }
+    
+}
+
 
 void ncursesMenu::close(){
+    
+    if(m_isSubMenu){
+        
+    }
     
 }
