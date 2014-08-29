@@ -72,27 +72,23 @@ void GraphChart::placePoint(_SharedPtr<GraphChartPoint> point){
         int pointY = point->m_Y;
         if(!point->m_hidden){
             for(int x = 0; x < m_width; x++){
-                for(int y = 0; y < m_height; y++){
-                    if( (y % m_ySize+1) && (x % m_xSize)){
-                        if(y != m_height-1 && x < m_width-1){
-                            
-                            if((x > m_xSize*pointX) && (x < (m_xSize*pointX)+m_xSize+1)){
-                                if((y > m_ySize*pointY) && (y < (m_ySize*pointY)+m_ySize+1)){
-                                    
-                                    if(m_showBorder){
-                                        if( y > 0){
-                                            wattrset(m_parent->get(), COLOR_PAIR(point->m_color));
-                                            mvwprintw(getParent()->get(), y, x,"%s", point->m_symbol.c_str());
-                                            wattrset(m_parent->get(), m_parent->getNormalColor());
-                                            
+                for(int x = 0; x < m_width; x++){
+                    for(int y = 0; y < m_height; y++){
+                        if( (y % m_ySize+1) && (x % m_xSize)){
+                            if(y != m_height-1 && x < m_width-1){
+                                
+                                if((x > m_xSize*pointX) && (x < (m_xSize*pointX)+m_xSize+1)){
+                                    if((y > m_ySize*pointY) && (y < (m_ySize*pointY)+m_ySize+1)){
+                                        if(m_showBorder){
+                                            if( y > 0){
+                                                wattrset(m_parent->get(), COLOR_PAIR(point->m_color));
+                                                mvwprintw(getParent()->get(), y, x,"%s", point->m_symbol.c_str());
+                                                wattrset(m_parent->get(), m_parent->getNormalColor());
+                                                wrefresh(getParent()->get());
+                                                
+                                            }
                                         }
                                     }
-                                }
-                                
-                                else{
-                                    wattrset(m_parent->get(), point->m_color);
-                                    mvwprintw(getParent()->get(), y, x,"%s", point->m_symbol.c_str());
-                                    wattrset(m_parent->get(), m_parent->getNormalColor());
                                 }
                             }
                         }
@@ -101,11 +97,12 @@ void GraphChart::placePoint(_SharedPtr<GraphChartPoint> point){
             }
         }
     }
-    
 }
 
 
+
 void GraphChart::placeAllPoints(){
+    
     
     for(size_t chartX = 0; chartX < m_chartPoints.size(); chartX++){
         
@@ -134,6 +131,7 @@ void GraphChart::placeAllPoints(){
                 }
             }
         }
+        
     }
 }
 
@@ -154,26 +152,33 @@ void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
                     if((x > m_xSize*pointX) && (x < (m_xSize*pointX)+m_xSize+1)){
                         if((y > m_ySize*pointY) && (y < (m_ySize*pointY)+m_ySize+1)){
                             
-                            mvwprintw(getParent()->get(), y, x,"%c", ' ');
+                            //mvwprintw(getParent()->get(), y, x,"%c", ' ');
                             
                             if(!m_showBars){
-                                if(y != m_height-1 && x < m_width-1){
+                                if(y == ((m_ySize*pointY)+m_ySize) || y < m_height-1)
                                     if( y > 0){
                                         mvwprintw(getParent()->get(), y, x,"%c", ' ');
                                     }
                                 }
                             }
-                            else{
-                                if(y == ((m_ySize*pointY)+m_ySize) || y == m_height-1)
+                            if(m_showBars){
+                                if(y == ((m_ySize*pointY)+m_ySize) || y < m_height-1)
                                     mvwprintw(getParent()->get(), y, x,"%c", '=');
-                                
+                            }
+                            if(m_showBorder){
+                                if( y == m_height-1)
+                                    mvwprintw(getParent()->get(), y, x,"%c", '=');
+                            }
+                            if(!m_showBorder){
+                                if( y == m_height-1)
+                                    mvwprintw(getParent()->get(), y, x,"%c", ' ');
                             }
                         }
                     }
                 }
             }
         }
-    }
+    
     wrefresh(getParent()->get());
 }
 
@@ -234,30 +239,34 @@ void GraphChart::handleKeys(int input){
 
 
 void GraphChart::randDirection(){
-    
-    int lottery = rand() % 1000000;
-    _SharedPtr<GraphChartPoint> point1 = m_chartPoints.at(0);
-    if(lottery > 999000){
+    int limit = 1000000;
+    int lottery = rand() % limit;
+    if(lottery > limit - m_chartPoints.size()*10000 ){
+        int number = rand() % m_chartPoints.size();
+        _SharedPtr<GraphChartPoint> point1 = m_chartPoints.at(number);
         if(point1){
+            
             int direction = rand() % 9 + 1;
+            
+            
             switch(direction){
                 case 1:
                     removePoint(point1);
                     if(point1->m_X > 0)
                         point1->m_X--;
-                    if(point1->m_Y < 11)
+                    if(point1->m_Y < m_rows-1)
                         point1->m_Y++;
                     break;
                 case 2:
                     removePoint(point1);
-                    if(point1->m_Y < 11)
+                    if(point1->m_Y < m_rows-1)
                         point1->m_Y++;
                     break;
                 case 3:
                     removePoint(point1);
-                    if(point1->m_X < 11)
+                    if(point1->m_X < m_cols)
                         point1->m_X++;
-                    if(point1->m_Y < 11)
+                    if(point1->m_Y < m_rows-1)
                         point1->m_Y++;
                     break;
                 case 4:
@@ -269,7 +278,7 @@ void GraphChart::randDirection(){
                     break;
                 case 6:
                     removePoint(point1);
-                    if(point1->m_X < 11)
+                    if(point1->m_X < m_cols)
                         point1->m_X++;
                     break;
                 case 7:
@@ -286,7 +295,7 @@ void GraphChart::randDirection(){
                     break;
                 case 9:
                     removePoint(point1);
-                    if(point1->m_X < 11)
+                    if(point1->m_X < m_cols)
                         point1->m_X++;
                     if(point1->m_Y > 0)
                         point1->m_Y--;

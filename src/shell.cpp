@@ -201,15 +201,29 @@ void Shell::populatePanels(){
     
     m_panels.at(1)->setName("Navigation");
     
-    graphController = _SharedPtr<GraphChart>(new GraphChart(m_windows.at(1), 6, 3));
+    graphController = _SharedPtr<GraphChart>(new GraphChart(m_windows.at(1), 3, 2));
     m_windows.at(1)->addWidget(graphController);
     graphController->setParent(m_windows.at(1));
     
     init_pair(3, COLOR_RED, COLOR_BLACK); // A default Background Color
-    point1 = _SharedPtr<GraphChartPoint>(new GraphChartPoint(5,8,3,"*"));
-    
+    _SharedPtr<GraphChartPoint> point1(new GraphChartPoint(5,8,3,"*"));
+    init_pair(8, COLOR_BLUE, COLOR_BLACK); // A default Background Color
+    _SharedPtr<GraphChartPoint> point2(new GraphChartPoint(2,9,8,"*"));
+    init_pair(9, COLOR_YELLOW, COLOR_BLACK); // A default Background Color
+    _SharedPtr<GraphChartPoint> point3(new GraphChartPoint(0,2,9,"*"));
+    init_pair(10, COLOR_WHITE, COLOR_BLACK); // A default Background Color
+    _SharedPtr<GraphChartPoint> point4(new GraphChartPoint(1,3,10,"*"));
+    init_pair(11, COLOR_CYAN, COLOR_BLACK); // A default Background Color
+    _SharedPtr<GraphChartPoint> point5(new GraphChartPoint(8,1,11,"*"));
+
     _SharedPtr<GraphChart> temp = std::dynamic_pointer_cast<GraphChart>(graphController);
     temp->addChartPoint(point1);
+    temp->addChartPoint(point2);
+    temp->addChartPoint(point3);
+    temp->addChartPoint(point4);
+    temp->addChartPoint(point5);
+    temp->hideBars();
+
     
     
     m_panels.at(2)->setName("Engineering");
