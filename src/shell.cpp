@@ -79,10 +79,13 @@ bool Shell::init(){
 	{
         refresh();
         doupdate();
+        if(checkForResize()){
+            m_topPanel->getChild()->clearScreen();
+        }
         
         if((c = getch()) == ERR){
-            mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
             m_topPanel->getChild()->render();
+            //mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
         }
         else{
             switch(c)
@@ -93,7 +96,6 @@ bool Shell::init(){
                     wclear(m_topPanel->getChild()->get());
                     mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
                     m_topPanel->getChild()->render();
-                    //graphController.fill();
                     break;
                     
                 case KEY_F(2):
@@ -111,16 +113,17 @@ bool Shell::init(){
                     // This is the TAB key
                 case 9:
                     m_topPanel->getChild()->closeAllMenus();
+                    m_topPanel->getChild()->clearScreen();
                     m_topPanel = m_topPanel->getNext();
                     m_topPanel->getChild()->clearScreen();
-                    mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
+                    //mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
                     m_topPanel->getChild()->render();
                     break;
                     
                 default:
-                    m_topPanel->getChild()->clearScreen();
+                    //m_topPanel->getChild()->clearScreen();
                     m_topPanel->getChild()->handleKeys(c);
-                    mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
+                    //mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
                     m_topPanel->getChild()->render();
                     break;
                     
@@ -130,6 +133,22 @@ bool Shell::init(){
     
     wrefresh(m_mainWindow->get());
     return true;
+}
+
+
+bool Shell::checkForResize(){
+    
+    int newRows, newCols;
+    
+    getmaxyx(stdscr, newRows, newCols);
+
+    if(newRows != m_rows || newCols != m_cols){
+        m_rows = newRows;
+        m_cols = newCols;
+        return true;
+    }
+    else
+        return false;
 }
 
 
@@ -181,7 +200,10 @@ void Shell::populatePanels(){
     top_panel(m_topPanel->getPanel());
     
     m_panels.at(1)->setName("Navigation");
-    GraphChart graphController(m_windows.at(1));
+    
+    graphController = _SharedPtr<GraphChart>(new GraphChart(m_windows.at(1)));
+    m_windows.at(1)->addWidget(graphController);
+    graphController->setParent(m_windows.at(1));
     
     
     m_panels.at(2)->setName("Engineering");

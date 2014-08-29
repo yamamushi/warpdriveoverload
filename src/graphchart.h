@@ -14,20 +14,20 @@
 #include "shell.h"
 #include "window.h"
 #include "tr1_wrapper.h"
+#include "widget.h"
 
-class GraphChart {
+class GraphChart : public Widget {
     
 public:
     
-    GraphChart(_SharedPtr<ncursesWindow> parent) : m_parent(parent){};
+    GraphChart(_SharedPtr<ncursesWindow> parent) : Widget(parent){};
     
-    _SharedPtr<ncursesWindow> getParent(){return m_parent;}
+    void render();
     
     void fill();
     
 private:
     
-    _SharedPtr<ncursesWindow> m_parent;
     
 };
 

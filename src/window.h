@@ -14,6 +14,7 @@
 #include <vector>
 #include "menu.h"
 #include "tr1_wrapper.h"
+#include "widget.h"
 
 class ncursesMenu;
 
@@ -32,6 +33,9 @@ public:
     void close();
     
     void addMenu(_SharedPtr<ncursesMenu> target){m_menuList.push_back(target);}
+    void addWidget(_SharedPtr<Widget> target);
+    void removeWidget(_SharedPtr<Widget> target);
+
     
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
     _SharedPtr<winBorder> getBorder(){return m_border;}
@@ -54,6 +58,8 @@ private:
     
     std::vector<_SharedPtr<ncursesMenu>> m_menuList;
     std::vector<_SharedPtr<ncursesWindow>> m_windowList;
+    std::vector<_SharedPtr<Widget>> m_widgetList;
+
     
     _SharedPtr<winBorder> m_border;
 };

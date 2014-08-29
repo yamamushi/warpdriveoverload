@@ -8,6 +8,7 @@
 
 #include "window.h"
 #include "tr1_threading.h"
+#include "tr1_wrapper.h"
 #include <iostream>
 
 ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : m_height(height), m_length(length), m_ypos(ypos), m_xpos(xpos)
@@ -93,6 +94,10 @@ void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char 
 
 void ncursesWindow::render(){
     
+    for(size_t x = 0; x < m_widgetList.size(); x++){
+        m_widgetList.at(x)->render();
+    }
+    
     for(size_t x = 0; x < m_menuList.size(); x++){
         m_menuList.at(x)->render();
     }
@@ -102,13 +107,33 @@ void ncursesWindow::render(){
 }
 
 
+
 void ncursesWindow::handleKeys(int input){
     
+    for(size_t x = 0; x < m_menuList.size(); x++){
+        m_menuList.at(x)->handleKeys(input);
+    }
     
-            for(size_t x = 0; x < m_menuList.size(); x++){
-                m_menuList.at(x)->handleKeys(input);
-            }
-            
+}
+
+
+
+
+void ncursesWindow::addWidget(_SharedPtr<Widget> target){
+    
+    removeWidget(target);
+    m_widgetList.push_back(target);
+    
+}
+
+
+void ncursesWindow::removeWidget(_SharedPtr<Widget> target){
+    
+    std::vector<_SharedPtr<Widget> >::iterator it = std::find(m_widgetList.begin(), m_widgetList.end(), target);
+    if (it != m_widgetList.end()){
+        m_widgetList.erase(std::remove(m_widgetList.begin(), m_widgetList.end(), target), m_widgetList.end());
+    }
     
     
 }
+

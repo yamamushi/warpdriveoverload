@@ -22,6 +22,7 @@
 #include "tr1_wrapper.h"
 #include "window.h"
 #include "ncursespanel.h"
+#include "widget.h"
 
 #include <string>
 #include <ncurses.h>
@@ -64,6 +65,8 @@ private:
     void close_win(_SharedPtr<ncursesWindow> target_window);
     void organizePanels();
     
+    bool checkForResize();
+    
     _SharedPtr<Nostradamus> m_parent;
     
     bool m_running;
@@ -79,6 +82,9 @@ private:
 
     void doNothing(){};
     void printDebug();
+    
+    
+    _SharedPtr<Widget> graphController;
 };
 
 

@@ -13,28 +13,32 @@
 void GraphChart::fill(){
     
     int height, width;
-    getmaxyx(m_parent->get(), height, width);
-    
-    wclear(m_parent->get());
+    getmaxyx(getParent()->get(), height, width);
     
     for(int x = 0; x < width; x++){
         for(int y = 0; y < height; y++){
             if(!(x % 4)){
-                mvwprintw(m_parent->get(), y, x,"%c", '|');
-                m_parent->setborder('|', '|', '=', '=', '+', '+', '+', '+');
-                wrefresh(m_parent->get());
+                mvwprintw(getParent()->get(), y, x,"%c", '|');
+                getParent()->setborder('|', '|', '=', '=', '+', '+', '+', '+');
+                wrefresh(getParent()->get());
 
             }
             else if(!(y% 2) && y != height-2){
-                mvwprintw(m_parent->get(), y, x,"%c", '_');
-                m_parent->setborder('|', '|', '=', '=', '+', '+', '+', '+');
-                wrefresh(m_parent->get());
+                mvwprintw(getParent()->get(), y, x,"%c", '_');
+                getParent()->setborder('|', '|', '=', '=', '+', '+', '+', '+');
+                wrefresh(getParent()->get());
 
             }
         }
     }
     
-    wrefresh(m_parent->get());
-
+    wrefresh(getParent()->get());
     
+}
+
+
+void GraphChart::render(){
+
+    fill();
+
 }
