@@ -12,6 +12,7 @@
 ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos){
     
     m_window = newwin(height, length, ypos, xpos);
+    m_border = _SharedPtr<winBorder>(new winBorder);
     setborder('|', '|', '=', '=', '+', '+', '+', '+');
     
     
@@ -48,6 +49,15 @@ void ncursesWindow::close(){
 
 void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br){
 
+    m_border->m_ls = ls;
+    m_border->m_rs = rs;
+    m_border->m_ts = ts;
+    m_border->m_bs = bs;
+    m_border->m_tl = tl;
+    m_border->m_tr = tr;
+    m_border->m_bl = bl;
+    m_border->m_br = br;
+    
     wborder(m_window, ls, rs, ts, bs, tl, tr, bl, br);
 
 }

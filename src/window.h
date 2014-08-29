@@ -1,3 +1,4 @@
+#
 //
 //  window.h
 //  warpdriveoverloaded
@@ -16,6 +17,12 @@
 
 class ncursesMenu;
 
+struct winBorder {
+    
+    char m_ls, m_rs, m_ts, m_bs, m_tl, m_tr, m_bl, m_br;
+
+};
+
 class ncursesWindow {
     
 public:
@@ -27,13 +34,14 @@ public:
     void addMenu(_SharedPtr<ncursesMenu> target){m_menuList.push_back(target);}
     
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
+    _SharedPtr<winBorder> getBorder(){return m_border;}
     
 private:
     
     WINDOW *m_window;
     std::vector<_SharedPtr<ncursesMenu>> m_menuList;
     
-    
+    _SharedPtr<winBorder> m_border;
 };
 
 

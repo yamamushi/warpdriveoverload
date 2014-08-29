@@ -138,13 +138,18 @@ bool Shell::init(){
     menuList.push_back("Exit");
     
     _SharedPtr<ncursesMenu> menuEngineering(new ncursesMenu(menuList, "ENG", m_panels.at(2)->getChild()));
+    menuEngineering->showTitle(true);
+    menuEngineering->highlightTitle(true);
+    init_pair(1, COLOR_RED, COLOR_BLACK); // A default Background Color
+    menuEngineering->setSelectedColor(COLOR_PAIR(1));
     menuEngineering->render();
     _SharedPtr<ncursesMenu> menuMain(new ncursesMenu(menuList, "MAIN", m_panels.at(0)->getChild(), true));
     menuMain->hide();
     menuMain->render();
     
     int c;
-    while(1)
+    bool m_run = true;
+    while(m_run)
 	{
         wrefresh(top->getChild()->get());
         refresh();
@@ -158,6 +163,7 @@ bool Shell::init(){
                 wclear(top->getChild()->get());
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
                 break;
+                
             case 'n':
                 top = m_panels.at(1);
                 wclear(top->getChild()->get());
@@ -165,6 +171,7 @@ bool Shell::init(){
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
                 top_panel(m_panels.at(1)->getPanel());
                 break;
+                
             case 'e':
                 top = m_panels.at(2);
                 wclear(top->getChild()->get());
@@ -172,6 +179,7 @@ bool Shell::init(){
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
                 top_panel(m_panels.at(2)->getPanel());
                 break;
+                
             case 'm':
                 top = m_panels.at(0);
                 wclear(top->getChild()->get());
@@ -179,16 +187,35 @@ bool Shell::init(){
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
                 top_panel(m_panels.at(0)->getPanel());
                 break;
+                
             case 9:
                 top = top->getNext();
                 wclear(top->getChild()->get());
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
                 top_panel(top->getPanel());
-
 				break;
                 
+            case KEY_DOWN:
+                menuEngineering->selectNext();
+                menuEngineering->render();
+                break;
+                
+            case KEY_UP:
+                menuEngineering->selectPrev();
+                menuEngineering->render();
+                break;
+                
             case KEY_ESC:  // quit
-                return 0;
+                m_run = false;
+                break;
+                
+            case 't':
+                top = m_panels.at(2);
+                wclear(top->getChild()->get());
+                menuEngineering->toggleItem(menuEngineering->getCurrentItem());
+                menuEngineering->render();
+                mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
+                top_panel(m_panels.at(2)->getPanel());
                 break;
 
 		}
