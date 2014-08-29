@@ -45,26 +45,10 @@
 #define _STD_FUNCTION(FUNC_TYPE) std::function< FUNC_TYPE >
 #define _STD_BIND std::bind
 
-#else
-#include <boost/chrono.hpp>
-#include <boost/thread.hpp>
-#include <boost/atomic.hpp>
-#include <boost/thread/mutex.hpp>
-#include <tr1/functional>
-#define _THREAD boost::thread
-#define _MUTEX(MT) boost::mutex MT
-#define INSTANTIATE_MLOCK(MT) boost::unique_lock<boost::mutex>mlock(MT)
-#define CONDITION_VARIABLE(VAR) boost::condition_variable VAR
-#define _ATOMIC(THE_ATOM) boost::atomic<bool> THE_ATOM
-#define _ATOMIC_TRUE 1
-#define _ATOMIC_FALSE 0
-#define _ATOMIC_ISTRUE(THE_VAL) (true == THE_VAL)
-#define _ATOMIC_ISFALSE(THE_VAL) (false == THE_VAL)
-#define _STD_FUNCTION(FUNC_TYPE) std::tr1::function< FUNC_TYPE >
-#define _STD_BIND std::tr1::bind
+#endif
+#endif
+
 #ifndef nullptr
 #define nullptr NULL
-#endif
-#endif
 #endif
 
