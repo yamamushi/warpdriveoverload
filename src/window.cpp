@@ -48,6 +48,12 @@ void ncursesWindow::close(){
     }
 }
 
+void ncursesWindow::clearScreen(){
+    
+    wclear(get());
+
+}
+
 void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br){
 
     m_border->m_ls = ls;
@@ -61,4 +67,25 @@ void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char 
     
     wborder(m_window, ls, rs, ts, bs, tl, tr, bl, br);
 
+}
+
+
+void ncursesWindow::render(){
+    
+    for(size_t x = 0; x < m_menuList.size(); x++){
+        m_menuList.at(x)->render();
+    }
+
+}
+
+
+void ncursesWindow::handleKeys(int input){
+    
+    
+            for(size_t x = 0; x < m_menuList.size(); x++){
+                m_menuList.at(x)->handleKeys(input);
+            }
+            
+    
+    
 }

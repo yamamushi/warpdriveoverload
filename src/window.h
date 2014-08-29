@@ -36,6 +36,11 @@ public:
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
     _SharedPtr<winBorder> getBorder(){return m_border;}
     
+    void render();
+    
+    void handleKeys(int input);
+    void clearScreen();
+    
 private:
     
     WINDOW *m_window;

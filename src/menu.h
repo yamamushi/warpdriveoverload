@@ -72,8 +72,11 @@ public:
     
     void resize();
     void closeSubMenu();
+    void toggleSubMenu();
     
     void execute();
+    
+    void handleKeys(int input);
     
     void close();
     
@@ -110,7 +113,7 @@ private:
     bool m_isSubMenu;
 
     
-    int m_subMenuOpen;
+    bool m_subMenuOpen;
     int m_subMenuControl;
     
     menuAlignment m_alignment;

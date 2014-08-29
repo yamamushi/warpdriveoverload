@@ -158,7 +158,7 @@ void ncursesMenu::render(){
                         
                     }
                     
-
+                    
                     
                     if(x == m_selected-1){
                         wattrset(m_parent->get(), m_cursorColor);
@@ -191,7 +191,7 @@ void ncursesMenu::render(){
                     for(size_t line = 0; line < m_width; line++){
                         mvwprintw(m_parent->get(), m_ypos, line, "%c", m_border->m_ts);
                         mvwprintw(m_parent->get(), m_ypos+2, line, "%c", m_border->m_bs);
-
+                        
                     }
                     
                     mvwprintw(m_parent->get(), m_ypos, m_xpos, "%c", m_border->m_tl);
@@ -322,15 +322,18 @@ void ncursesMenu::execute(){
     }
     _STD_FUNCTION(void()) command;
     
+    if(m_subMenuOpen){
+        m_subMenuList.at(m_subMenuControl-1).first->execute();
+        return;
+    }
+    
     for(size_t x = 0; x < m_subMenuList.size(); x++){
         if(m_subMenuList.at(x).second == m_selected-1){
-            m_subMenuList.at(x).first->toggleHide();
-            m_subMenuList.at(x).first->render();
-            m_subMenuOpen = 0;
-            m_subMenuControl = m_subMenuList.at(x).second;
+            toggleSubMenu();
             return;
         }
     }
+    
     command = m_menuList.at(m_selected-1).second;
     command();
     
@@ -361,10 +364,43 @@ void ncursesMenu::addSubMenu(_SharedPtr<ncursesMenu> menu, int keyID){
         }
     }
     menu->hide();
-    menu->move(m_ypos+keyID-1, m_xpos+m_width+1);
+    if(m_horizontal){
+        int correction = 0;
+        if(m_showTitle){
+            correction += m_name.length()+1;
+        }
+        for(size_t x = 0; x < m_menuList.size(); x++){
+            if(x < keyID-1){
+                correction += m_menuList.at(x).first.length();
+            }
+        }
+        
+        menu->move(m_ypos+2, m_xpos+correction+keyID);
+    }
+    else{
+        menu->move(m_ypos+keyID-1, m_xpos+m_width+1);
+    }
     menu->setSubMenuStatus(true);
     m_subMenuList.push_back(item);
     
+}
+
+void ncursesMenu::toggleSubMenu(){
+    
+    for(size_t x = 0; x < m_subMenuList.size(); x++){
+        if(m_subMenuList.at(x).second == m_selected-1){
+            
+            m_subMenuList.at(x).first->toggleHide();
+            
+            if(!m_subMenuList.at(x).first->getHidden())
+                m_subMenuList.at(x).first->render();
+            
+            m_subMenuOpen = !m_subMenuOpen;
+            m_subMenuControl = m_subMenuList.at(x).second;
+            
+            return;
+        }
+    }
 }
 
 void ncursesMenu::toggleItem(int itemID){
@@ -416,9 +452,78 @@ void ncursesMenu::closeSubMenu(){
     if(m_subMenuOpen){
         
         m_subMenuList.at(m_subMenuControl-1).first->hide();
-        m_subMenuOpen = 0;
+        m_subMenuOpen = false;
         m_subMenuControl = 0;
         wclear(m_parent->get());
+    }
+    
+}
+
+
+void ncursesMenu::handleKeys(int input){
+    
+    if(!m_horizontal){
+        switch(input){
+            case KEY_DOWN:
+                selectNext();
+                break;
+                
+            case KEY_UP:
+                selectPrev();
+                break;
+                
+            case KEY_LEFT:
+                closeSubMenu();
+                break;
+                
+            case KEY_RIGHT:
+                execute();
+                break;
+            case '\n':
+                execute();
+        }
+    }
+    else if(m_horizontal && m_subMenuOpen){
+        switch(input){
+            case KEY_DOWN:
+                selectNext();
+                break;
+                
+            case KEY_UP:
+                selectPrev();
+                break;
+                
+            case KEY_LEFT:
+                closeSubMenu();
+                break;
+                
+            case KEY_RIGHT:
+                execute();
+                break;
+            case '\n':
+                execute();
+        }
+    }
+    else{
+        switch(input){
+            case KEY_DOWN:
+                execute();
+                break;
+                
+            case KEY_UP:
+                closeSubMenu();
+                break;
+                
+            case KEY_LEFT:
+                selectPrev();
+                break;
+                
+            case KEY_RIGHT:
+                selectNext();
+                break;
+            case '\n':
+                execute();
+        }
     }
     
 }

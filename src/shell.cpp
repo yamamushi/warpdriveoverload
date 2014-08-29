@@ -163,8 +163,28 @@ bool Shell::init(){
     menuEngineering->setSelectedColor(COLOR_PAIR(1));
     menuEngineering->render();
     _SharedPtr<ncursesMenu> menuMain(new ncursesMenu(menuList, "MAIN", m_panels.at(0)->getChild(), true));
-//    menuMain->hide();
     menuMain->render();
+    
+    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList2;
+    std::pair<std::string, _STD_FUNCTION(void())> subItem3("Sub1", _STD_BIND(&Shell::doNothing, this));
+    std::pair<std::string, _STD_FUNCTION(void())> subItem4("Sub2", _STD_BIND(&Shell::doNothing, this));
+    subMenuList2.push_back(subItem3);
+    subMenuList2.push_back(subItem4);
+    _SharedPtr<ncursesMenu> subList2(new ncursesMenu(subMenuList2, "Sub", m_panels.at(0)->getChild()));
+    menuMain->addSubMenu(subList2, 2);
+    
+    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList3;
+    std::pair<std::string, _STD_FUNCTION(void())> subItem5("Sub1", _STD_BIND(&Shell::doNothing, this));
+    std::pair<std::string, _STD_FUNCTION(void())> subItem6("Sub2", _STD_BIND(&Shell::doNothing, this));
+    subMenuList3.push_back(subItem5);
+    subMenuList3.push_back(subItem6);
+    _SharedPtr<ncursesMenu> subList3(new ncursesMenu(subMenuList3, "Sub", m_panels.at(0)->getChild()));
+    menuMain->addSubMenu(subList3, 3);
+
+
+    m_panels.at(0)->getChild()->addMenu(menuMain);
+    m_panels.at(2)->getChild()->addMenu(menuEngineering);
+
     
     int c;
     
@@ -178,83 +198,43 @@ bool Shell::init(){
         c = getch();//wgetch(m_mainWindow->get());
 		switch(c)
 		{
-            case 'a':
-                wclear(top->getChild()->get());
-                mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
-                break;
-                
-            case 'n':
+
+            case KEY_F(1):
                 top = m_panels.at(1);
                 wclear(top->getChild()->get());
-                graphController.fill();
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
+                top->getChild()->render();
+                graphController.fill();
                 top_panel(m_panels.at(1)->getPanel());
                 break;
                 
-            case 'e':
+            case KEY_F(2):
                 top = m_panels.at(2);
-                wclear(top->getChild()->get());
-                menuEngineering->render();
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
+                top->getChild()->render();
                 top_panel(m_panels.at(2)->getPanel());
                 break;
                 
-            case 'm':
+            case KEY_F(3):
                 top = m_panels.at(0);
                 wclear(top->getChild()->get());
                 menuMain->render();
-                mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
                 top_panel(m_panels.at(0)->getPanel());
                 break;
                 
+                // This is the TAB key
             case 9:
+                top->getChild()->clearScreen();
+                top->getChild()->render();
                 top = top->getNext();
-                wclear(top->getChild()->get());
                 mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
                 top_panel(top->getPanel());
 				break;
-                
-            case KEY_DOWN:
-                menuEngineering->selectNext();
-                menuEngineering->render();
-                menuMain->selectNext();
-                menuMain->render();
-                break;
-                
-            case KEY_UP:
-                menuEngineering->selectPrev();
-                menuEngineering->render();
-                menuMain->selectPrev();
-                menuMain->render();
-                break;
-                
-            case KEY_LEFT:
-                menuEngineering->closeSubMenu();
-                menuEngineering->render();
-                break;
-                
-            case KEY_RIGHT:
-                menuEngineering->execute();
-                menuEngineering->render();
-                break;
-                
-            case KEY_ESC:  // quit
-                m_running = false;
-                break;
-                
-            case '\n':  // quit
-                wclear(top->getChild()->get());
-                menuEngineering->execute();
-                menuEngineering->render();
-                break;
-                
-            case 't':
-                top = m_panels.at(2);
-                wclear(top->getChild()->get());
-                menuEngineering->toggleItem(menuEngineering->getCurrentItem());
-                menuEngineering->render();
-                mvwprintw(top->getChild()->get(), 1, (m_cols - top->getName().size())/2, "%s", top->getName().c_str());
-                top_panel(m_panels.at(2)->getPanel());
+
+            default:
+                top->getChild()->clearScreen();
+                top->getChild()->handleKeys(c);
+                top->getChild()->render();
                 break;
 
 		}
