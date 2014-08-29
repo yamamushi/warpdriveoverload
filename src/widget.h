@@ -24,8 +24,10 @@ public:
     _SharedPtr<ncursesWindow> getParent(){return m_parent;}
     
     virtual void render(){};
+    virtual void refresh(){};
+    virtual void handleKeys(int input){};
     
-private:
+protected:
     
     _SharedPtr<ncursesWindow> m_parent;
 

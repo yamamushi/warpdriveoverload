@@ -41,6 +41,7 @@ public:
     _SharedPtr<winBorder> getBorder(){return m_border;}
     
     void render();
+    void refresh();
     
     void handleKeys(int input);
     void clearScreen();
@@ -50,6 +51,24 @@ public:
     void move(int newX, int newY);
     void resize(int height, int length, int ypos, int xpos);
     
+    void setBGColor(int color){m_bgColor = color;}
+    int getBGColor(){return m_bgColor;}
+    
+    void setNormalColor(int color){m_normalColor = COLOR_PAIR(color);}
+    int getNormalColor(){return m_normalColor;}
+    
+    void setFGColor(int color){m_fgColor = COLOR_PAIR(color);}
+    int getFGColor(){return m_fgColor;}
+    
+    void setSelectedColor(int color){m_selectedColor = COLOR_PAIR(color);}
+    int getSelectedColor(){return m_selectedColor;}
+    
+    void setCursorColor(int color){m_cursorColor = COLOR_PAIR(color);}
+    int getCursorColor(){return m_cursorColor;}
+    
+    void setBorderColor(int color){m_borderColor = COLOR_PAIR(color);}
+    int getBorderColor(){return m_borderColor;}
+
 private:
     
     int m_height, m_length, m_ypos, m_xpos;
@@ -59,9 +78,17 @@ private:
     std::vector<_SharedPtr<ncursesMenu>> m_menuList;
     std::vector<_SharedPtr<ncursesWindow>> m_windowList;
     std::vector<_SharedPtr<Widget>> m_widgetList;
-
     
+    
+    int m_bgColor;
+    int m_fgColor;
+    int m_selectedColor;
+    int m_cursorColor;
+    int m_normalColor;
+    int m_borderColor;
+
     _SharedPtr<winBorder> m_border;
+    int m_color;
 };
 
 

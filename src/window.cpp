@@ -19,6 +19,20 @@ ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : m_hei
     setborder('|', '|', '=', '=', '+', '+', '+', '+');
     
     
+    init_pair(1, COLOR_GREEN, COLOR_BLACK); // A default Background Color
+    setBGColor(COLOR_BLACK);
+    setFGColor(COLOR_GREEN);
+    setNormalColor(1);
+    
+    init_pair(2, COLOR_BLUE, COLOR_BLACK); // A default Background Color
+    setCursorColor(2);
+    
+    init_pair(3, COLOR_RED, COLOR_BLACK); // A default Background Color
+    setSelectedColor(3);
+    
+    init_pair(4, COLOR_RED, COLOR_BLACK); // A default Background Color
+    setBorderColor(4);
+    
 }
 
 
@@ -106,12 +120,24 @@ void ncursesWindow::render(){
     
 }
 
+void ncursesWindow::refresh(){
+    
+    clearScreen();
 
+    for(size_t x = 0; x < m_widgetList.size(); x++){
+        m_widgetList.at(x)->refresh();
+    }
+    
+}
 
 void ncursesWindow::handleKeys(int input){
     
     for(size_t x = 0; x < m_menuList.size(); x++){
         m_menuList.at(x)->handleKeys(input);
+    }
+    
+    for(size_t x = 0; x < m_widgetList.size(); x++){
+        m_widgetList.at(x)->handleKeys(input);
     }
     
 }

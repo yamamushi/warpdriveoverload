@@ -36,6 +36,10 @@ void Shell::refreshShell(){
         m_windows.at(x)->resize(m_rows, m_cols, 0, 0);
     }
     
+    if(m_topPanel){
+        m_topPanel->getChild()->clearScreen();
+        m_topPanel->getChild()->refresh();
+    }
 }
 
 bool Shell::init(){
@@ -72,6 +76,7 @@ bool Shell::init(){
     int c;
     
     m_topPanel->getChild()->clearScreen();
+    m_topPanel->getChild()->refresh();
     m_topPanel->getChild()->render();
     
     
@@ -81,10 +86,12 @@ bool Shell::init(){
         doupdate();
         if(checkForResize()){
             m_topPanel->getChild()->clearScreen();
+            m_topPanel->getChild()->refresh();
         }
         
         if((c = getch()) == ERR){
             m_topPanel->getChild()->render();
+
             //mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
         }
         else{
@@ -95,36 +102,28 @@ bool Shell::init(){
                     m_topPanel = m_panels.at(1);
                     wclear(m_topPanel->getChild()->get());
                     mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
-                    m_topPanel->getChild()->render();
                     break;
                     
                 case KEY_F(2):
                     m_topPanel = m_panels.at(2);
                     mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
-                    m_topPanel->getChild()->render();
                     break;
                     
                 case KEY_F(3):
                     m_topPanel = m_panels.at(0);
                     wclear(m_topPanel->getChild()->get());
-                    m_topPanel->getChild()->render();
                     break;
                     
-                    // This is the TAB key
-                case 9:
+                case KEY_TAB: // This is defined in asciicodes.h
                     m_topPanel->getChild()->closeAllMenus();
                     m_topPanel->getChild()->clearScreen();
                     m_topPanel = m_topPanel->getNext();
                     m_topPanel->getChild()->clearScreen();
-                    //mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
-                    m_topPanel->getChild()->render();
+                    m_topPanel->getChild()->refresh();
                     break;
                     
                 default:
-                    //m_topPanel->getChild()->clearScreen();
                     m_topPanel->getChild()->handleKeys(c);
-                    //mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
-                    m_topPanel->getChild()->render();
                     break;
                     
             }
@@ -201,9 +200,15 @@ void Shell::populatePanels(){
     
     m_panels.at(1)->setName("Navigation");
     
-    graphController = _SharedPtr<GraphChart>(new GraphChart(m_windows.at(1)));
+    graphController = _SharedPtr<GraphChart>(new GraphChart(m_windows.at(1), 6, 3));
     m_windows.at(1)->addWidget(graphController);
     graphController->setParent(m_windows.at(1));
+    
+    init_pair(3, COLOR_RED, COLOR_BLACK); // A default Background Color
+    _SharedPtr<GraphChartPoint> point1(new GraphChartPoint(5,8,3,"*"));
+    
+    _SharedPtr<GraphChart> temp = std::dynamic_pointer_cast<GraphChart>(graphController);
+    temp->addChartPoint(point1);
     
     
     m_panels.at(2)->setName("Engineering");
