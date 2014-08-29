@@ -41,10 +41,19 @@ public:
     void handleKeys(int input);
     void clearScreen();
     
+    void closeAllMenus();
+    
+    void move(int newX, int newY);
+    void resize(int height, int length, int ypos, int xpos);
+    
 private:
     
+    int m_height, m_length, m_ypos, m_xpos;
+    
     WINDOW *m_window;
+    
     std::vector<_SharedPtr<ncursesMenu>> m_menuList;
+    std::vector<_SharedPtr<ncursesWindow>> m_windowList;
     
     _SharedPtr<winBorder> m_border;
 };

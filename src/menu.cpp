@@ -397,6 +397,9 @@ void ncursesMenu::toggleSubMenu(){
             
             m_subMenuOpen = !m_subMenuOpen;
             m_subMenuControl = m_subMenuList.at(x).second;
+            if(m_subMenuOpen){
+                m_subMenuList.at(x).first->selectNext();
+            }
             
             return;
         }

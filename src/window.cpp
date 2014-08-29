@@ -10,7 +10,8 @@
 #include "tr1_threading.h"
 #include <iostream>
 
-ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos){
+ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : m_height(height), m_length(length), m_ypos(ypos), m_xpos(xpos)
+{
     
     m_window = newwin(height, length, ypos, xpos);
     m_border = _SharedPtr<winBorder>(new winBorder);
@@ -19,6 +20,18 @@ ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos){
     
 }
 
+
+void ncursesWindow::resize(int height, int length, int ypos, int xpos){
+
+    m_height = height;
+    m_length = length;
+    m_ypos = ypos;
+    m_xpos = xpos;
+    delwin(m_window);
+    
+    m_window = newwin(height, length, ypos, xpos);
+
+}
 
 void ncursesWindow::close(){
     
@@ -48,6 +61,14 @@ void ncursesWindow::close(){
     }
 }
 
+void ncursesWindow::closeAllMenus(){
+    
+    for(size_t x = 0; x < m_menuList.size(); x++){
+        m_menuList.at(x)->closeSubMenu();
+    }
+    
+}
+
 void ncursesWindow::clearScreen(){
     
     wclear(get());
@@ -75,7 +96,9 @@ void ncursesWindow::render(){
     for(size_t x = 0; x < m_menuList.size(); x++){
         m_menuList.at(x)->render();
     }
-
+    
+    wrefresh(m_window);
+    
 }
 
 
