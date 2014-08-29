@@ -9,7 +9,6 @@ add_executable(client main.cpp
 			player.cpp
 			room.cpp
             sqlite.cpp
-            logger.cpp
             shell.cpp
             game_engine.cpp
             term_control.cpp
@@ -19,4 +18,4 @@ add_executable(client main.cpp
             ncursespanel.cpp
             )
 
-set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lboost_thread-mt -ltermcap -lpanel -lncurses")
+set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lpanel -lncurses")

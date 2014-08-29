@@ -22,6 +22,8 @@
 #include "tr1_wrapper.h"
 #include "window.h"
 #include "ncursespanel.h"
+#include "widget.h"
+#include "graphchart.h"
 
 #include <string>
 #include <ncurses.h>
@@ -30,7 +32,10 @@
 #include <vector>
 #include <panel.h>
 
+struct GraphChartPoint;
+
 class ncursesPanel;
+
 
 class Shell {
     
@@ -41,22 +46,31 @@ public:
     bool running(){return m_running;}
     void boot();
     
-    
+    void refreshShell();
+
     void panelRefresh(){update_panels();}
     
 private:
     
     
     bool init();
+    void populatePanels();
     void shutdown();
     
+    void quit();
+    
     void createWindow(int ysize, int xsize);
+    void addToWindowList(_SharedPtr<ncursesWindow> target);
+    
+    void removeFromWindowList(_SharedPtr<ncursesWindow> target);
+    void removeFromPanelList(_SharedPtr<ncursesPanel> target);
     
     void addToPanelList(_SharedPtr<ncursesWindow> targetWindow);
     void close_win(_SharedPtr<ncursesWindow> target_window);
+    void organizePanels();
     
+    bool checkForResize();
     
-    void SetStdinEcho(bool enable = true);
     _SharedPtr<Nostradamus> m_parent;
     
     bool m_running;
@@ -65,10 +79,15 @@ private:
     int m_cols;
     
     _SharedPtr<ncursesWindow> m_mainWindow;
+    _SharedPtr<ncursesPanel> m_topPanel;
     
     std::vector<_SharedPtr<ncursesWindow> > m_windows;
     std::vector<_SharedPtr<ncursesPanel> > m_panels;
 
+    void doNothing(){};
+    void printDebug();
+    
+    _SharedPtr<Widget> graphController;
     
 };
 
