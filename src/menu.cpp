@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <iostream>
 
-ncursesMenu::ncursesMenu(std::vector<std::string> menuList, std::string name, _SharedPtr<ncursesWindow> parent, bool horizontal) : m_name(name), m_menuList(menuList), m_horizontal(horizontal){
+ncursesMenu::ncursesMenu(std::vector<std::pair<std::string, _STD_FUNCTION(void())> > menuList, std::string name, _SharedPtr<ncursesWindow> parent, bool horizontal) : m_name(name), m_menuList(menuList), m_horizontal(horizontal){
     
     m_border = _SharedPtr<winBorder>(new winBorder);
     setParent(parent);
@@ -42,8 +42,8 @@ ncursesMenu::ncursesMenu(std::vector<std::string> menuList, std::string name, _S
     m_height = menuList.size() + 1;
     
     for(size_t x = 0; x < menuList.size(); x++){
-        if(menuList.at(x).length()+2 > m_width){
-            m_width = menuList.at(x).length()+2;
+        if(menuList.at(x).first.length()+2 > m_width){
+            m_width = menuList.at(x).first.length()+2;
         }
     }
     
@@ -105,8 +105,8 @@ void ncursesMenu::render(){
                         
                     }
                     else{
-                        mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%s", m_menuList.at(x).c_str());
-                        charCounter += m_menuList.at(x).length()+1;
+                        mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%s", m_menuList.at(x).first.c_str());
+                        charCounter += m_menuList.at(x).first.length()+1;
                         
                     }
                     
@@ -176,7 +176,7 @@ void ncursesMenu::render(){
                     
                     // Here we are printing the item out
                     if( x < m_menuList.size()){
-                        mvwprintw(m_parent->get(), m_ypos+1+x, m_xpos+1, "%s", m_menuList.at(x).c_str());
+                        mvwprintw(m_parent->get(), m_ypos+1+x, m_xpos+1, "%s", m_menuList.at(x).first.c_str());
                     }
                     
                     wattroff(m_parent->get(), A_REVERSE);
@@ -212,7 +212,7 @@ void ncursesMenu::render(){
                 
                 for(size_t x = 0; x < m_menuList.size(); x++){
                     
-                    mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter, "%s", m_menuList.at(x).c_str());
+                    mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter, "%s", m_menuList.at(x).first.c_str());
                     
                     if(m_showBorder){
                         mvwprintw(m_parent->get(), m_ypos, m_width, "%c", m_border->m_bl);
@@ -226,6 +226,14 @@ void ncursesMenu::render(){
         }
     }
     
+    
+}
+
+
+void ncursesMenu::execute(){
+    
+    _STD_FUNCTION(void()) command = m_menuList.at(m_selected-1).second;
+    command();
     
 }
 

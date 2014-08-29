@@ -14,7 +14,9 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 #include "tr1_wrapper.h"
+#include "tr1_threading.h"
 
 struct winBorder;
 
@@ -29,7 +31,7 @@ enum class menuAlignment {
 class ncursesMenu {
     
 public:
-    ncursesMenu(std::vector<std::string> menuList, std::string m_name, _SharedPtr<ncursesWindow> parent = nullptr, bool horizontal = false);
+    ncursesMenu(std::vector<std::pair<std::string, _STD_FUNCTION(void())> > menuList, std::string m_name, _SharedPtr<ncursesWindow> parent = nullptr, bool horizontal = false);
     
     void setParent(_SharedPtr<ncursesWindow> target);
     _SharedPtr<ncursesWindow> getParent(){return m_parent;}
@@ -61,6 +63,8 @@ public:
     void hide(){m_hidden = true;}
     void show(){m_hidden = false;}
     
+    void execute();
+    
     void close();
     
     
@@ -69,7 +73,7 @@ private:
     _SharedPtr<ncursesWindow> m_parent;
     bool m_hidden;
     bool m_horizontal;
-    std::vector<std::string> m_menuList;
+    std::vector<std::pair<std::string, _STD_FUNCTION(void())> > m_menuList;
     int m_xpos;
     int m_ypos;
     

@@ -11,6 +11,7 @@
 #include "version.h"
 #include "ncursespanel.h"
 #include "graphchart.h"
+#include "tr1_threading.h"
 
 #include "asciicodes.h"
 
@@ -57,6 +58,8 @@ void Shell::boot(){
 
 
 bool Shell::init(){
+    
+    m_running = true;
     
     initscr();
     
@@ -130,12 +133,17 @@ bool Shell::init(){
     
     m_panels.at(2)->setName("Engineering");
     
-    std::vector<std::string> menuList;
-    menuList.push_back("First");
-    menuList.push_back("Second");
-    menuList.push_back("Third");
-    menuList.push_back("Fourth");
-    menuList.push_back("Exit");
+    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > menuList;
+    std::pair<std::string, _STD_FUNCTION(void())> item("First", _STD_BIND(&Shell::doNothing, this));
+    menuList.push_back(item);
+    std::pair<std::string, _STD_FUNCTION(void())> item2("Second", _STD_BIND(&Shell::doNothing, this));
+    menuList.push_back(item2);
+    std::pair<std::string, _STD_FUNCTION(void())> item3("Third", _STD_BIND(&Shell::doNothing, this));
+    menuList.push_back(item3);
+    std::pair<std::string, _STD_FUNCTION(void())> item4("Fourth", _STD_BIND(&Shell::printDebug, this));
+    menuList.push_back(item4);
+    std::pair<std::string, _STD_FUNCTION(void())> item5("Exit", _STD_BIND(&Shell::quit, this));
+    menuList.push_back(item5);
     
     _SharedPtr<ncursesMenu> menuEngineering(new ncursesMenu(menuList, "ENG", m_panels.at(2)->getChild()));
     menuEngineering->showTitle(true);
@@ -148,8 +156,8 @@ bool Shell::init(){
     menuMain->render();
     
     int c;
-    bool m_run = true;
-    while(m_run)
+    
+    while(m_running)
 	{
         wrefresh(top->getChild()->get());
         refresh();
@@ -206,7 +214,13 @@ bool Shell::init(){
                 break;
                 
             case KEY_ESC:  // quit
-                m_run = false;
+                m_running = false;
+                break;
+                
+            case '\n':  // quit
+                wclear(top->getChild()->get());
+                menuEngineering->execute();
+                menuEngineering->render();
                 break;
                 
             case 't':
@@ -256,7 +270,18 @@ bool Shell::init(){
     return true;
 }
 
+void Shell::printDebug(){
+    
+    mvwprintw(stdscr, m_rows/2, m_cols/2, "%s", "Testing Debug Output");
 
+    
+}
+
+void Shell::quit(){
+    
+    m_running = false;
+    
+}
 
 void Shell::addToPanelList(_SharedPtr<ncursesWindow> targetWindow){
     size_t panelListSize = m_panels.size();

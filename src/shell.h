@@ -49,6 +49,7 @@ private:
     
     bool init();
     void shutdown();
+    void quit();
     
     void createWindow(int ysize, int xsize);
     
@@ -69,7 +70,8 @@ private:
     std::vector<_SharedPtr<ncursesWindow> > m_windows;
     std::vector<_SharedPtr<ncursesPanel> > m_panels;
 
-    
+    void doNothing(){};
+    void printDebug();
 };
 
 

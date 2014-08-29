@@ -7,6 +7,7 @@
 //
 
 #include "window.h"
+#include "tr1_threading.h"
 #include <iostream>
 
 ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos){
