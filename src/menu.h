@@ -52,13 +52,14 @@ public:
     void setFGColor(int color){m_fgColor = COLOR_PAIR(color);}
     void setSelectedColor(int color){m_selectedColor = COLOR_PAIR(color);}
     void setCursorColor(int color){m_cursorColor = COLOR_PAIR(color);}
+    void setBorderColor(int color){m_borderColor = COLOR_PAIR(color);}
     
     void addSubMenu(_SharedPtr<ncursesMenu> item, int keyID);
     
     void toggleItem(int itemID);
     int getCurrentItem();
     
-    void setHorizontal(bool option){m_horizontal = option;}
+    void setHorizontal(bool option);
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
     void setAlignment(menuAlignment align = menuAlignment::LEFT);
     
@@ -69,6 +70,7 @@ public:
     void setSubMenuStatus(bool status){m_isSubMenu = status;}
     bool checkIfSubMenu(){return m_isSubMenu;}
     
+    void resize();
     void closeSubMenu();
     
     void execute();
@@ -104,6 +106,7 @@ private:
     int m_selectedColor;
     int m_cursorColor;
     int m_normalColor;
+    int m_borderColor;
     bool m_isSubMenu;
 
     

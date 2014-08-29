@@ -163,7 +163,7 @@ bool Shell::init(){
     menuEngineering->setSelectedColor(COLOR_PAIR(1));
     menuEngineering->render();
     _SharedPtr<ncursesMenu> menuMain(new ncursesMenu(menuList, "MAIN", m_panels.at(0)->getChild(), true));
-    menuMain->hide();
+//    menuMain->hide();
     menuMain->render();
     
     int c;
@@ -217,11 +217,15 @@ bool Shell::init(){
             case KEY_DOWN:
                 menuEngineering->selectNext();
                 menuEngineering->render();
+                menuMain->selectNext();
+                menuMain->render();
                 break;
                 
             case KEY_UP:
                 menuEngineering->selectPrev();
                 menuEngineering->render();
+                menuMain->selectPrev();
+                menuMain->render();
                 break;
                 
             case KEY_LEFT:

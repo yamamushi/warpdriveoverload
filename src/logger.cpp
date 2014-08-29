@@ -8,8 +8,9 @@
 #include<sys/types.h>
 #include<unistd.h>
 #include<boost/lexical_cast.hpp>
-#include<boost/thread.hpp>
-#include <boost/thread/thread.hpp>
+
+#include "tr1_threading.h"
+
 #ifndef _GetPid
 #define _GetPid getpid
 #endif
@@ -64,7 +65,7 @@ void logger::logToFile( const std::string text, const int msglvl ) {
 }
 
 unsigned long logger::getThreadID() {
-	std::string threadID = boost::lexical_cast<std::string>(boost::this_thread::get_id() );
+	std::string threadID = boost::lexical_cast<std::string>(std::this_thread::get_id() );
 	unsigned long threadnum = 0;
 	sscanf( threadID.c_str(), "%lx", &threadnum );
 	return threadnum;
