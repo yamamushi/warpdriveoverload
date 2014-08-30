@@ -13,6 +13,7 @@
 #include "graphchart.h"
 #include "tr1_threading.h"
 
+#include "debugWindow.h"
 
 #include "asciicodes.h"
 
@@ -50,8 +51,9 @@ bool Shell::init(){
     initscr();
     
     if(has_colors() == FALSE)
-	{	endwin();
-		printf("Your terminal does not support color\n");
+	{
+        endwin();
+        std::cout << "Your terminal does not support color\n" << std::endl;
 		exit(1);
 	}
     
@@ -66,6 +68,7 @@ bool Shell::init(){
     
     getmaxyx(stdscr,m_rows,m_cols);
     
+    //mvwprintw(stdscr, 4, (m_cols - m_topPanel->getName().size())/, "%s", m_topPanel->getName().c_str());
     populatePanels();
     if(!m_topPanel){
         // Something went wrong this should not happen
@@ -74,66 +77,75 @@ bool Shell::init(){
     
     // This is about to get fun
     nodelay(stdscr, true);
-    int c;
+    int keyInput;
     
     m_topPanel->getChild()->clearScreen();
     m_topPanel->getChild()->refresh();
     m_topPanel->getChild()->render();
     
-    
     while(m_running)
 	{
         refresh();
         doupdate();
-        if(checkForResize()){
-            m_topPanel->getChild()->clearScreen();
-            m_topPanel->getChild()->refresh();
-        }
         
-        if((c = getch()) == ERR){
-            m_topPanel->getChild()->render();
-
-            //mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
+        if((keyInput = getch()) == ERR){
+            run();
         }
         else{
-            switch(c)
-            {
-                    
-                case KEY_F(1):
-                    m_topPanel = m_panels.at(1);
-                    wclear(m_topPanel->getChild()->get());
-                    mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
-                    break;
-                    
-                case KEY_F(2):
-                    m_topPanel = m_panels.at(2);
-                    mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
-                    break;
-                    
-                case KEY_F(3):
-                    m_topPanel = m_panels.at(0);
-                    wclear(m_topPanel->getChild()->get());
-                    break;
-                    
-                case KEY_TAB: // This is defined in asciicodes.h
-                    m_topPanel->getChild()->closeAllMenus();
-                    m_topPanel->getChild()->clearScreen();
-                    m_topPanel = m_topPanel->getNext();
-                    m_topPanel->getChild()->clearScreen();
-                    m_topPanel->getChild()->refresh();
-                    break;
-                    
-                default:
-                    m_topPanel->getChild()->handleKeys(c);
-                    break;
-                    
-            }
+            handleKeys(keyInput);
         }
-	}
-    
+    }
     wrefresh(m_mainWindow->get());
     return true;
 }
+
+
+void Shell::run(){
+    
+    if(checkForResize()){
+        m_topPanel->getChild()->clearScreen();
+        m_topPanel->getChild()->refresh();
+    }
+    
+    m_topPanel->getChild()->render();
+    //mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
+}
+
+
+void Shell::handleKeys(int input){
+    
+    switch(input)
+    {
+        case KEY_F(1):
+            m_topPanel = m_panels.at(1);
+            wclear(m_topPanel->getChild()->get());
+            mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
+            break;
+            
+        case KEY_F(2):
+            m_topPanel = m_panels.at(2);
+            mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
+            break;
+            
+        case KEY_F(3):
+            m_topPanel = m_panels.at(0);
+            wclear(m_topPanel->getChild()->get());
+            break;
+            
+        case KEY_TAB: // This is defined in asciicodes.h
+            m_topPanel->getChild()->closeAllMenus();
+            m_topPanel->getChild()->clearScreen();
+            m_topPanel = m_topPanel->getNext();
+            m_topPanel->getChild()->clearScreen();
+            m_topPanel->getChild()->refresh();
+            break;
+            
+        default:
+            m_topPanel->getChild()->handleKeys(input);
+            break;
+    }
+}
+
 
 
 bool Shell::checkForResize(){
@@ -152,38 +164,42 @@ bool Shell::checkForResize(){
 }
 
 
-void Shell::populatePanels(){
+void Shell::loadInterfaces(){
     
+    
+    
+}
+
+void Shell::populatePanels(){
     
     createWindow(m_rows, m_cols); // Create our root window
     m_mainWindow = m_windows.at(0); // Assign it here
-    
     addToPanelList(m_mainWindow); // Add our window to the panel list manually
-    update_panels();
-    
-    m_panels.at(0)->setName("Main Window");
+    //m_panels.at(0)->setName("Debug Window");
     
     init_pair(1, COLOR_GREEN, COLOR_BLACK); // A default Background Color
     wbkgd(m_mainWindow->get(), COLOR_PAIR(1)); // Set the background color accordingly
-    
     std::string welcome = "Welcome to Nostradamus OS";
-    
     attroff(A_BOLD);
     mvwprintw(m_mainWindow->get(), (m_rows/2)-1, (m_cols - welcome.size())/2, "%s", welcome.c_str());
     mvwprintw(m_mainWindow->get(), m_rows/2,(m_cols - global_version_string.size())/2,"%s", global_version_string.c_str());
-    
     wattron(m_mainWindow->get(), A_BLINK);
     std::string pleasecontinue = "Press any key to Continue";
     mvwprintw(m_mainWindow->get(), m_rows-5,(m_cols - pleasecontinue.size())/2,"%s", pleasecontinue.c_str());
     wattroff(m_mainWindow->get(), A_BLINK);
-    
     wrefresh(m_mainWindow->get());
     refresh();
     getch();
+    
+    
+    
+    
     keypad(m_mainWindow->get(), TRUE);		/* We get F1, F2 etc..		*/
     
     wrefresh(m_mainWindow->get());
 	refresh();
+    
+    
     
     
     
@@ -197,7 +213,10 @@ void Shell::populatePanels(){
     
     wclear(m_topPanel->getChild()->get());
     mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
-    top_panel(m_topPanel->getPanel());
+    //top_panel(m_topPanel->getPanel());
+    
+    
+    
     
     m_panels.at(1)->setName("Navigation");
     
@@ -309,17 +328,13 @@ void Shell::addToPanelList(_SharedPtr<ncursesWindow> targetWindow){
     m_panels.push_back(l_panel);
     
     if(panelListSize > 0){
-        set_panel_userptr(m_panels.at(panelListSize-1)->getPanel(), m_panels.back()->getPanel());
-        set_panel_userptr(m_panels.back()->getPanel(), m_panels.front()->getPanel());
         
         m_panels.at(panelListSize-1)->addNext(m_panels.back());
         m_panels.back()->addPrev(m_panels.at(panelListSize-1));
         m_panels.back()->addNext(m_panels.at(0));
         
     }
-    
-    update_panels();
-    doupdate();
+
     
     
 }
@@ -330,7 +345,7 @@ void Shell::organizePanels(){
     for(size_t x = 0; x < m_panels.size(); x++){
         
         if(x > 0){
-            set_panel_userptr(m_panels.at(x-1)->getPanel(), m_panels.at(x)->getPanel());
+            //set_panel_userptr(m_panels.at(x-1)->getPanel(), m_panels.at(x)->getPanel());
             
             m_panels.at(x-1)->addNext(m_panels.at(x));
             m_panels.at(x)->addPrev(m_panels.at(x-1));
@@ -338,19 +353,19 @@ void Shell::organizePanels(){
         }
         else{
             
-            set_panel_userptr(m_panels.at(x)->getPanel(), m_panels.at(x)->getPanel());
+            //set_panel_userptr(m_panels.at(x)->getPanel(), m_panels.at(x)->getPanel());
             
         }
         
-        replace_panel(m_topPanel->getPanel(), m_panels.at(x)->getChild()->get());
+        //replace_panel(m_topPanel->getPanel(), m_panels.at(x)->getChild()->get());
     }
     
     m_panels.back()->addPrev(m_panels.at(panelListSize-2));
     m_panels.back()->addNext(m_panels.at(0));
     
     
-    update_panels();
-    doupdate();
+    //update_panels();
+    //doupdate();
 }
 
 void Shell::createWindow(int ysize, int xsize){
@@ -402,6 +417,5 @@ void Shell::shutdown(){
 void Shell::close_win(_SharedPtr<ncursesWindow> target_window){
     
     target_window->close();
-    
     
 }

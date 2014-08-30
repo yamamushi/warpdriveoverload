@@ -24,6 +24,7 @@
 #include "ncursespanel.h"
 #include "widget.h"
 #include "graphchart.h"
+#include "interface.h"
 
 #include <string>
 #include <ncurses.h>
@@ -35,7 +36,7 @@
 struct GraphChartPoint;
 
 class ncursesPanel;
-
+class Interface;
 
 class Shell {
     
@@ -48,25 +49,34 @@ public:
     
     void refreshShell();
 
-    void panelRefresh(){update_panels();}
+    void addToWindowList(_SharedPtr<ncursesWindow> target);
+    void removeFromWindowList(_SharedPtr<ncursesWindow> target);
+    
+    void removeFromPanelList(_SharedPtr<ncursesPanel> target);
+    void addToPanelList(_SharedPtr<ncursesWindow> targetWindow);
+    
+    _SharedPtr<ncursesPanel> getRootPanel(){return m_panels.at(0);};
+
     
 private:
     
+    friend class InterfaceHandler;
+    friend class Interface;
     
     bool init();
     void populatePanels();
+    
+    void loadInterfaces();
     void shutdown();
+    
+    void run();
+    void handleKeys(int input);
     
     void quit();
     
     void createWindow(int ysize, int xsize);
-    void addToWindowList(_SharedPtr<ncursesWindow> target);
-    
-    void removeFromWindowList(_SharedPtr<ncursesWindow> target);
-    void removeFromPanelList(_SharedPtr<ncursesPanel> target);
-    
-    void addToPanelList(_SharedPtr<ncursesWindow> targetWindow);
     void close_win(_SharedPtr<ncursesWindow> target_window);
+    
     void organizePanels();
     
     bool checkForResize();
@@ -88,6 +98,7 @@ private:
     void printDebug();
     
     _SharedPtr<Widget> graphController;
+    _SharedPtr<Interface> m_interfaceList;
     
 };
 
