@@ -66,11 +66,12 @@ public:
     void removePoint(_SharedPtr<GraphChartPoint> point);
     void placeRawPoint(_SharedPtr<GraphChartPoint> point);
     void placeAllPoints();
-
-private:
     
     void generateChart();
     void fill();
+
+private:
+
     
     int m_rows;
     int m_cols;

@@ -149,6 +149,7 @@ void ncursesWindow::handleKeys(int input){
 void ncursesWindow::addWidget(_SharedPtr<Widget> target){
     
     removeWidget(target);
+    target->setParent(shared_from_this());
     m_widgetList.push_back(target);
     
 }

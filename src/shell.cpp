@@ -12,7 +12,7 @@
 #include "ncursespanel.h"
 #include "graphchart.h"
 #include "tr1_threading.h"
-
+#include "navigation.h"
 #include "debugWindow.h"
 
 #include "asciicodes.h"
@@ -66,11 +66,21 @@ bool Shell::init(){
     curs_set(0);
     refresh();
     
-    
     getmaxyx(stdscr,m_rows,m_cols);
     
-    //mvwprintw(stdscr, 4, (m_cols - m_topPanel->getName().size())/, "%s", m_topPanel->getName().c_str());
+    initMainWindow();
+    
+    return true;
+    
+}
+
+
+
+bool Shell::run(){
+    
     populatePanels();
+    
+    
     if(!m_topPanel){
         // Something went wrong this should not happen
         return false;
@@ -90,7 +100,7 @@ bool Shell::init(){
         doupdate();
         
         if((keyInput = getch()) == ERR){
-            run();
+            execute();
         }
         else{
             handleKeys(keyInput);
@@ -101,7 +111,18 @@ bool Shell::init(){
 }
 
 
-void Shell::run(){
+
+void Shell::initMainWindow(){
+
+    createWindow(m_rows, m_cols); // Create our root window
+    m_mainWindow = m_windows.at(0); // Assign it here
+    m_topPanel = _SharedPtr<ncursesPanel>(new ncursesPanel(m_mainWindow));
+    addToPanelList(m_topPanel); // Add our window to the panel list manually
+    keypad(m_mainWindow->get(), TRUE);		/* We get F1, F2 etc..		*/
+    
+}
+
+void Shell::execute(){
     
     if(checkForResize()){
         m_topPanel->getChild()->clearScreen();
@@ -165,88 +186,24 @@ bool Shell::checkForResize(){
 }
 
 
-void Shell::loadInterfaces(){
+void Shell::loadInterfaces(_SharedPtr<Shell> parent){
+    
+    // Launch our debug Interface which will attach to the root panel on this shell
+    _SharedPtr<DebugInterface> debugInterface(new DebugInterface(parent));
+    debugInterface->init();
     
     
-    
+    _SharedPtr<NavigationInterface> navigationInterface(new NavigationInterface(parent));
+    navigationInterface->init();
 }
 
 void Shell::populatePanels(){
     
-    createWindow(m_rows, m_cols); // Create our root window
-    m_mainWindow = m_windows.at(0); // Assign it here
-    addToPanelList(m_mainWindow); // Add our window to the panel list manually
-    //m_panels.at(0)->setName("Debug Window");
+    //wrefresh(m_mainWindow->get());
+	//refresh();
     
-    init_pair(1, COLOR_GREEN, COLOR_BLACK); // A default Background Color
-    wbkgd(m_mainWindow->get(), COLOR_PAIR(1)); // Set the background color accordingly
-    std::string welcome = "Welcome to Nostradamus OS";
-    attroff(A_BOLD);
-    mvwprintw(m_mainWindow->get(), (m_rows/2)-1, (m_cols - welcome.size())/2, "%s", welcome.c_str());
-    mvwprintw(m_mainWindow->get(), m_rows/2,(m_cols - global_version_string.size())/2,"%s", global_version_string.c_str());
-    wattron(m_mainWindow->get(), A_BLINK);
-    std::string pleasecontinue = "Press any key to Continue";
-    mvwprintw(m_mainWindow->get(), m_rows-5,(m_cols - pleasecontinue.size())/2,"%s", pleasecontinue.c_str());
-    wattroff(m_mainWindow->get(), A_BLINK);
-    wrefresh(m_mainWindow->get());
-    refresh();
-    getch();
-    
-    
-    
-    
-    keypad(m_mainWindow->get(), TRUE);		/* We get F1, F2 etc..		*/
-    
-    wrefresh(m_mainWindow->get());
-	refresh();
-    
-    
-    
-    
-    
-    createWindow(m_rows, m_cols);
-    addToPanelList(m_windows.at(1));
-    
-    createWindow(m_rows, m_cols);
-    addToPanelList(m_windows.at(2));
-    
-    m_topPanel = m_panels.at(0);
-    
-    wclear(m_topPanel->getChild()->get());
-    mvwprintw(m_topPanel->getChild()->get(), 1, (m_cols - m_topPanel->getName().size())/2, "%s", m_topPanel->getName().c_str());
-    //top_panel(m_topPanel->getPanel());
-    
-    
-    
-    
-    m_panels.at(1)->setName("Navigation");
-    
-    graphController = _SharedPtr<GraphChart>(new GraphChart(m_windows.at(1), 2, 1));
-    m_windows.at(1)->addWidget(graphController);
-    graphController->setParent(m_windows.at(1));
-    
-    init_pair(3, COLOR_RED, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point1(new GraphChartPoint(5,8,3,"*"));
-    init_pair(8, COLOR_BLUE, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point2(new GraphChartPoint(2,9,8,"*"));
-    init_pair(9, COLOR_YELLOW, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point3(new GraphChartPoint(0,2,9,"*"));
-    init_pair(10, COLOR_WHITE, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point4(new GraphChartPoint(1,3,10,"*"));
-    init_pair(11, COLOR_CYAN, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point5(new GraphChartPoint(8,1,11,"*"));
-
-    _SharedPtr<GraphChart> temp = std::dynamic_pointer_cast<GraphChart>(graphController);
-    temp->addChartPoint(point1);
-    temp->addChartPoint(point2);
-    temp->addChartPoint(point3);
-    temp->addChartPoint(point4);
-    temp->addChartPoint(point5);
-    _SharedPtr<GraphChartPoint> point6(new GraphChartPoint(8,1,11,"@"));
-    temp->addRawChartPoint(point6);
-    temp->hideBars();
-
-    
+    //wclear(m_topPanel->getChild()->get());
+    /*
     
     m_panels.at(2)->setName("Engineering");
     
@@ -299,20 +256,23 @@ void Shell::populatePanels(){
     menuMain->addSubMenu(subList3, 3);
     
     
-    m_panels.at(0)->getChild()->addMenu(menuMain);
-    m_panels.at(2)->getChild()->addMenu(menuEngineering);
+    //m_panels.at(0)->getChild()->addMenu(menuMain);
+    //m_panels.at(2)->getChild()->addMenu(menuEngineering);
+     */
     
     organizePanels();
     
-    
 }
+
+
 
 void Shell::printDebug(){
     
     mvwprintw(stdscr, m_rows/2, m_cols/2, "%s", "Testing Debug Output");
     
-    
 }
+
+
 
 void Shell::quit(){
     
@@ -320,13 +280,13 @@ void Shell::quit(){
     
 }
 
-void Shell::addToPanelList(_SharedPtr<ncursesWindow> targetWindow){
+
+
+void Shell::addToPanelList(_SharedPtr<ncursesPanel> target){
     
     size_t panelListSize = m_panels.size();
     
-    _SharedPtr<ncursesPanel> l_panel(new ncursesPanel(targetWindow));
-    
-    m_panels.push_back(l_panel);
+    m_panels.push_back(target);
     
     if(panelListSize > 0){
         
@@ -335,10 +295,9 @@ void Shell::addToPanelList(_SharedPtr<ncursesWindow> targetWindow){
         m_panels.back()->addNext(m_panels.at(0));
         
     }
-
-    
-    
 }
+
+
 
 void Shell::organizePanels(){
     size_t panelListSize = m_panels.size();
@@ -346,28 +305,22 @@ void Shell::organizePanels(){
     for(size_t x = 0; x < m_panels.size(); x++){
         
         if(x > 0){
-            //set_panel_userptr(m_panels.at(x-1)->getPanel(), m_panels.at(x)->getPanel());
-            
+
             m_panels.at(x-1)->addNext(m_panels.at(x));
             m_panels.at(x)->addPrev(m_panels.at(x-1));
             
         }
         else{
-            
-            //set_panel_userptr(m_panels.at(x)->getPanel(), m_panels.at(x)->getPanel());
-            
+            ;
         }
-        
-        //replace_panel(m_topPanel->getPanel(), m_panels.at(x)->getChild()->get());
     }
     
     m_panels.back()->addPrev(m_panels.at(panelListSize-2));
     m_panels.back()->addNext(m_panels.at(0));
     
-    
-    //update_panels();
-    //doupdate();
 }
+
+
 
 void Shell::createWindow(int ysize, int xsize){
     
@@ -382,6 +335,30 @@ void Shell::addToWindowList(_SharedPtr<ncursesWindow> target){
     m_windows.push_back(target); // Add to the list of Windows for the window manager.
     
 }
+
+
+
+void Shell::addToInterfaceList(_SharedPtr<Interface> target){
+    
+    removeFromInterfaceList(target);
+    m_interfaceList.push_back(target);
+    
+    addToPanelList(target->getPanel());
+    
+}
+
+
+
+
+void Shell::removeFromInterfaceList(_SharedPtr<Interface> target){
+    
+    std::vector<_SharedPtr<Interface>>::iterator it = std::find(m_interfaceList.begin(), m_interfaceList.end(), target);
+    if (it != m_interfaceList.end()){
+        m_interfaceList.erase(std::remove(m_interfaceList.begin(), m_interfaceList.end(), target), m_interfaceList.end());
+    }
+    
+}
+
 
 
 void Shell::removeFromWindowList(_SharedPtr<ncursesWindow> target){

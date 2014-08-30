@@ -18,6 +18,7 @@ add_executable(client main.cpp
             ncursespanel.cpp
             interface.cpp
             debugWindow.cpp
+            navigation.cpp
             )
 
 set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lpanel -lncurses")

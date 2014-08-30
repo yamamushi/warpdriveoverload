@@ -47,11 +47,15 @@ void InterfaceHandler::removeInterface(_SharedPtr<Interface> target){
 
 
 
+Interface::Interface(_SharedPtr<Shell> owner) : m_owner(owner){
+    
+    m_initialized = false;
+    
+}
 
 
 
-
-void Interface::addToInterface(_STD_FUNCTION(void()) target){
+void Interface::queueCommand(_STD_FUNCTION(void()) target){
     
     l_functionList.push(target);
     

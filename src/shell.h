@@ -38,27 +38,28 @@ struct GraphChartPoint;
 class ncursesPanel;
 class Interface;
 
-class Shell {
+class Shell : public std::enable_shared_from_this<Shell>{
     
 public:
+    
     Shell(_SharedPtr<Nostradamus> parent) : m_parent(parent){m_running = false;}
     ~Shell(){shutdown();}
     
     bool running(){return m_running;}
     void boot();
+    bool run();
     
-    void refreshShell();
+    void loadInterfaces(_SharedPtr<Shell> parent);
 
-    void addToWindowList(_SharedPtr<ncursesWindow> target);
-    void removeFromWindowList(_SharedPtr<ncursesWindow> target);
+    void refreshShell();
     
-    void removeFromPanelList(_SharedPtr<ncursesPanel> target);
-    void addToPanelList(_SharedPtr<ncursesWindow> targetWindow);
+    void removeFromInterfaceList(_SharedPtr<Interface> target);
+    void addToInterfaceList(_SharedPtr<Interface> target);
     
     _SharedPtr<ncursesPanel> getRootPanel(){return m_panels.at(0);};
 
     
-private:
+protected:
     
     friend class InterfaceHandler;
     friend class Interface;
@@ -66,11 +67,21 @@ private:
     bool init();
     void populatePanels();
     
-    void loadInterfaces();
-    void shutdown();
+    void addToWindowList(_SharedPtr<ncursesWindow> target);
+    void removeFromWindowList(_SharedPtr<ncursesWindow> target);
     
-    void run();
+    void removeFromPanelList(_SharedPtr<ncursesPanel> target);
+    void addToPanelList(_SharedPtr<ncursesPanel> target);
+    
+    _SharedPtr<Shell> getSharedPtr(){return shared_from_this();}
+
+    void shutdown();
+    void execute();
+    
     void handleKeys(int input);
+    
+    void initMainWindow();
+    _SharedPtr<ncursesWindow> getLastWindow(){return m_windows.back();}
     
     void quit();
     
@@ -98,7 +109,7 @@ private:
     void printDebug();
     
     _SharedPtr<Widget> graphController;
-    _SharedPtr<Interface> m_interfaceList;
+    std::vector<_SharedPtr<Interface> > m_interfaceList;
     
 };
 

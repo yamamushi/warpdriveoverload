@@ -15,15 +15,21 @@
 #include "window.h"
 #include "widget.h"
 
+#include "tr1_wrapper.h"
+
 class DebugInterface : public Interface {
     
 public:
     
     DebugInterface(_SharedPtr<Shell> owner);
     
+    void init();
+    void run();
+    void handleKeys(int input){};
     
 private:
     
+    _SharedPtr<ncursesWindow> m_window;
     
 };
 

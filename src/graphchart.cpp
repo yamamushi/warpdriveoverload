@@ -31,19 +31,17 @@ void GraphChart::fill(){
     
     getmaxyx(getParent()->get(), m_height, m_width);
     
-    wattrset(m_parent->get(), m_parent->getNormalColor());
-    
     for(int x = 0; x < m_width; x++){
         for(int y = 0; y < m_height; y++){
             if(!(x % m_xSize)){
                 if(m_showBars)
                     mvwprintw(getParent()->get(), y, x,"%c", '|');
-                wrefresh(getParent()->get());
+                //wrefresh(getParent()->get());
             }
             else if(!(y % m_ySize) && y != m_height-2){
                 if(m_showBars)
                     mvwprintw(getParent()->get(), y, x,"%c", '=');
-                wrefresh(getParent()->get());
+                //wrefresh(getParent()->get());
             }
             
         }
@@ -51,8 +49,6 @@ void GraphChart::fill(){
     
     if(m_showBorder)
         getParent()->setborder('|', '|', '=', '=', '+', '+', '+', '+');
-    
-    wrefresh(getParent()->get());
     
 }
 
@@ -212,8 +208,8 @@ void GraphChart::removeChartPoint(_SharedPtr<GraphChartPoint> point){
 
 void GraphChart::refresh(){
     
-    wrefresh(getParent()->get());
     fill();
+    wrefresh(getParent()->get());
     
 }
 
