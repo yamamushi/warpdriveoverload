@@ -12,6 +12,8 @@
 #include "tr1_wrapper.h"
 #include "bresenham2d.h"
 #include "tr1_threading.h"
+#include "connectionwidget.h"
+#include "shell.h"
 
 #include <vector>
 #include <ncurses.h>
@@ -55,6 +57,40 @@ void NavigationInterface::init(){
     // Bottom
     bresenham2d(5, height-5, width-6, height-5, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
     m_mainWindow->hideBorder();
+    
+    
+    
+    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > navigationMenuList;
+    std::pair<std::string, _STD_FUNCTION(void())> Menu("Menu", _STD_BIND(&NavigationInterface::doNothing, this));
+    navigationMenuList.push_back(Menu);
+    std::pair<std::string, _STD_FUNCTION(void())> item2("Second", _STD_BIND(&NavigationInterface::doNothing, this));
+    navigationMenuList.push_back(item2);
+    std::pair<std::string, _STD_FUNCTION(void())> item3("Third", _STD_BIND(&NavigationInterface::doNothing, this));
+    navigationMenuList.push_back(item3);
+    std::pair<std::string, _STD_FUNCTION(void())> item5("Exit", _STD_BIND(&Shell::quit, m_owner));
+    navigationMenuList.push_back(item5);
+    
+    
+    menuNavigation = _SharedPtr<ncursesMenu>(new ncursesMenu(navigationMenuList, "Navigation", m_mainWindow));
+
+    menuNavigation->showTitle(false);
+    menuNavigation->highlightTitle(false);
+    menuNavigation->setHorizontal(true);
+    menuNavigation->move(height-3,5);
+    m_mainWindow->addMenu(menuNavigation);
+    /*
+    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList;
+    std::pair<std::string, _STD_FUNCTION(void())> subItem1("Sub1", _STD_BIND(&NavigationInterface::doNothing, this));
+    std::pair<std::string, _STD_FUNCTION(void())> subItem2("Sub2", _STD_BIND(&NavigationInterface::doNothing, this));
+    subMenuList.push_back(subItem1);
+    subMenuList.push_back(subItem2);
+    
+    _SharedPtr<ncursesMenu> subList(new ncursesMenu(subMenuList, "Sub", m_mainWindow));
+    
+
+    menuEngineering->addSubMenu(subList, 2);
+     */
+
 
 
     graphController->hideBars();
@@ -112,31 +148,33 @@ void NavigationInterface::handleKeys(int input){
 
     switch(input){
         case KEY_DOWN:
-            graphController->resize(m_graphX, m_graphY+1);
+      /*      graphController->resize(m_graphX, m_graphY+1);
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
-            graphController->refresh();
+            graphController->refresh(); */
             break;
             
         case KEY_UP:
-            graphController->resize(m_graphX, m_graphY-1);
+       /*     graphController->resize(m_graphX, m_graphY-1);
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
-            graphController->refresh();
+            graphController->refresh(); */
             break;
             
         case KEY_LEFT:
-            graphController->resize(m_graphX-1, m_graphY);
+          /*  graphController->resize(m_graphX-1, m_graphY);
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
-            graphController->refresh();
+            graphController->refresh(); */
+            menuNavigation->selectPrev();
             break;
             
         case KEY_RIGHT:
-            graphController->resize(m_graphX+1, m_graphY);
+           /* graphController->resize(m_graphX+1, m_graphY);
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
-            graphController->refresh();
+            graphController->refresh();*/
+            menuNavigation->selectNext();
             break;
         case 'b':
             graphController->toggleBars();
@@ -156,6 +194,7 @@ void NavigationInterface::handleKeys(int input){
             break;
         case '\n':
             //;//graphController->getAllChartPoints().at(0)->m_hidden = !m_chartPoints.at(0)->m_hidden;
+            menuNavigation->execute();
             break;
         default:
             m_mainWindow->handleKeys(input);

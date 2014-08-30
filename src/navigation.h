@@ -13,6 +13,7 @@
 #include "menu.h"
 #include "window.h"
 #include "widget.h"
+#include "connectionwidget.h"
 
 #include <ncurses.h>
 #include <vector>
@@ -34,12 +35,16 @@ private:
     int lotteryLimit;
     
     _SharedPtr<GraphChart> graphController;
+    _SharedPtr<ConnectionWidget> connectionStatus;
+    _SharedPtr<ncursesMenu> menuNavigation;
     
     int m_graphX;
     int m_graphY;
     
     void drawAt(int x=-1, int y=-1);
     void failedAt(int x=-1, int y=-1){};
+    
+    void doNothing(){};
     
 };
 

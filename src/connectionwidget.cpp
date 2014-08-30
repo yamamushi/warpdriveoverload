@@ -7,3 +7,20 @@
 //
 
 #include "connectionwidget.h"
+
+
+void ConnectionWidget::render(){
+
+}
+
+void ConnectionWidget::refresh(){
+
+}
+
+void ConnectionWidget::resize(int newx, int newy){
+
+}
+
+void ConnectionWidget::handleKeys(int input){
+
+}

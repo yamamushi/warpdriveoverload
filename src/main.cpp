@@ -16,7 +16,6 @@
 int main(int argc, char **argv){
     
     term_clear();
-
     
     sqliteDB::instance()->run();
     
@@ -30,7 +29,9 @@ int main(int argc, char **argv){
     while(shell->running()){
     
     }
-    
+
+    term_clear();
+
     return 0;
     
 }

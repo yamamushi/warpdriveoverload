@@ -17,6 +17,7 @@
 #include "widget.h"
 
 class ncursesMenu;
+class Widget;
 
 struct winBorder {
     

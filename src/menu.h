@@ -74,6 +74,9 @@ public:
     void closeSubMenu();
     void toggleSubMenu();
     
+    int getX(){return m_xpos;}
+    int getY(){return m_ypos;}
+    
     void execute();
     
     void handleKeys(int input);

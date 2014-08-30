@@ -81,9 +81,6 @@ bool Shell::run(){
         return false;
     }
     
-    // Our first window is now about to be replaced
-    //m_topInterface = m_topInterface->getNext();
-    
     // This is about to get fun
     nodelay(stdscr, true);
     int keyInput;

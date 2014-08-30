@@ -54,6 +54,8 @@ public:
     
     _SharedPtr<Interface> getRootInterface(){return m_interfaceList.at(0);};
 
+    void quit();
+
 
 protected:
     
@@ -75,8 +77,6 @@ protected:
     
     void initMainWindow();
     _SharedPtr<ncursesWindow> getLastWindow(){return m_windows.back();}
-    
-    void quit();
     
     void createWindow(int ysize, int xsize);
     void close_win(_SharedPtr<ncursesWindow> target_window);

@@ -9,5 +9,30 @@
 #ifndef __warpdriveoverloaded__connectionwidget__
 #define __warpdriveoverloaded__connectionwidget__
 
+#include "widget.h"
+#include "window.h"
+
+class ncursesWindow;
+
+class ConnectionWidget: public Widget {
+    
+public:
+    
+    ConnectionWidget(_SharedPtr<ncursesWindow> parent, int xpos, int ypos) : Widget(parent){};
+    
+    void render();
+    void refresh();
+    void resize(int newx, int newy);
+    void handleKeys(int input);
+    
+    void hide(){m_hidden = true;}
+    void show(){m_hidden = false;}
+    void toggleHidnde(){m_hidden = !m_hidden;}
+    
+protected:
+    
+    bool m_hidden;
+    
+};
 
 #endif /* defined(__warpdriveoverloaded__connectionwidget__) */
