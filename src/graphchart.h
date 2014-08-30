@@ -46,6 +46,9 @@ public:
     void resize(int xSize, int ySize);
     int getXSize(){return m_xSize;}
     int getYSize(){return m_ySize;}
+    
+    int getRows(){return m_rows;}
+    int getCols(){return m_cols;}
 
     void hideBars(){m_showBars = false;}
     void showBars(){m_showBars = true;}
@@ -57,9 +60,12 @@ public:
     
     void addChartPoint(_SharedPtr<GraphChartPoint> point);
     void removeChartPoint(_SharedPtr<GraphChartPoint> point);
+    std::vector<_SharedPtr<GraphChartPoint> > getAllChartPoints(){return m_chartPoints;}
     
     void addRawChartPoint(_SharedPtr<GraphChartPoint> point);
     void removeRawChartPoint(_SharedPtr<GraphChartPoint> point);
+    std::vector<_SharedPtr<GraphChartPoint> > getAllRawChartPoints(){return m_rawchartPoints;}
+
     
     void handleKeys(int input);
 
@@ -87,10 +93,6 @@ private:
     
     std::vector<_SharedPtr<GraphChartPoint> > m_chartPoints;
     std::vector<_SharedPtr<GraphChartPoint> > m_rawchartPoints;
-
-    // Testing
-    void randDirection();
-    int limit;
 
 };
 

@@ -30,6 +30,16 @@ public:
 private:
     
     //std::vector<_SharedPtr<Widget> > m_widgetList;
+    void randDirection();
+    int lotteryLimit;
+    
+    _SharedPtr<GraphChart> graphController;
+    
+    int m_graphX;
+    int m_graphY;
+    
+    void drawAt(int x=-1, int y=-1);
+    void failedAt(int x=-1, int y=-1){};
     
 };
 

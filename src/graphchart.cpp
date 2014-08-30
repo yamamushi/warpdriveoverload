@@ -12,9 +12,6 @@
 
 GraphChart::GraphChart(_SharedPtr<ncursesWindow> parent, int xSize, int ySize) : Widget(parent){
     
-    // TESTING
-    limit = 10000000;
-    //
     m_showBars = true;
     m_showBorder = true;
     
@@ -28,14 +25,16 @@ GraphChart::GraphChart(_SharedPtr<ncursesWindow> parent, int xSize, int ySize) :
     else
         m_ySize = ySize;
     
+    getmaxyx(getParent()->get(), m_height, m_width);
+
+    generateChart();
+
 }
 
 void GraphChart::fill(){
 
     wattrset(m_parent->get(), m_parent->getNormalColor());
 
-    getmaxyx(getParent()->get(), m_height, m_width);
-    
     for(int x = 0; x < m_width; x++){
         for(int y = 0; y < m_height; y++){
             if(!(x % m_xSize)){
@@ -63,9 +62,6 @@ void GraphChart::fill(){
 void GraphChart::render(){
     
     generateChart();
-    mvwprintw(getParent()->get(), 5, 2,"%d", m_rows);
-    mvwprintw(getParent()->get(), 8, 2,"%d", m_cols);
-    randDirection();
     placeAllPoints();
     
 }
@@ -234,109 +230,5 @@ void GraphChart::resize(int xSize, int ySize){
 
 void GraphChart::handleKeys(int input){
     
-    switch(input){
-        case KEY_DOWN:
-            resize(m_xSize, m_ySize+1);
-            break;
-            
-        case KEY_UP:
-            resize(m_xSize, m_ySize-1);
-            break;
-            
-        case KEY_LEFT:
-            resize(m_xSize-1, m_ySize);
-            break;
-            
-        case KEY_RIGHT:
-            resize(m_xSize+1, m_ySize);
-            break;
-        case 'b':
-            toggleBars();
-            m_parent->clearScreen();
-            refresh();
-            break;
-        case 'B':
-            m_parent->toggleBorder();
-            m_parent->clearScreen();
-            refresh();
-            break;
-        case 'i':
-            limit = limit + 100000;
-            break;
-        case 'u':
-            limit = limit - 100000;
-            break;
-        case '\n':
-            m_chartPoints.at(0)->m_hidden = !m_chartPoints.at(0)->m_hidden;
-            break;
-    }
-    
-}
 
-
-void GraphChart::randDirection(){
-    int lottery = rand() % limit;
-    if(lottery > limit - m_chartPoints.size()*10000 ){
-        int number = rand() % m_chartPoints.size();
-        _SharedPtr<GraphChartPoint> point1 = m_chartPoints.at(number);
-        if(point1){
-            
-            int direction = rand() % 9 + 1;
-            
-            
-            switch(direction){
-                case 1:
-                    removePoint(point1);
-                    if(point1->m_X > 0)
-                        point1->m_X--;
-                    if(point1->m_Y < m_rows-1)
-                        point1->m_Y++;
-                    break;
-                case 2:
-                    removePoint(point1);
-                    if(point1->m_Y < m_rows-1)
-                        point1->m_Y++;
-                    break;
-                case 3:
-                    removePoint(point1);
-                    if(point1->m_X < m_cols)
-                        point1->m_X++;
-                    if(point1->m_Y < m_rows-1)
-                        point1->m_Y++;
-                    break;
-                case 4:
-                    removePoint(point1);
-                    if(point1->m_X > 0)
-                        point1->m_X--;
-                    break;
-                case 5:
-                    break;
-                case 6:
-                    removePoint(point1);
-                    if(point1->m_X < m_cols)
-                        point1->m_X++;
-                    break;
-                case 7:
-                    removePoint(point1);
-                    if(point1->m_X > 0)
-                        point1->m_X--;
-                    if(point1->m_Y > 0)
-                        point1->m_Y--;
-                    break;
-                case 8:
-                    removePoint(point1);
-                    if(point1->m_Y > 0)
-                        point1->m_Y--;
-                    break;
-                case 9:
-                    removePoint(point1);
-                    if(point1->m_X < m_cols)
-                        point1->m_X++;
-                    if(point1->m_Y > 0)
-                        point1->m_Y--;
-                    break;
-            }
-            
-        }
-    }
 }

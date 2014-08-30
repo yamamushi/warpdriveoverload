@@ -8,6 +8,14 @@
 
 #include "navigation.h"
 #include "widget.h"
+#include "graphchart.h"
+#include "tr1_wrapper.h"
+#include "bresenham2d.h"
+#include "tr1_threading.h"
+
+#include <vector>
+#include <ncurses.h>
+#include <ctime>
 
 
 void NavigationInterface::init(){
@@ -18,53 +26,213 @@ void NavigationInterface::init(){
     // Set our Interface NAme
     setName("Navigation");
     
-    // Print our name out to the Interface
-    mvwprintw(m_mainWindow->get(), 1, (m_sizeY - getName().size())/2, "%s", getName().c_str());
     
     // Add widgets
-    _SharedPtr<GraphChart> graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 2, 1));
+    m_graphX = 1;
+    m_graphY = 1;
+    lotteryLimit = 100;
+    graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, m_graphX, m_graphY));
     m_mainWindow->addWidget(graphController);
     
-    
-    // Here we populate our
-    init_pair(3, COLOR_RED, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point1(new GraphChartPoint(5,8,3,"*"));
-    init_pair(8, COLOR_BLUE, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point2(new GraphChartPoint(2,9,8,"*"));
-    init_pair(9, COLOR_YELLOW, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point3(new GraphChartPoint(0,2,9,"*"));
-    init_pair(10, COLOR_WHITE, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point4(new GraphChartPoint(1,3,10,"*"));
-    init_pair(11, COLOR_CYAN, COLOR_BLACK); // A default Background Color
-    _SharedPtr<GraphChartPoint> point5(new GraphChartPoint(8,1,11,"*"));
-    
-    _SharedPtr<GraphChart> temp = std::dynamic_pointer_cast<GraphChart>(graphController);
-    temp->addChartPoint(point1);
-    temp->addChartPoint(point2);
-    temp->addChartPoint(point3);
-    temp->addChartPoint(point4);
-    temp->addChartPoint(point5);
-    
-    _SharedPtr<GraphChartPoint> point6(new GraphChartPoint(8,1,11,"@"));
-    temp->addRawChartPoint(point6);
-    //temp->hideBars();
-    //graphController->resize(m_sizeY, m_sizeX);
+
+    // Here we populate our random points
+//    _STD_FUNCTION(void(int,int)) pass = _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2);
+//    _STD_FUNCTION(void(int,int)) fail = _STD_BIND(&NavigationInterface::failedAt, this, std::placeholders::_1, std::placeholders::_2);
+//    _STD_FUNCTION(void(int,int)) fail2 = _STD_BIND(void,nullptr, std::placeholders::_1, std::placeholders::_2);
+    int height = m_mainWindow->getY();
+    int width = m_mainWindow->getX();
+
+    // Bottom Left
+    //bresenham2d(5, rows-5, cols-5, 3, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
+    // Top Right
+    bresenham2d(width-6, 4, width-6, height-5, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
+    // Bottom Right
+    //bresenham2d(cols-5, rows-5, 5, 3, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
+    // Left
+    bresenham2d(5, 4, 5, height-5, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
+    // Bottom Left
+    bresenham2d(5, 4, width-6, 4, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
+    // Bottom
+    bresenham2d(5, height-5, width-6, height-5, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
+    m_mainWindow->hideBorder();
+
+
+    graphController->hideBars();
     graphController->refresh();
     m_initialized = true;
     
 }
 
 
+void NavigationInterface::drawAt(int x, int y){
+    
+    if(y == -1 || x == -1)
+        return;
+    
+    init_pair(5, COLOR_GREEN, COLOR_BLACK); // A default Background Color
+
+    _SharedPtr<GraphChartPoint> point(new GraphChartPoint(x,y,COLOR_PAIR(5),"*"));
+    graphController->addRawChartPoint(point);
+    
+}
+
+
 void NavigationInterface::run(){
     
+    //randDirection();
+    // Print our name out to the Interface
+    mvwprintw(m_mainWindow->get(), 1, (m_sizeY - getName().size())/2, "%s", getName().c_str());
+    std::string rowMessage = std::to_string(graphController->getRows()) + " : Rows";
+    std::string colMessage = std::to_string(graphController->getCols()) + " : Cols";
+
+    mvwprintw(m_mainWindow->get(), 1, (graphController->getCols()/2)-getName().length(),"%s", rowMessage.c_str());
     
+    mvwprintw(m_mainWindow->get(), 2, (graphController->getCols()/2)-getName().length(),"%s", colMessage.c_str());
+    
+    time_t timeT = time(0);
+    struct tm * now = localtime( & timeT );
+    char       buf[80];
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", now);
+    
+    std::string timeString(buf);
+    std::string timeMessage = "Time: " + timeString;
+
+    
+    mvwprintw(m_mainWindow->get(), 1, (graphController->getCols()/2)-getName().length()+18,"%s", timeMessage.c_str());
+
+    
+    m_mainWindow->render();
     
 }
 
 
 void NavigationInterface::handleKeys(int input){
     
-    m_mainWindow->handleKeys(input);
+    //mvwprintw(m_mainWindow->get(), 10, 2,"%d", input);
+
+    switch(input){
+        case KEY_DOWN:
+            graphController->resize(m_graphX, m_graphY+1);
+            m_graphY = graphController->getYSize();
+            m_graphX = graphController->getXSize();
+            graphController->refresh();
+            break;
+            
+        case KEY_UP:
+            graphController->resize(m_graphX, m_graphY-1);
+            m_graphY = graphController->getYSize();
+            m_graphX = graphController->getXSize();
+            graphController->refresh();
+            break;
+            
+        case KEY_LEFT:
+            graphController->resize(m_graphX-1, m_graphY);
+            m_graphY = graphController->getYSize();
+            m_graphX = graphController->getXSize();
+            graphController->refresh();
+            break;
+            
+        case KEY_RIGHT:
+            graphController->resize(m_graphX+1, m_graphY);
+            m_graphY = graphController->getYSize();
+            m_graphX = graphController->getXSize();
+            graphController->refresh();
+            break;
+        case 'b':
+            graphController->toggleBars();
+            m_mainWindow->clearScreen();
+            graphController->refresh();
+            break;
+        case 'B':
+            m_mainWindow->toggleBorder();
+            m_mainWindow->clearScreen();
+            graphController->refresh();
+            break;
+        case 'i':
+            lotteryLimit = lotteryLimit + 100000;
+            break;
+        case 'u':
+            lotteryLimit = lotteryLimit - 100000;
+            break;
+        case '\n':
+            //;//graphController->getAllChartPoints().at(0)->m_hidden = !m_chartPoints.at(0)->m_hidden;
+            break;
+        default:
+            m_mainWindow->handleKeys(input);
+            break;
+    }
+    
+    
 
 }
 
+
+
+void NavigationInterface::randDirection(){
+    
+    
+    int lottery = rand() % lotteryLimit;
+    if(lottery > lotteryLimit - 50 ){
+        int number = rand() % graphController->getAllChartPoints().size();
+        _SharedPtr<GraphChartPoint> point1 = graphController->getAllChartPoints().at(number);
+        if(point1){
+            
+            int direction = rand() % 9 + 1;
+            
+            
+            switch(direction){
+                case 1:
+                    graphController->removePoint(point1);
+                    if(point1->m_X > 0)
+                        point1->m_X--;
+                    if(point1->m_Y < graphController->getRows()-1)
+                        point1->m_Y++;
+                    break;
+                case 2:
+                    graphController->removePoint(point1);
+                    if(point1->m_Y < graphController->getRows()-1)
+                        point1->m_Y++;
+                    break;
+                case 3:
+                    graphController->removePoint(point1);
+                    if(point1->m_X < graphController->getCols())
+                        point1->m_X++;
+                    if(point1->m_Y < graphController->getRows()-1)
+                        point1->m_Y++;
+                    break;
+                case 4:
+                    graphController->removePoint(point1);
+                    if(point1->m_X > 0)
+                        point1->m_X--;
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    graphController->removePoint(point1);
+                    if(point1->m_X < graphController->getCols())
+                        point1->m_X++;
+                    break;
+                case 7:
+                    graphController->removePoint(point1);
+                    if(point1->m_X > 0)
+                        point1->m_X--;
+                    if(point1->m_Y > 0)
+                        point1->m_Y--;
+                    break;
+                case 8:
+                    graphController->removePoint(point1);
+                    if(point1->m_Y > 0)
+                        point1->m_Y--;
+                    break;
+                case 9:
+                    graphController->removePoint(point1);
+                    if(point1->m_X < graphController->getCols())
+                        point1->m_X++;
+                    if(point1->m_Y > 0)
+                        point1->m_Y--;
+                    break;
+            }
+            
+        }
+    }
+}

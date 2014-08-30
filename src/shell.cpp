@@ -127,9 +127,8 @@ void Shell::execute(){
         m_topInterface->getWindow()->clearScreen();
         m_topInterface->init();
     }
-    else{
-        m_topInterface->run();
-    }
+    
+    m_topInterface->run();
     
     m_topInterface->getWindow()->render();
     
@@ -145,7 +144,7 @@ void Shell::handleKeys(int input){
             m_topInterface->getWindow()->refresh();
             m_topInterface->getWindow()->closeAllMenus();
             m_topInterface = m_topInterface->getNext();
-//            m_topInterface->getWindow()->clearScreen();
+            m_topInterface->getWindow()->clearScreen();
             break;
             
         default:
