@@ -27,7 +27,6 @@
 
 #include <string>
 #include <ncurses.h>
-#include <Interface.h>
 #include <iostream>
 #include <vector>
 
