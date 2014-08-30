@@ -8,7 +8,7 @@
 
 #include "graphchart.h"
 #include <stdlib.h>
-
+#include <algorithm>
 
 GraphChart::GraphChart(_SharedPtr<ncursesWindow> parent, int xSize, int ySize) : Widget(parent){
     

@@ -10,6 +10,7 @@
 #include "tr1_threading.h"
 #include "tr1_wrapper.h"
 #include <iostream>
+#include <algorithm>
 
 ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : m_height(height), m_length(length), m_ypos(ypos), m_xpos(xpos)
 {

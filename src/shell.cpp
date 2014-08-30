@@ -17,6 +17,7 @@
 
 #include "asciicodes.h"
 
+#include <algorithm>
 
 void Shell::boot(){
     
