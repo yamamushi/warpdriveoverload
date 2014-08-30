@@ -11,21 +11,15 @@
 
 
 void NavigationInterface::init(){
+    
+    // By the time we get here, we should have already have had a window created and ready for us.
+    m_mainWindow->clearScreen();
 
-    getmaxyx(stdscr, m_sizeY, m_sizeX);
+    // Set our Interface NAme
+    setName("Navigation");
     
-    // Build a panel first
-    m_panel = _SharedPtr<ncursesPanel>(new ncursesPanel(_SharedPtr<ncursesWindow>(new ncursesWindow(m_sizeY, m_sizeX, 0, 0))));
-    
-    // Assign our main window
-    m_mainWindow = m_panel->getChild();
-    
-    // Set our Panel NAme
-    m_panel->setName("Navigation");
-    
-    // Print our name out to the panel
-    mvwprintw(m_panel->getChild()->get(), 1, (m_sizeY - m_panel->getName().size())/2, "%s", m_panel->getName().c_str());
-
+    // Print our name out to the Interface
+    mvwprintw(m_mainWindow->get(), 1, (m_sizeY - getName().size())/2, "%s", getName().c_str());
     
     // Add widgets
     _SharedPtr<GraphChart> graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 2, 1));
@@ -53,14 +47,10 @@ void NavigationInterface::init(){
     
     _SharedPtr<GraphChartPoint> point6(new GraphChartPoint(8,1,11,"@"));
     temp->addRawChartPoint(point6);
-    temp->hideBars();
+    //temp->hideBars();
     //graphController->resize(m_sizeY, m_sizeX);
-    
-    m_owner->addToInterfaceList(shared_from_this());
-    
-    m_mainWindow->clearScreen();
-    m_mainWindow->refresh();
-    m_mainWindow->render();
+    graphController->refresh();
+    m_initialized = true;
     
 }
 
@@ -70,3 +60,11 @@ void NavigationInterface::run(){
     
     
 }
+
+
+void NavigationInterface::handleKeys(int input){
+    
+    m_mainWindow->handleKeys(input);
+
+}
+

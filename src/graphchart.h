@@ -90,6 +90,7 @@ private:
 
     // Testing
     void randDirection();
+    int limit;
 
 };
 

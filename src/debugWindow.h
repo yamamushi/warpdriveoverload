@@ -10,7 +10,6 @@
 #define __warpdriveoverloaded__debugWindow__
 
 #include "interface.h"
-#include "ncursespanel.h"
 #include "menu.h"
 #include "window.h"
 #include "widget.h"
@@ -25,7 +24,7 @@ public:
     
     void init();
     void run();
-    void handleKeys(int input){};
+    void handleKeys(int input);
     
 private:
     

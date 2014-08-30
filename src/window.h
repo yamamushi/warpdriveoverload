@@ -44,6 +44,11 @@ public:
     
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
     _SharedPtr<winBorder> getBorder(){return m_border;}
+    void drawBorder();
+    
+    void showBorder(){m_showBorder = true;}
+    void hideBorder(){m_showBorder = false;}
+    void toggleBorder(){m_showBorder = !m_showBorder;}
     
     void render();
     void refresh();
@@ -84,6 +89,7 @@ private:
     std::vector<_SharedPtr<ncursesWindow>> m_windowList;
     std::vector<_SharedPtr<Widget>> m_widgetList;
     
+    bool m_showBorder;
     
     int m_bgColor;
     int m_fgColor;

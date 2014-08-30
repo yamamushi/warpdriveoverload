@@ -21,21 +21,18 @@
 #include "game_engine.h"
 #include "tr1_wrapper.h"
 #include "window.h"
-#include "ncursespanel.h"
 #include "widget.h"
 #include "graphchart.h"
 #include "interface.h"
 
 #include <string>
 #include <ncurses.h>
-#include <panel.h>
+#include <Interface.h>
 #include <iostream>
 #include <vector>
-#include <panel.h>
 
 struct GraphChartPoint;
 
-class ncursesPanel;
 class Interface;
 
 class Shell : public std::enable_shared_from_this<Shell>{
@@ -56,22 +53,19 @@ public:
     void removeFromInterfaceList(_SharedPtr<Interface> target);
     void addToInterfaceList(_SharedPtr<Interface> target);
     
-    _SharedPtr<ncursesPanel> getRootPanel(){return m_panels.at(0);};
+    _SharedPtr<Interface> getRootInterface(){return m_interfaceList.at(0);};
 
-    
+
 protected:
     
     friend class InterfaceHandler;
     friend class Interface;
     
     bool init();
-    void populatePanels();
+    void populateInterfaces();
     
     void addToWindowList(_SharedPtr<ncursesWindow> target);
     void removeFromWindowList(_SharedPtr<ncursesWindow> target);
-    
-    void removeFromPanelList(_SharedPtr<ncursesPanel> target);
-    void addToPanelList(_SharedPtr<ncursesPanel> target);
     
     _SharedPtr<Shell> getSharedPtr(){return shared_from_this();}
 
@@ -88,7 +82,7 @@ protected:
     void createWindow(int ysize, int xsize);
     void close_win(_SharedPtr<ncursesWindow> target_window);
     
-    void organizePanels();
+    void organizeInterfaces();
     
     bool checkForResize();
     
@@ -100,15 +94,13 @@ protected:
     int m_cols;
     
     _SharedPtr<ncursesWindow> m_mainWindow;
-    _SharedPtr<ncursesPanel> m_topPanel;
+    _SharedPtr<Interface> m_topInterface;
     
     std::vector<_SharedPtr<ncursesWindow> > m_windows;
-    std::vector<_SharedPtr<ncursesPanel> > m_panels;
 
     void doNothing(){};
     void printDebug();
     
-    _SharedPtr<Widget> graphController;
     std::vector<_SharedPtr<Interface> > m_interfaceList;
     
 };

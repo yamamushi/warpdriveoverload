@@ -22,13 +22,12 @@
 #include "tr1_wrapper.h"
 #include "shell.h"
 #include "window.h"
-#include "panel.h"
 
 #include <ncurses.h>
 #include <vector>
 
 class Interface;
-class ncursesPanel;
+class ncursesInterface;
 class ncursesWindow;
 class Widget;
 class Shell;
@@ -69,20 +68,28 @@ public:
     void queueCommand(_STD_FUNCTION(void()) target);
     //void unqueueCommand(_STD_FUNCTION(void()) target);
     
-    _SharedPtr<ncursesPanel> getPanel(){return m_panel;}
+    _SharedPtr<ncursesWindow> getWindow(){return m_mainWindow;}
     
     virtual void run();
     virtual void init(){};
     virtual void handleKeys(int input){};
     bool initialized(){return m_initialized;}
     
+    _SharedPtr<Interface> getChild(){return m_child;}
+    _SharedPtr<Interface>  getNext(){return m_next;}
+    _SharedPtr<Interface>  getPrevl(){return m_prev;}
+    
+    void setName(std::string name){m_name = name;}
+    std::string getName(){return m_name;}
     
 protected:
+    
+    friend class Shell;
     
     MsgQueue<_STD_FUNCTION(void())> l_functionList;
     _SharedPtr<Shell> m_owner;
     
-    _SharedPtr<ncursesPanel> m_panel;
+    _SharedPtr<ncursesInterface> m_Interface;
     
     std::vector<_SharedPtr<Widget> > m_widgetList;
     
@@ -95,6 +102,40 @@ protected:
     int m_sizeX;
     int m_sizeY;
     
+    void addNext(_SharedPtr<Interface>  nextInterface){m_next = nextInterface;}
+    void addPrev(_SharedPtr<Interface>  prevInterface){m_prev = prevInterface;}
+    
+    _SharedPtr<Interface> m_child;
+    _SharedPtr<Interface> m_prev;
+    _SharedPtr<Interface> m_next;
+    
+    
+    static int ID;
+    int m_ID;
+    
+    std::string m_name;
+
 };
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
