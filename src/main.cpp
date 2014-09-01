@@ -30,8 +30,6 @@ int main(int argc, char **argv){
     
     }
 
-    term_clear();
-
     return 0;
     
 }

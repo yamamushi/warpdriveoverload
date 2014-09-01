@@ -55,7 +55,7 @@ bool Shell::init(){
 		exit(1);
 	}
     
-    raw(); // disable line buffering
+    //raw(); // disable line buffering
     cbreak();			// Line buffering disabled, Pass on
     keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
     noecho();			/* Don't echo() while we do getch */
@@ -74,7 +74,7 @@ bool Shell::init(){
 bool Shell::run(){
     
     initMainWindow();
-    populateInterfaces();
+    organizeInterfaces();
     
     if(!m_topInterface){
         // Something went wrong this should not happen
@@ -99,6 +99,9 @@ bool Shell::run(){
             handleKeys(keyInput);
         }
     }
+    
+    shutdown();
+    
     return true;
 }
 
@@ -173,11 +176,9 @@ void Shell::loadInterfaces(_SharedPtr<Shell> parent){
     // Launch our debug Interface which will attach to the root Interface on this shell
     _SharedPtr<DebugInterface> debugInterface(new DebugInterface(parent));
     addToInterfaceList(debugInterface);
-    //debugInterface->init();
     
     _SharedPtr<NavigationInterface> navigationInterface(new NavigationInterface(parent));
     addToInterfaceList(navigationInterface);
-    //navigationInterface->init();
 
     initMainWindow();
 

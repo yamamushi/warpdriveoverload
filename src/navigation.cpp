@@ -18,6 +18,7 @@
 #include <vector>
 #include <ncurses.h>
 #include <ctime>
+//#include <locale.h>
 
 
 void NavigationInterface::init(){
@@ -124,6 +125,13 @@ void NavigationInterface::run(){
     mvwprintw(m_mainWindow->get(), 1, (graphController->getCols()/2)-getName().length(),"%s", rowMessage.c_str());
     
     mvwprintw(m_mainWindow->get(), 2, (graphController->getCols()/2)-getName().length(),"%s", colMessage.c_str());
+    
+    //setlocale(LC_ALL, "");
+    //const wchar_t* wstr = L"<\u2603\u26c4\U0001F638>";
+    //mvwprintw(m_mainWindow->get(), 3, (graphController->getCols()/2)-getName().length(),"%lc", L'\u263A');
+    //wmove(m_mainWindow->get(), 3, (graphController->getCols()/2)-getName().length());
+    //waddch(m_mainWindow->get(), L'\u263A');
+    //mvaddstr(1, 0, "\u2666");
     
     time_t timeT = time(0);
     struct tm * now = localtime( & timeT );
