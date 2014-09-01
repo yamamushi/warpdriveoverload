@@ -85,6 +85,8 @@ void ncursesMenu::move(int ypos, int xpos){
     
     m_ypos = ypos;
     m_xpos = xpos;
+    m_parent->clearScreen();
+    m_parent->render();
     
 }
 
@@ -145,7 +147,7 @@ void ncursesMenu::render(){
                     
                     // Show Title?
                     if(x == 0 && m_showTitle){
-                        
+                        charCounter++;
                         if(m_highlightTitle){
                             wattron(m_parent->get(), A_REVERSE);
                         }
@@ -153,12 +155,12 @@ void ncursesMenu::render(){
                             wattroff(m_parent->get(), A_REVERSE);
                         }
                         mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%s", m_name.c_str());
-                        charCounter += m_name.length()+1;
+                        charCounter += m_name.length();
                         wattroff(m_parent->get(), A_REVERSE);
                         
                     }
                     
-                    
+                    charCounter++;
                     
                     if(x == m_selected-1){
                         wattrset(m_parent->get(), m_cursorColor);
@@ -187,21 +189,36 @@ void ncursesMenu::render(){
                 if(m_showBorder){
                     
                     wattrset(m_parent->get(), m_borderColor);
-                    
-                    for(size_t line = 0; line < m_width; line++){
-                        mvwprintw(m_parent->get(), m_ypos, line, "%c", m_border->m_ts);
-                        mvwprintw(m_parent->get(), m_ypos+2, line, "%c", m_border->m_bs);
-                        
+
+                    if(!m_showTitle){
+                        mvwprintw(m_parent->get(), m_ypos, m_xpos+charCounter+1, "%c", m_border->m_tr);
+                        mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%c", m_border->m_rs);
+                        mvwprintw(m_parent->get(), m_ypos+2, m_xpos+charCounter+1, "%c", m_border->m_br);
+                        for(size_t line = m_xpos; line < m_width-m_menuSize; line++){
+                            mvwprintw(m_parent->get(), m_ypos, line, "%c", m_border->m_ts);
+                            mvwprintw(m_parent->get(), m_ypos+2, line, "%c", m_border->m_bs);
+                            
+                        }
+
+                    }
+                    else{
+                        mvwprintw(m_parent->get(), m_ypos, m_xpos+charCounter+1, "%c", m_border->m_tr);
+                        mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%c", m_border->m_rs);
+                        mvwprintw(m_parent->get(), m_ypos+2, m_xpos+charCounter+1, "%c", m_border->m_br);
+                        for(size_t line = m_xpos; line < m_width-m_menuSize+1; line++){
+                            mvwprintw(m_parent->get(), m_ypos, line, "%c", m_border->m_ts);
+                            mvwprintw(m_parent->get(), m_ypos+2, line, "%c", m_border->m_bs);
+                            
+                        }
+
                     }
                     
                     mvwprintw(m_parent->get(), m_ypos, m_xpos, "%c", m_border->m_tl);
-                    mvwprintw(m_parent->get(), m_ypos, m_xpos+m_width, "%c", m_border->m_tr);
                     mvwprintw(m_parent->get(), m_ypos+1, m_xpos, "%c", m_border->m_ls);
-                    mvwprintw(m_parent->get(), m_ypos+1, m_xpos+m_width, "%c", m_border->m_rs);
-                    
                     mvwprintw(m_parent->get(), m_ypos+2, m_xpos, "%c", m_border->m_bl);
-                    mvwprintw(m_parent->get(), m_ypos+2, m_xpos+m_width, "%c", m_border->m_br);
                     
+                    wattrset(m_parent->get(), m_normalColor);
+
                 }
             }
             

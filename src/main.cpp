@@ -16,19 +16,20 @@
 int main(int argc, char **argv){
     
     term_clear();
-
     
     sqliteDB::instance()->run();
     
     _SharedPtr<Nostradamus> nostradamus(new Nostradamus);
-    Shell shell(nostradamus);
+    _SharedPtr<Shell>shell(new Shell(nostradamus));
 
-    shell.boot();
+    shell->boot();
+    shell->loadInterfaces(shell);
+    shell->run();
     
-    while(shell.running()){
+    while(shell->running()){
     
     }
-    
+
     return 0;
     
 }

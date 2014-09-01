@@ -21,53 +21,67 @@
 #include "game_engine.h"
 #include "tr1_wrapper.h"
 #include "window.h"
-#include "ncursespanel.h"
 #include "widget.h"
 #include "graphchart.h"
+#include "interface.h"
 
 #include <string>
 #include <ncurses.h>
-#include <panel.h>
 #include <iostream>
 #include <vector>
-#include <panel.h>
 
 struct GraphChartPoint;
 
-class ncursesPanel;
+class Interface;
 
-
-class Shell {
+class Shell : public std::enable_shared_from_this<Shell>{
     
 public:
+    
     Shell(_SharedPtr<Nostradamus> parent) : m_parent(parent){m_running = false;}
     ~Shell(){shutdown();}
     
     bool running(){return m_running;}
     void boot();
+    bool run();
     
-    void refreshShell();
+    void loadInterfaces(_SharedPtr<Shell> parent);
 
-    void panelRefresh(){update_panels();}
+    void refreshShell();
     
-private:
+    void removeFromInterfaceList(_SharedPtr<Interface> target);
+    void addToInterfaceList(_SharedPtr<Interface> target);
     
+    _SharedPtr<Interface> getRootInterface(){return m_interfaceList.at(0);};
+
+    void quit();
+
+
+protected:
+    
+    friend class InterfaceHandler;
+    friend class Interface;
     
     bool init();
-    void populatePanels();
-    void shutdown();
+    void populateInterfaces();
     
-    void quit();
+    void addToWindowList(_SharedPtr<ncursesWindow> target);
+    void removeFromWindowList(_SharedPtr<ncursesWindow> target);
+    
+    _SharedPtr<Shell> getSharedPtr(){return shared_from_this();}
+
+    void shutdown();
+    void execute();
+    
+    void handleKeys(int input);
+    
+    void initMainWindow();
+    _SharedPtr<ncursesWindow> getLastWindow(){return m_windows.back();}
     
     void createWindow(int ysize, int xsize);
-    void addToWindowList(_SharedPtr<ncursesWindow> target);
-    
-    void removeFromWindowList(_SharedPtr<ncursesWindow> target);
-    void removeFromPanelList(_SharedPtr<ncursesPanel> target);
-    
-    void addToPanelList(_SharedPtr<ncursesWindow> targetWindow);
     void close_win(_SharedPtr<ncursesWindow> target_window);
-    void organizePanels();
+    
+    void organizeInterfaces();
     
     bool checkForResize();
     
@@ -79,15 +93,14 @@ private:
     int m_cols;
     
     _SharedPtr<ncursesWindow> m_mainWindow;
-    _SharedPtr<ncursesPanel> m_topPanel;
+    _SharedPtr<Interface> m_topInterface;
     
     std::vector<_SharedPtr<ncursesWindow> > m_windows;
-    std::vector<_SharedPtr<ncursesPanel> > m_panels;
 
     void doNothing(){};
     void printDebug();
     
-    _SharedPtr<Widget> graphController;
+    std::vector<_SharedPtr<Interface> > m_interfaceList;
     
 };
 

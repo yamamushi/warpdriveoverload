@@ -17,6 +17,7 @@
 #include "widget.h"
 
 class ncursesMenu;
+class Widget;
 
 struct winBorder {
     
@@ -24,7 +25,7 @@ struct winBorder {
 
 };
 
-class ncursesWindow {
+class ncursesWindow : public std::enable_shared_from_this<ncursesWindow>{
     
 public:
     ncursesWindow(int height, int length, int ypos, int xpos);
@@ -36,9 +37,19 @@ public:
     void addWidget(_SharedPtr<Widget> target);
     void removeWidget(_SharedPtr<Widget> target);
 
+    int getX(){return m_length;};
+    int getY(){return m_height;};
+    int getXpos(){return m_xpos;};
+    int getYpos(){return m_ypos;};
+    
     
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
     _SharedPtr<winBorder> getBorder(){return m_border;}
+    void drawBorder();
+    
+    void showBorder(){m_showBorder = true;}
+    void hideBorder(){m_showBorder = false;}
+    void toggleBorder(){m_showBorder = !m_showBorder;}
     
     void render();
     void refresh();
@@ -79,6 +90,7 @@ private:
     std::vector<_SharedPtr<ncursesWindow>> m_windowList;
     std::vector<_SharedPtr<Widget>> m_widgetList;
     
+    bool m_showBorder;
     
     int m_bgColor;
     int m_fgColor;

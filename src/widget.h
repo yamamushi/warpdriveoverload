@@ -25,6 +25,7 @@ public:
     
     virtual void render(){};
     virtual void refresh(){};
+    virtual void resize(int newx, int newy){};
     virtual void handleKeys(int input){};
     
 protected:
