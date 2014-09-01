@@ -79,7 +79,8 @@ void NavigationInterface::init(){
     menuNavigation->setHorizontal(true);
     menuNavigation->move(height-3,5);
     m_mainWindow->addMenu(menuNavigation);
-    /*
+    
+    
     std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList;
     std::pair<std::string, _STD_FUNCTION(void())> subItem1("Sub1", _STD_BIND(&NavigationInterface::doNothing, this));
     std::pair<std::string, _STD_FUNCTION(void())> subItem2("Sub2", _STD_BIND(&NavigationInterface::doNothing, this));
@@ -87,12 +88,7 @@ void NavigationInterface::init(){
     subMenuList.push_back(subItem2);
     
     _SharedPtr<ncursesMenu> subList(new ncursesMenu(subMenuList, "Sub", m_mainWindow));
-    
-
-    menuEngineering->addSubMenu(subList, 2);
-     */
-
-
+    menuNavigation->addSubMenu(subList, 2);
 
     graphController->hideBars();
     graphController->refresh();
@@ -155,35 +151,36 @@ void NavigationInterface::handleKeys(int input){
     //mvwprintw(m_mainWindow->get(), 10, 2,"%d", input);
 
     switch(input){
+            /*
         case KEY_DOWN:
-      /*      graphController->resize(m_graphX, m_graphY+1);
+             graphController->resize(m_graphX, m_graphY+1);
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
-            graphController->refresh(); */
+            graphController->refresh();
             break;
             
         case KEY_UP:
-       /*     graphController->resize(m_graphX, m_graphY-1);
+            graphController->resize(m_graphX, m_graphY-1);
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
-            graphController->refresh(); */
+            graphController->refresh();
             break;
             
         case KEY_LEFT:
-          /*  graphController->resize(m_graphX-1, m_graphY);
+            graphController->resize(m_graphX-1, m_graphY);
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
-            graphController->refresh(); */
-            menuNavigation->selectPrev();
+            graphController->refresh();
+            //menuNavigation->selectPrev();
             break;
             
         case KEY_RIGHT:
-           /* graphController->resize(m_graphX+1, m_graphY);
+            graphController->resize(m_graphX+1, m_graphY);
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
-            graphController->refresh();*/
-            menuNavigation->selectNext();
-            break;
+            graphController->refresh();
+            //menuNavigation->selectNext();
+            break; */
         case 'b':
             graphController->toggleBars();
             m_mainWindow->clearScreen();

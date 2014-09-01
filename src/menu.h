@@ -46,6 +46,7 @@ public:
     void showBorder(bool show);
     void highlightTitle(bool toggle = true){m_highlightTitle = toggle;}
     void showTitle(bool toggle = true){m_showTitle = toggle;}
+    int getMenuSize(){return m_menuList.size();}
     
     void setBGColor(int color){m_bgColor = color;}
     void setNormalColor(int color){m_normalColor = COLOR_PAIR(color);}
@@ -59,6 +60,7 @@ public:
     void toggleItem(int itemID);
     int getCurrentItem();
     
+    void setPlacement(int placement){m_placement = placement;}
     void setHorizontal(bool option);
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
     void setAlignment(menuAlignment align = menuAlignment::LEFT);
@@ -89,6 +91,7 @@ private:
     _SharedPtr<ncursesWindow> m_parent;
     bool m_hidden;
     bool m_horizontal;
+    int m_placement; // 0 - Top, 1 - Right, 2 - Bottom, 3 - Left
     std::vector<std::pair<std::string, _STD_FUNCTION(void())> > m_menuList;
     std::vector<std::pair<_SharedPtr<ncursesMenu>, int> > m_subMenuList;
     
