@@ -28,5 +28,6 @@ client
 *.db
 
 # Apple Stuff
-*.xcodeproj
+# include my xcode project now 
+# *.xcodeproj
 .DS_Store
