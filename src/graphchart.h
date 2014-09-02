@@ -38,7 +38,7 @@ class GraphChart : public Widget {
     
 public:
     
-    GraphChart(_SharedPtr<ncursesWindow> parent, int xSize, int ySize);
+    GraphChart(_SharedPtr<ncursesWindow> parent, int xpos=0, int ypos=0);
     
     void render();
     void refresh();
@@ -46,9 +46,13 @@ public:
     void resize(int xSize, int ySize);
     int getXSize(){return m_xSize;}
     int getYSize(){return m_ySize;}
+    void setSize(int xSize, int ySize);
     
     int getRows(){return m_rows;}
     int getCols(){return m_cols;}
+    
+    int getHeight(){return m_height;}
+    int getWidth(){return m_width;}
 
     void hideBars(){m_showBars = false;}
     void showBars(){m_showBars = true;}
@@ -66,7 +70,7 @@ public:
     void removeRawChartPoint(_SharedPtr<GraphChartPoint> point);
     std::vector<_SharedPtr<GraphChartPoint> > getAllRawChartPoints(){return m_rawchartPoints;}
 
-    
+    void resizeWindow(int height, int width){m_height = height; m_width = width; generateChart();}
     void handleKeys(int input);
 
     void removePoint(_SharedPtr<GraphChartPoint> point);
@@ -78,6 +82,8 @@ public:
 
 private:
 
+    int m_xpos;
+    int m_ypos;
     
     int m_rows;
     int m_cols;

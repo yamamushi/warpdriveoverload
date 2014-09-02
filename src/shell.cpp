@@ -15,6 +15,7 @@
 #include "debugWindow.h"
 
 #include "asciicodes.h"
+#include "terostest.h"
 
 #include <algorithm>
 
@@ -128,9 +129,13 @@ void Shell::execute(){
         m_topInterface->init();
     }
     
-    m_topInterface->run();
+    
+    // We give priority to the window render over the interface running, as we want to make sure our widgets
+    // And Menus have a chance to run before we do any manual drawing to the screen through the interface
     
     m_topInterface->getWindow()->render();
+    m_topInterface->run();
+    //m_topInterface->getWindow()->render();
     
 }
 
@@ -180,72 +185,14 @@ void Shell::loadInterfaces(_SharedPtr<Shell> parent){
     _SharedPtr<NavigationInterface> navigationInterface(new NavigationInterface(parent));
     addToInterfaceList(navigationInterface);
 
+    _SharedPtr<TerosTestInterface> terosTest(new TerosTestInterface(parent));
+    addToInterfaceList(terosTest);
+    
     initMainWindow();
 
 }
 
 void Shell::populateInterfaces(){
-    
-    //wrefresh(m_mainWindow->get());
-	//refresh();
-    
-    //wclear(m_topInterface->getChild()->get());
-    /*
-    
-    m_Interfaces.at(2)->setName("Engineering");
-    
-    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > menuList;
-    std::pair<std::string, _STD_FUNCTION(void())> item("First", _STD_BIND(&Shell::doNothing, this));
-    menuList.push_back(item);
-    std::pair<std::string, _STD_FUNCTION(void())> item2("Second", _STD_BIND(&Shell::doNothing, this));
-    menuList.push_back(item2);
-    std::pair<std::string, _STD_FUNCTION(void())> item3("Third", _STD_BIND(&Shell::doNothing, this));
-    menuList.push_back(item3);
-    std::pair<std::string, _STD_FUNCTION(void())> item4("Fourth", _STD_BIND(&Shell::printDebug, this));
-    menuList.push_back(item4);
-    std::pair<std::string, _STD_FUNCTION(void())> item5("Exit", _STD_BIND(&Shell::quit, this));
-    menuList.push_back(item5);
-    
-    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList;
-    std::pair<std::string, _STD_FUNCTION(void())> subItem1("Sub1", _STD_BIND(&Shell::doNothing, this));
-    std::pair<std::string, _STD_FUNCTION(void())> subItem2("Sub2", _STD_BIND(&Shell::doNothing, this));
-    subMenuList.push_back(subItem1);
-    subMenuList.push_back(subItem2);
-    
-    _SharedPtr<ncursesMenu> subList(new ncursesMenu(subMenuList, "Sub", m_Interfaces.at(2)->getChild()));
-    
-    _SharedPtr<ncursesMenu> menuEngineering(new ncursesMenu(menuList, "ENG", m_Interfaces.at(2)->getChild()));
-    menuEngineering->showTitle(true);
-    menuEngineering->highlightTitle(true);
-    menuEngineering->move(10,10);
-    menuEngineering->addSubMenu(subList, 2);
-    
-    init_pair(1, COLOR_RED, COLOR_BLACK); // A default Background Color
-    menuEngineering->setSelectedColor(COLOR_PAIR(1));
-    menuEngineering->render();
-    _SharedPtr<ncursesMenu> menuMain(new ncursesMenu(menuList, "MAIN", m_Interfaces.at(0)->getChild(), true));
-    menuMain->render();
-    
-    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList2;
-    std::pair<std::string, _STD_FUNCTION(void())> subItem3("Sub1", _STD_BIND(&Shell::doNothing, this));
-    std::pair<std::string, _STD_FUNCTION(void())> subItem4("Sub2", _STD_BIND(&Shell::doNothing, this));
-    subMenuList2.push_back(subItem3);
-    subMenuList2.push_back(subItem4);
-    _SharedPtr<ncursesMenu> subList2(new ncursesMenu(subMenuList2, "Sub", m_Interfaces.at(0)->getChild()));
-    menuMain->addSubMenu(subList2, 2);
-    
-    std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList3;
-    std::pair<std::string, _STD_FUNCTION(void())> subItem5("Sub1", _STD_BIND(&Shell::doNothing, this));
-    std::pair<std::string, _STD_FUNCTION(void())> subItem6("Sub2", _STD_BIND(&Shell::doNothing, this));
-    subMenuList3.push_back(subItem5);
-    subMenuList3.push_back(subItem6);
-    _SharedPtr<ncursesMenu> subList3(new ncursesMenu(subMenuList3, "Sub", m_Interfaces.at(0)->getChild()));
-    menuMain->addSubMenu(subList3, 3);
-    
-    
-    //m_Interfaces.at(0)->getChild()->addMenu(menuMain);
-    //m_Interfaces.at(2)->getChild()->addMenu(menuEngineering);
-     */
     
     organizeInterfaces();
     
@@ -287,6 +234,7 @@ void Shell::addToInterfaceList(_SharedPtr<Interface> target){
 
 
 void Shell::organizeInterfaces(){
+    
     size_t InterfaceListSize = m_interfaceList.size();
     
     for(size_t x = 0; x < m_interfaceList.size(); x++){

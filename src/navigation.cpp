@@ -13,11 +13,11 @@
 #include "bresenham2d.h"
 #include "tr1_threading.h"
 #include "connectionwidget.h"
+#include "TimeWidget.h"
 #include "shell.h"
 
 #include <vector>
 #include <ncurses.h>
-#include <ctime>
 //#include <locale.h>
 
 
@@ -34,9 +34,11 @@ void NavigationInterface::init(){
     m_graphX = 1;
     m_graphY = 1;
     lotteryLimit = 100;
-    graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, m_graphX, m_graphY));
+    graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 0, 0));
     m_mainWindow->addWidget(graphController);
     
+    _SharedPtr<TimeWidget> w_timeWidget = _SharedPtr<TimeWidget> (new TimeWidget(m_mainWindow, (graphController->getCols()/2)-getName().length()+18, 1));
+    m_mainWindow->addWidget(w_timeWidget);
 
     // Here we populate our random points
 //    _STD_FUNCTION(void(int,int)) pass = _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2);
@@ -44,6 +46,11 @@ void NavigationInterface::init(){
 //    _STD_FUNCTION(void(int,int)) fail2 = _STD_BIND(void,nullptr, std::placeholders::_1, std::placeholders::_2);
     int height = m_mainWindow->getY();
     int width = m_mainWindow->getX();
+    //graphController->move(3, 3);
+    //graphController->resizeWindow(10, 20);
+    
+    _SharedPtr<GraphChartPoint> point(new GraphChartPoint( 3, 3,COLOR_PAIR(5),"O"));
+    graphController->addChartPoint(point);
 
     // Bottom Left
     //bresenham2d(5, rows-5, cols-5, 3, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
@@ -114,34 +121,16 @@ void NavigationInterface::run(){
     
     //randDirection();
     // Print our name out to the Interface
-    mvwprintw(m_mainWindow->get(), 1, (m_sizeY - getName().size())/2, "%s", getName().c_str());
+    m_mainWindow->drawAt( (m_sizeY - getName().size())/2, 1, getName());
+    
     std::string rowMessage = std::to_string(graphController->getRows()) + " : Rows";
     std::string colMessage = std::to_string(graphController->getCols()) + " : Cols";
+    m_mainWindow->drawAt((m_mainWindow->getX()/2)-getName().length(), 1, rowMessage);
+    m_mainWindow->drawAt((m_mainWindow->getX()/2)-getName().length(), 2, colMessage);
+    
 
-    mvwprintw(m_mainWindow->get(), 1, (graphController->getCols()/2)-getName().length(),"%s", rowMessage.c_str());
-    
-    mvwprintw(m_mainWindow->get(), 2, (graphController->getCols()/2)-getName().length(),"%s", colMessage.c_str());
-    
-    //setlocale(LC_ALL, "");
-    //const wchar_t* wstr = L"<\u2603\u26c4\U0001F638>";
-    //mvwprintw(m_mainWindow->get(), 3, (graphController->getCols()/2)-getName().length(),"%lc", L'\u263A');
-    //wmove(m_mainWindow->get(), 3, (graphController->getCols()/2)-getName().length());
-    //waddch(m_mainWindow->get(), L'\u263A');
-    //mvaddstr(1, 0, "\u2666");
-    
-    time_t timeT = time(0);
-    struct tm * now = localtime( & timeT );
-    char       buf[80];
-    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", now);
-    
-    std::string timeString(buf);
-    std::string timeMessage = "Time: " + timeString;
-
-    
-    mvwprintw(m_mainWindow->get(), 1, (graphController->getCols()/2)-getName().length()+18,"%s", timeMessage.c_str());
-
-    
-    m_mainWindow->render();
+// We don't need to render because our shell handles that call for us.
+//    m_mainWindow->render();
     
 }
 
@@ -151,36 +140,20 @@ void NavigationInterface::handleKeys(int input){
     //mvwprintw(m_mainWindow->get(), 10, 2,"%d", input);
 
     switch(input){
-            /*
+            
         case KEY_DOWN:
-             graphController->resize(m_graphX, m_graphY+1);
+            graphController->resizeWindow(graphController->getHeight()+1, graphController->getWidth());
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
             graphController->refresh();
-            break;
-            
-        case KEY_UP:
-            graphController->resize(m_graphX, m_graphY-1);
-            m_graphY = graphController->getYSize();
-            m_graphX = graphController->getXSize();
-            graphController->refresh();
-            break;
-            
-        case KEY_LEFT:
-            graphController->resize(m_graphX-1, m_graphY);
-            m_graphY = graphController->getYSize();
-            m_graphX = graphController->getXSize();
-            graphController->refresh();
-            //menuNavigation->selectPrev();
             break;
             
         case KEY_RIGHT:
-            graphController->resize(m_graphX+1, m_graphY);
+            graphController->resizeWindow(graphController->getHeight(), graphController->getWidth()+1);
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
             graphController->refresh();
-            //menuNavigation->selectNext();
-            break; */
+            break;
         case 'b':
             graphController->toggleBars();
             m_mainWindow->clearScreen();

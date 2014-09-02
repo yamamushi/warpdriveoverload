@@ -59,6 +59,9 @@ public:
     
     void closeAllMenus();
     
+    void drawAt(int x, int y, std::string output);
+    void drawAt(int x, int y, char c);
+    
     void move(int newX, int newY);
     void resize(int height, int length, int ypos, int xpos);
     
