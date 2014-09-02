@@ -90,7 +90,6 @@ void GraphChart::placeRawPoint(_SharedPtr<GraphChartPoint> point){
         if( point->m_Y > 0 && point->m_Y < m_height){
             if(point->m_X > 0 && point->m_X < m_width){
                 wattrset(m_parent->get(), COLOR_PAIR(point->m_color));
-                wattrset(m_parent->get(), m_parent->getNormalColor());
                 getParent()->drawAt( point->m_X + getXpos(), point->m_Y + getYpos(), point->m_symbol);
                 wattrset(m_parent->get(), m_parent->getNormalColor());
             }
@@ -118,8 +117,7 @@ void GraphChart::placeAllPoints(){
                                 if((y > m_ySize*pointY) && (y < (m_ySize*pointY)+m_ySize+1)){
                                     if(m_showBorder){
                                         if( y > 0){
-                                            //wattrset(m_parent->get(), COLOR_PAIR(m_chartPoints.at(chartX)->m_color));
-                                            wattrset(m_parent->get(), m_parent->getNormalColor());
+                                            wattrset(m_parent->get(), COLOR_PAIR(m_chartPoints.at(chartX)->m_color));
                                             getParent()->drawAt( x + getXpos(), y + getYpos(), m_chartPoints.at(chartX)->m_symbol);
                                             wattrset(m_parent->get(), m_parent->getNormalColor());
                                         }
@@ -136,8 +134,7 @@ void GraphChart::placeAllPoints(){
         if(!m_rawchartPoints.at(rawchartX)->m_hidden){
             if( m_rawchartPoints.at(rawchartX)->m_Y > 0 && m_rawchartPoints.at(rawchartX)->m_Y < m_height){
                 if(m_rawchartPoints.at(rawchartX)->m_X > 0 && m_rawchartPoints.at(rawchartX)->m_X < m_width){
-                   // wattrset(m_parent->get(), COLOR_PAIR(m_rawchartPoints.at(rawchartX)->m_color));
-                    wattrset(m_parent->get(), m_parent->getNormalColor());
+                    wattrset(m_parent->get(), COLOR_PAIR(m_rawchartPoints.at(rawchartX)->m_color));
                     getParent()->drawAt( m_rawchartPoints.at(rawchartX)->m_X + getXpos(), m_rawchartPoints.at(rawchartX)->m_Y + getYpos(), m_rawchartPoints.at(rawchartX)->m_symbol);
                     wattrset(m_parent->get(), m_parent->getNormalColor());
                 }
