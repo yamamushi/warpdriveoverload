@@ -90,6 +90,7 @@ void GraphChart::placeRawPoint(_SharedPtr<GraphChartPoint> point){
         if( point->m_Y > 0 && point->m_Y < m_height){
             if(point->m_X > 0 && point->m_X < m_width){
                 wattrset(m_parent->get(), COLOR_PAIR(point->m_color));
+                wattrset(m_parent->get(), m_parent->getNormalColor());
                 getParent()->drawAt( point->m_X + getXpos(), point->m_Y + getYpos(), point->m_symbol);
                 wattrset(m_parent->get(), m_parent->getNormalColor());
             }
