@@ -79,7 +79,7 @@ void TerosWindow::loadfromfile(std::string target)
 void TerosWindow::loadfromvector (vector<char> input, int column)
 {
     
-    init_pair(12, COLOR_BLUE, COLOR_BLACK); // A default Background Color
+//    init_pair(12, COLOR_BLUE, COLOR_BLACK); // A default Background Color
 	if (input.size()%column)
 	{
 		return;
@@ -99,7 +99,7 @@ void TerosWindow::loadfromvector (vector<char> input, int column)
 		for (int j = 0; j < l_width; j++)
 		{
 			//m_content [(m_height - i - 1)*m_width + j] = input [(i*m_width) + j];
-            //init_pair(2, COLOR_BLUE, COLOR_BLACK); // A default Background Color
+            init_pair(20, COLOR_BLUE, COLOR_BLACK); // A default Background Color
             
             //m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(i, j, COLOR_PAIR(2), "*")));
             
@@ -109,12 +109,12 @@ void TerosWindow::loadfromvector (vector<char> input, int column)
             std::string output(&test);
 
             if(input [(i*l_width) + j] == ' ' || j == l_width - 1){
-                m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, COLOR_PAIR(1), " ")));
+                m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, 20, " ")));
             }
             else{
 
                 
-                m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, COLOR_PAIR(1), output)));
+                m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, 20, output)));
             }
 
 		}

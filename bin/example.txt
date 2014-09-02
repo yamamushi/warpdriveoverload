@@ -1,0 +1,12 @@
+
+HH  HH EEEEEE LL     LL     OOOOOO
+HH  HH EE     LL     LL     OO  OO
+HHHHHH EEEEEE LL     LL     OO  OO
+HH  HH EE     LL     LL     OO  OO
+HH  HH EEEEEE LLLLLL LLLLLL OOOOOO
+
+WW  WW OOOOOO RRRR   LL     DDDD   !! !! !!
+WW  WW OO  OO RR  RR LL     DD  DD !! !! !!
+WW  WW OO  OO RR  RR LL     DD  DD !! !! !!
+WWWWWW OO  OO RRRR   LL     DD  DD         
+WWWWWW OOOOOO RR  RR LLLLLL DDDD   !! !! !!
