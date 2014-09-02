@@ -3,7 +3,7 @@ warpdriveoverload
 
 Current: 
 
-    This is a MUD-type project in development. At the moment, this is primarily a client showcasing various features of the library being written to support this project.
+This is a MUD-type project in development. At the moment, this is primarily a client showcasing various features of the library being written to support this project.
     
 
 Dependencies:
@@ -16,8 +16,9 @@ Dependencies:
 
 Development:
 
-    Please make sure you are on the proper branch, "Develop". You can switch branches with:
-        git checkout develop
+Please make sure you are on the proper branch, "Develop". You can switch branches with:
+    
+    git checkout develop
         
 
 
