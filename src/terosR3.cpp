@@ -11,7 +11,7 @@
  */
 
 #include "terosR3.h"
-#include "terosPolygon.h"
+#include "terospolygon.h"
 #include <iostream>
 
 

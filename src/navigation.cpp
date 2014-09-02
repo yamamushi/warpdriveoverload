@@ -139,6 +139,7 @@ void NavigationInterface::handleKeys(int input){
 
     switch(input){
             
+            /*
         case KEY_DOWN:
             graphController->resizeWindow(graphController->getHeight()+1, graphController->getWidth());
             m_graphY = graphController->getYSize();
@@ -151,7 +152,7 @@ void NavigationInterface::handleKeys(int input){
             m_graphY = graphController->getYSize();
             m_graphX = graphController->getXSize();
             graphController->refresh();
-            break;
+            break; */
         case 'b':
             graphController->toggleBars();
             m_mainWindow->clearScreen();

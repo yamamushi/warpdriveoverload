@@ -52,6 +52,7 @@ private:
     int direction;
     int m_zoom;
     bool m_rotate;
+    double m_rotspeed;
 };
 
 
