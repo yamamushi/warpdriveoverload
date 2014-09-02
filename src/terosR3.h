@@ -1,11 +1,15 @@
 #pragma once
-//
-//  terosR3.h
-//  warpdriveoverloaded
-//
-//  Created by Jonathan Rumion on 9/1/14.
-//  Copyright (c) 2014 TAP. All rights reserved.
-//
+/*
+ 
+ A modified version of TEROS Engine 0.0.2.7 by Kyle L. Miskell - KyleMiskell@gmail.com
+ 
+ Original TEROS project can be found at:
+ 
+ https://github.com/SighoftheSecond/TEROS-ENGINE
+ 
+ - Yamamushi
+ 
+ */
 
 #ifndef __warpdriveoverloaded__terosR3__
 #define __warpdriveoverloaded__terosR3__

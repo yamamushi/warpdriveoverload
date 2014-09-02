@@ -1,6 +1,6 @@
 /*
  
- A modified version of TEROS Engine 0.0.2.7 by Kyle L. Miskell.
+ A modified version of TEROS Engine 0.0.2.7 by Kyle L. Miskell - KyleMiskell@gmail.com
  
  Original TEROS project can be found at:
  
@@ -8,7 +8,7 @@
  
  - Yamamushi
  
-*/
+ */
 
 #include "teros.h"
 #include "terospolygon.h"
