@@ -65,12 +65,14 @@ public:
     void addChartPoint(_SharedPtr<GraphChartPoint> point);
     void removeChartPoint(_SharedPtr<GraphChartPoint> point);
     std::vector<_SharedPtr<GraphChartPoint> > getAllChartPoints(){return m_chartPoints;}
-    void clearAllChartPoints(){m_chartPoints.clear();}
+    void clearAllChartPoints();
     
     void addRawChartPoint(_SharedPtr<GraphChartPoint> point);
     void removeRawChartPoint(_SharedPtr<GraphChartPoint> point);
     std::vector<_SharedPtr<GraphChartPoint> > getAllRawChartPoints(){return m_rawchartPoints;}
-    void clearAllRawChartPoints(){m_rawchartPoints.clear();}
+    void clearAllRawChartPoints();
+    
+    void clearAll(){wclear(m_parent->get());}
 
     void resizeWindow(int height, int width){m_height = height; m_width = width; generateChart();}
     void handleKeys(int input);

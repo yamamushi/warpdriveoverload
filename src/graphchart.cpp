@@ -211,6 +211,28 @@ void GraphChart::removeChartPoint(_SharedPtr<GraphChartPoint> point){
     }
 }
 
+
+void GraphChart::clearAllChartPoints(){
+    /*
+    for(int x=0; x < m_chartPoints.size(); x++){
+        getParent()->drawAt( m_chartPoints.at(x)->m_X, m_chartPoints.at(x)->m_Y," ");
+    }
+    */
+    m_chartPoints.clear();
+
+}
+
+void GraphChart::clearAllRawChartPoints(){
+   
+    for(int x=0; x < m_rawchartPoints.size(); x++){
+        removePoint(m_rawchartPoints.at(x));
+    }
+    wrefresh(getParent()->get());
+    m_rawchartPoints.clear();
+    
+}
+
+
 void GraphChart::refresh(){
     
     fill();

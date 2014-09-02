@@ -66,7 +66,8 @@ void TerosWindow::loadfromfile(std::string target)
         }
         else{
             std::string output(&ch);
-            m_screen->drawAt(x+m_xpos, y, output);
+            //m_screen->drawAt(x+m_xpos, y, output);
+            m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(x+m_xpos, y, COLOR_PAIR(1), output)));
             x++;
         }
     }
@@ -75,25 +76,47 @@ void TerosWindow::loadfromfile(std::string target)
 	input.close ();
 }
 
-void TerosWindow::loadfromvector (vector <char> input, int column)
+void TerosWindow::loadfromvector (vector<char> input, int column)
 {
-	if (input.size ()%column)
+    
+    init_pair(12, COLOR_BLUE, COLOR_BLACK); // A default Background Color
+	if (input.size()%column)
 	{
 		return;
 	}
 
+    m_display.clear();
 	m_content.resize (input.size ());
 	m_cursors.resize (0);
 	m_activetext.resize (0);
 
-	m_width = column;
-	m_height = input.size ()/column;
+    int l_width = column;
+    int l_height = input.size()/column;
+    
 
-	for (int i = 0; i < m_height; i++)
+	for (int i = 0; i < l_height; i++)
 	{
-		for (int j = 0; j < m_width; j++)
+		for (int j = 0; j < l_width; j++)
 		{
-			m_content [(m_height - i - 1)*m_width + j] = input [(i*m_width) + j];
+			//m_content [(m_height - i - 1)*m_width + j] = input [(i*m_width) + j];
+            //init_pair(2, COLOR_BLUE, COLOR_BLACK); // A default Background Color
+            
+            //m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(i, j, COLOR_PAIR(2), "*")));
+            
+            //if(input.at((i*j)+j) != ' ')
+            char test;
+            test = input [(i*l_width) + j];
+            std::string output(&test);
+
+            if(input [(i*l_width) + j] == ' '){
+                m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, COLOR_PAIR(1), " ")));
+            }
+            else{
+
+                
+                m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, COLOR_PAIR(1), output)));
+            }
+
 		}
 	}
 
@@ -276,11 +299,19 @@ void TerosScreen::drawAt(int x, int y, char c){
 
 void TerosScreen::buildscr ()
 {
-
-    //m_graphChart->clearAllChartPoints();
-    //m_graphChart->clearAllRawChartPoints();
-    for(int x = 0; x < m_display.size(); x++){
-        m_graphChart->addRawChartPoint(m_display.at(x));
+    
+    m_graphChart->clearAllChartPoints();
+    m_graphChart->clearAllRawChartPoints();
+    m_display.clear();
+    
+    for(int x = 0; x < layers.size(); x++){
+        std::vector<_SharedPtr<GraphChartPoint> > points = layers.at(x)->getDisplay();
+        for(int y = 0; y < points.size(); y++){
+            m_display.push_back(points.at(y));
+        }
+    }
+    for(int y = 0; y < m_display.size(); y++){
+        m_graphChart->addRawChartPoint(m_display.at(y));
     }
     
 }
@@ -288,8 +319,6 @@ void TerosScreen::buildscr ()
 void TerosScreen::displayscr ()
 {
 	buildscr ();
-
-    //m_graphChart->render();
     
 }
 

@@ -16,6 +16,8 @@
 #include "connectionwidget.h"
 #include "teros.h"
 #include "graphchart.h"
+#include "terosR3.h"
+#include "terospolygon.h"
 
 #include <ncurses.h>
 #include <vector>
@@ -33,8 +35,19 @@ public:
 private:
     
     void doNothing(){};
+    
     _SharedPtr<TerosScreen> m_terosScreen;
     _SharedPtr<GraphChart> m_graphController;
+    _SharedPtr<TerosR3Cam> m_terosCam;
+    _SharedPtr<TerosR3Object> m_terosObject;
+    _SharedPtr<TerosWindow> m_terosWindow;
+
+
+    std::vector<TerosPolygon> m_terosPolygons;
+
+    int yrotation;
+    int xrotation;
+    int zrotation;
     
 };
 

@@ -7,6 +7,8 @@
 //
 
 #include "terostest.h"
+#include "terospolygon.h"
+#include "terosR3.h"
 
 
 void TerosTestInterface::init(){
@@ -16,20 +18,135 @@ void TerosTestInterface::init(){
     
     m_graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 0, 0));
     m_mainWindow->addWidget(m_graphController);
+    m_graphController->hideBars();
     
     
     m_terosScreen = _SharedPtr<TerosScreen>(new TerosScreen(m_mainWindow, 0, 0, m_graphController));
     m_mainWindow->addWidget(m_terosScreen);
     
-    _SharedPtr<TerosWindow> l_testWindow  =  _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth(), m_terosScreen->getheight(), 2, 2));
+    m_terosWindow  =  _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth(), m_terosScreen->getheight(), 2, 2));
     
-    m_terosScreen->addlayer(l_testWindow);
+    m_terosScreen->addlayer(m_terosWindow);
     m_mainWindow->drawAt(3, 3, "Testing");
 //    m_mainWindow->refresh();
-    l_testWindow->loadfromfile("example.txt");
+//    l_testWindow->loadfromfile("example.txt");
     m_mainWindow->drawAt(4, 4, "Testing 2");
+    
+    m_terosObject = _SharedPtr<TerosR3Object>(new TerosR3Object);
+    m_terosCam = _SharedPtr<TerosR3Cam>(new TerosR3Cam);
+    
+    yrotation = 0;
+    zrotation = 0;
+    xrotation = 0;
+    
+
+    TerosPolygon ls1;
+	TerosPolygon ls2;
+	TerosPolygon rs1;
+	TerosPolygon rs2;
+	TerosPolygon bs1;
+	TerosPolygon bs2;
+	TerosPolygon fs1;
+	TerosPolygon fs2;
+	TerosPolygon ts1;
+	TerosPolygon ts2;
+	TerosPolygon us1;
+	TerosPolygon us2;
+    
+    
+    ls1.modp (0, 2.5, -0.5, -0.5);
+	ls1.modp (1, 3.5, -0.5, -0.5);
+	ls1.modp (2, 3.5, -0.5, 0.5);
+	ls1.setfill ('@');
+    m_terosPolygons.push_back(ls1);
+
+	ls2.modp (0, 3.5, -0.5, 0.5);
+	ls2.modp (1, 2.5, -0.5, 0.5);
+	ls2.modp (2, 2.5, -0.5, -0.5);
+	ls2.setfill ('@');
+    m_terosPolygons.push_back(ls2);
+
+	rs1.modp (0, 2.5, 0.5, -0.5);
+	rs1.modp (1, 3.5, 0.5, -0.5);
+	rs1.modp (2, 3.5, 0.5, 0.5);
+	rs1.setfill ('@');
+    m_terosPolygons.push_back(rs1);
+
+	rs2.modp (0, 3.5, 0.5, 0.5);
+	rs2.modp (1, 2.5, 0.5, 0.5);
+	rs2.modp (2, 2.5, 0.5, -0.5);
+	rs2.setfill ('@');
+    m_terosPolygons.push_back(rs2);
+
+	bs1.modp (0, 3.5, -0.5, -0.5);
+	bs1.modp (1, 3.5, 0.5, -0.5);
+	bs1.modp (2, 3.5, 0.5, 0.5);
+	bs1.setfill ('#');
+    m_terosPolygons.push_back(bs1);
+
+	bs2.modp (0, 3.5, 0.5, 0.5);
+	bs2.modp (1, 3.5, -0.5, 0.5);
+	bs2.modp (2, 3.5, -0.5, -0.5);
+	bs2.setfill ('#');
+    m_terosPolygons.push_back(bs2);
+
+	fs1.modp (0, 2.5, -0.5, -0.5);
+	fs1.modp (1, 2.5, 0.5, -0.5);
+	fs1.modp (2, 2.5, 0.5, 0.5);
+	fs1.setfill ('#');
+    m_terosPolygons.push_back(fs1);
+
+	fs2.modp (0, 2.5, 0.5, 0.5);
+	fs2.modp (1, 2.5, -0.5, 0.5);
+	fs2.modp (2, 2.5, -0.5, -0.5);
+	fs2.setfill ('#');
+    m_terosPolygons.push_back(fs2);
+
+	ts1.modp (0, 3.5, -0.5, 0.5);
+	ts1.modp (1, 3.5, 0.5, 0.5);
+	ts1.modp (2, 2.5, 0.5, 0.5);
+	ts1.setfill ('X');
+    m_terosPolygons.push_back(ts1);
+
+	ts2.modp (0, 2.5, 0.5, 0.5);
+	ts2.modp (1, 2.5, -0.5, 0.5);
+	ts2.modp (2, 3.5, -0.5, 0.5);
+	ts2.setfill ('X');
+    m_terosPolygons.push_back(ts2);
+
+	us1.modp (0, 3.5, -0.5, -0.5);
+	us1.modp (1, 3.5, 0.5, -0.5);
+	us1.modp (2, 2.5, 0.5, -0.5);
+	us1.setfill ('X');
+    m_terosPolygons.push_back(us1);
+
+	us2.modp (0, 2.5, 0.5, -0.5);
+	us2.modp (1, 2.5, -0.5, -0.5);
+	us2.modp (2, 3.5, -0.5, -0.5);
+	us2.setfill ('X');
+    m_terosPolygons.push_back(us2);
+
+    
+    for(int x = 0; x < m_terosPolygons.size(); x++){
+        m_terosObject->addside(&m_terosPolygons.at(x));
+    }
+    
+    m_terosCam->setviewsize(40,70);
+    
+    m_terosCam->addobject(m_terosObject.get());
+    
+    double p1[3]{0,0,0};
+    double p2[3]{0,0,0};
+    m_terosCam->applyrotation(1, 1, 1, p1, p2, *m_terosObject);
+
+    m_terosCam->drawobjects();
+    
+    
 
     m_terosScreen->displayscr();
+    
+    m_terosObject->saveobj("Test.tr3");
+
     
     m_initialized = true;
 }
@@ -37,14 +154,47 @@ void TerosTestInterface::init(){
 
 void TerosTestInterface::run(){
 
-//    m_terosScreen->displayscr();
+    m_terosCam->rotatecam('x', -0.1);
+    m_terosCam->drawobjects();
+
+    m_terosWindow->loadfromvector(m_terosCam->putview(), 70);
+
+    m_terosScreen->displayscr();
+
+    //m_mainWindow->clearScreen();
+    m_mainWindow->drawAt(m_mainWindow->getX()/2, 3, "3D Rendering Test");
+    
+    //m_mainWindow->render();
+
 //    l_testWindow->loadfromfile("example.txt");
     
 }
 
 
 void TerosTestInterface::handleKeys(int input){
-    
+    switch(input){
+            
+        case KEY_DOWN:
+ 
+            m_terosCam->drawobjects();
+            break;
+            
+        case KEY_RIGHT:
+            m_terosCam->rotatecam('x', -0.2);
+            //xrotation++;
+            m_terosCam->drawobjects();
+
+            break;
+        case KEY_LEFT:
+            m_terosCam->rotatecam('x', 0.2);
+            //yrotation++;
+            m_terosCam->drawobjects();
+
+            break;
+        default:
+            m_mainWindow->handleKeys(input);
+            break;
+    }
     
     
 }

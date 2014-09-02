@@ -53,6 +53,8 @@ public:
     void resize(int newx, int newy){}
     void handleKeys(int input){}
     
+    std::vector<_SharedPtr<GraphChartPoint> > getDisplay(){return m_display;}
+    
     // End Widget Functions
     
 

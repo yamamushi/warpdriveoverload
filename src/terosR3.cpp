@@ -1329,9 +1329,9 @@ void TerosR3Cam::setcampos (double x, double y, double z)
 
 void TerosR3Cam::addobject (TerosR3Object * nextelement)
 {
-	objects.resize (objects.size () + 1);
+	//objects.resize (objects.size () + 1);
     
-	objects [objects.size () - 1] = nextelement;
+	objects.push_back(nextelement);
 }
 
 void TerosR3Cam::delobject (int index)
@@ -1801,6 +1801,13 @@ double TerosR3Cam::putzoomfactor ()
 
 vector <char> TerosR3Cam::putview ()
 {
+    /*
+     // We were using this to debug our window output
+    std::string str(view.begin(),view.end());
+    std::ofstream log("output.txt");
+    log << str;
+    log.close();
+*/
 	return view;
 }
 

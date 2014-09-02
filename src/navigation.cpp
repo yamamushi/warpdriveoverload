@@ -119,7 +119,6 @@ void NavigationInterface::drawAt(int x, int y){
 
 void NavigationInterface::run(){
     
-    //randDirection();
     // Print our name out to the Interface
     m_mainWindow->drawAt( (m_sizeY - getName().size())/2, 1, getName());
     
@@ -129,8 +128,7 @@ void NavigationInterface::run(){
     m_mainWindow->drawAt((m_mainWindow->getX()/2)-getName().length(), 2, colMessage);
     
 
-// We don't need to render because our shell handles that call for us.
-//    m_mainWindow->render();
+    m_mainWindow->render();
     
 }
 
