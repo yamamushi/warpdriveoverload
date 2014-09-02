@@ -37,5 +37,7 @@ public:
     
     TerosR3Object * putchest (); //Prototyping a function for returning a pointer to the 'chest' R3Object contained within a given TreasureChest object.
     TerosR3Object * putlid (); //Prototyping a function for returning a pointer to the 'lid' R3Object contained within a given TreasureChest object.
+    
+    void reset();
 };
 #endif /* defined(__warpdriveoverloaded__TreasureChest__) */

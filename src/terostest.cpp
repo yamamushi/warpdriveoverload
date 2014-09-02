@@ -113,11 +113,11 @@ void TerosTestInterface::run(){
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 15, " Z Buffer: " + std::to_string(zpos) + " ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 16, "                                 ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 17, "                                 ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-34), 18, "t - Change Tool                  ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-34), 18, "t - Change Item to Rotate        ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 19, "x/X: Rotate Camera on X axis     ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 20, "y/Y: Rotate Camera on Y axis     ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 21, "z/Z: Rotate Camera on Z axis     ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-34), 22, "spacebar: Pause/Unpause rotation ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-34), 22, "c/o: close/open chest ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 23, "Up/Down: Zoom in/out             ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 24, "j/k/l (and caps): modify buffer  ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 25, "Enter: Commit Buffer             ");
@@ -160,10 +160,10 @@ void TerosTestInterface::run(){
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 7, "Rotation Paused");
     }
     if(!m_tool){
-        m_mainWindow->drawAt((m_mainWindow->getX()-34), 9, "Camera Tool Selected");
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 9, "Camera Selected");
     }
     else{
-        m_mainWindow->drawAt((m_mainWindow->getX()-34), 9, "Object Tool Selected");
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 9, "Chest Selected");
     }
     
     m_graphController->refresh();

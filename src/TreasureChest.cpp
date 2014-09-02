@@ -75,3 +75,11 @@ TerosR3Object * TreasureChest::putlid ()
 {
 	return &lid; //Returning a pointer to the lid R3Object.
 }
+
+
+void TreasureChest::reset(){
+    
+    lid.basisreset();
+    chest.basisreset();
+    
+}
