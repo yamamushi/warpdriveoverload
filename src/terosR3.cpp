@@ -1464,12 +1464,12 @@ void TerosR3Cam::cpybasis (char axis, double store [3])
 	}
 }
 
-void TerosR3Cam::setviewsize (int rows, int columns)
+void TerosR3Cam::setviewsize (int rows, int column)
 {
-	if (columns > 0 && rows > 0)
+	if (column > 0 && rows > 0)
 	{
-		viewcolumns = columns;
-		view.resize (columns*rows);
+		viewcolumns = column;
+		view.resize (column*rows);
 		viewdepth.resize (view.size ());
 	}
 }

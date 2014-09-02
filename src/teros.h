@@ -22,6 +22,7 @@
 #include "window.h"
 #include "widget.h"
 #include "tr1_wrapper.h"
+#include "graphchart.h"
 
 #define SCRHEIGHT 50
 #define SCRWIDTH 78
@@ -37,11 +38,14 @@ double findang (double, double);
 
 string doubletostring (double);
 
-class TerosWindow : public Widget
+class TerosScreen;
+
+
+class TerosWindow
 {
     
 public:
-    TerosWindow(_SharedPtr<ncursesWindow> owner, int xpos, int ypos);
+    TerosWindow(_SharedPtr<TerosScreen> owner, int width, int height, int xpos, int ypos);
     
     // Begin Widget Functions
     void render(){}
@@ -51,7 +55,10 @@ public:
     
     // End Widget Functions
     
-    void loadfromfile (string);
+
+    // Teros Defaults
+    
+    void loadfromfile(std::string target);
     void loadfromvector (std::vector <char>, int);
     void modcontent (char, int, int);
     void tlrepos (int, int);
@@ -65,7 +72,7 @@ public:
     
     bool putcursor (int);
     
-    char readcontent (int, int);
+    std::string readcontent (int, int);
     char putfill ();
     char putcursorchar ();
     char putatxtid ();
@@ -76,50 +83,82 @@ public:
     int putheight ();
     int putxpos ();
     int putypos ();
+    int getxpos(){return m_xpos;}
+    int getypos(){return m_ypos;}
     int cursorcount ();
     int activetextcount ();
     
     string putactivetext (int);
     
 private:
-    std::vector <char> content;
-    std::vector <bool> cursors;
-    std::vector <string> activetext;
+    std::vector <char> m_content;
+    std::vector <bool> m_cursors;
+    std::vector <string> m_activetext;
     
-    int width;
-    int height;
-    int tlposx;
-    int tlposy;
+    std::vector<_SharedPtr<GraphChartPoint> > m_display;
     
-    char cursorchar;
-    char fill;
-    char atxtid;
-    char cursorid;
-    char transparency;
+    int m_width;
+    int m_height;
+    int m_tlposx;
+    int m_tlposy;
+    int m_xpos;
+    int m_ypos;
+    
+    char m_cursorchar;
+    char m_fill;
+    char m_atxtid;
+    char m_cursorid;
+    char m_transparency;
+    
+    _SharedPtr<TerosScreen> m_screen;
     
 };
 
-class TerosScreen
+class TerosScreen : public Widget
 {
-private:
-    char display [SCRWIDTH][SCRHEIGHT];
-    
-    std::vector <TerosWindow *> layers;
     
 public:
-    TerosScreen ();
+    TerosScreen (_SharedPtr<ncursesWindow> owner, int xpos, int ypos, _SharedPtr<GraphChart> renderObject);
     
-    void clrscr ();
+    
+    // New Functions
+    int getwidth(){return m_width;}
+    int getheight(){return m_height;}
+    
+    void drawAt(int x, int y, std::string output);
+    void drawAt(int x, int y, char c);
+    
+    int getxpos(){return m_xpos;}
+    int getypos(){return m_ypos;}
+    
+    // End New Functions
+    
     void buildscr ();
     void displayscr ();
-    void addlayer (TerosWindow *);
+    void addlayer ( _SharedPtr<TerosWindow> layer);
     void dellayer (int);
     void swaplayer (int, int);
-    void modlayer (int, TerosWindow *);
+    void modlayer (int,  _SharedPtr<TerosWindow> layer);
+    
+    
     
     int layercount ();
     
-    TerosWindow * putlayer (int);
+     _SharedPtr<TerosWindow> putlayer(int);
+    
+    
+private:
+    
+    std::vector<_SharedPtr<GraphChartPoint> > m_display;
+    std::vector< _SharedPtr<TerosWindow> > layers;
+    
+    int m_width;
+    int m_height;
+    int m_xpos;
+    int m_ypos;
+    
+    _SharedPtr<GraphChart> m_graphChart;
+
 };
 
 

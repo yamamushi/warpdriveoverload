@@ -13,128 +13,110 @@
 #include "teros.h"
 #include "terospolygon.h"
 
-TerosWindow::TerosWindow(_SharedPtr<ncursesWindow> parent, int posx, int posy) : Widget(parent, posx, posy)
+#include <ncurses.h>
+
+TerosWindow::TerosWindow(_SharedPtr<TerosScreen> owner, int width, int height, int posx, int posy)
 {
-	width = parent->getX();
-	height = parent->getY();
+    m_screen = owner;
+	m_width = width;
+	m_height = height;
+    m_xpos = posx;
+    m_ypos = posy;
 
-	//m_xpos = 0;
-	m_ypos = height - 1;
-
-	cursorchar = '>';
-	fill = ' ';
-	cursorid = '&';
-	atxtid = '%';
-	transparency = '`';
+	m_cursorchar = '>';
+	m_fill = ' ';
+	m_cursorid = '&';
+	m_atxtid = '%';
+	m_transparency = '`';
 }
 
-void TerosWindow::loadfromfile (string fname)
+
+
+
+
+void TerosWindow::loadfromfile(std::string target)
 {
-	width = 0;
-	height = 0;
+    m_screen->drawAt(5, 5, "loading file: " + target);
 
-	ifstream input;
+	//m_width = 0;
+	//m_height = m_screen->getheight();
+    //m_width = 0;
+    m_height = 0;
 
-	string line;
+    std::ifstream input;
 
-	input.open (fname.c_str());
+    std::string line;
 
-	while (!input.eof())
-	{
-		getline (input, line);
+	//input.open (target.c_str());
 
-		if (line.size() > width)
-		{
-			width = line.size ();
-		}
-	}
+	m_content.resize (0);
+	m_cursors.resize (0);
+	m_activetext.resize (0);
 
-	input.close ();
 
-	input.open (fname.c_str());
-
-	content.resize (0);
-	cursors.resize (0);
-	activetext.resize (0);
-
-	while (!input.eof())
-	{
-		getline (input, line);
-
-		for (int i = 0; i < width; i++)
-		{
-			content.resize (content.size () + 1);
-
-			if (i < line.size ())
-			{
-				content [i + height*width] = line [i];
-			}
-			else
-			{
-				content [i + height*width] = fill;
-			}
-
-			if (content [i + height*width] == cursorid)
-			{
-				cursors.resize (cursors.size () + 1);
-				cursors [cursors.size () - 1] = false;
-			}
-			else if (content [i + height*width] == atxtid)
-			{
-				activetext.resize (activetext.size () + 1);
-
-				activetext [activetext.size () - 1] = "";
-			}
-		}
-
-		height++;
-	}
+    char ch;
+    fstream fin(target.c_str(), fstream::in);
+    int x = 0;
+    int y = 0;
+    while(fin >> noskipws >> ch){
+        
+        if(ch == '\n' || ch == '\r'){
+            y++;
+            x = 0;
+        }
+        else{
+            std::string output(&ch);
+            m_screen->drawAt(x+m_xpos, y, output);
+            x++;
+        }
+    }
+    //m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(i, m_height, COLOR_PAIR(1), symbol)));
 
 	input.close ();
 }
 
-void TerosWindow::loadfromvector (vector <char> input, int columns)
+void TerosWindow::loadfromvector (vector <char> input, int column)
 {
-	if (input.size ()%columns)
+	if (input.size ()%column)
 	{
 		return;
 	}
 
-	content.resize (input.size ());
-	cursors.resize (0);
-	activetext.resize (0);
+	m_content.resize (input.size ());
+	m_cursors.resize (0);
+	m_activetext.resize (0);
 
-	width = columns;
-	height = input.size ()/columns;
+	m_width = column;
+	m_height = input.size ()/column;
 
-	for (int i = 0; i < height; i++)
+	for (int i = 0; i < m_height; i++)
 	{
-		for (int j = 0; j < width; j++)
+		for (int j = 0; j < m_width; j++)
 		{
-			content [(height - i - 1)*width + j] = input [(i*width) + j];
+			m_content [(m_height - i - 1)*m_width + j] = input [(i*m_width) + j];
 		}
 	}
 
-	cursorid = '\0';
-	atxtid = '\0';
-	transparency = '\0';
+	m_cursorid = '\0';
+	m_atxtid = '\0';
+	m_transparency = '\0';
 }
 
 void TerosWindow::setatxtid (char atid)
 {
-	atxtid = atid;
+	m_atxtid = atid;
 }
 
 void TerosWindow::setcursorid (char cid)
 {
-	cursorid = cid;
+	m_cursorid = cid;
 }
 
 void TerosWindow::modcontent (char c, int x, int y)
 {
-	if (x >= 0 && x < width && y >= 0 && y < height)
+	if (x >= 0 && x < m_width && y >= 0 && y < m_height)
 	{
-		content [(height - y - 1)*width + x] = c;
+		m_content [(m_height - y - 1)*m_width + x] = c;
 	}
 }
 
@@ -146,43 +128,43 @@ void TerosWindow::tlrepos (int x, int y)
 
 void TerosWindow::setcursor (int index, bool state)
 {
-	if (index < cursors.size ())
+	if (index < m_cursors.size ())
 	{
-		cursors [index] = state;
+		m_cursors [index] = state;
 	}
 }
 
 void TerosWindow::setactivetext (int index, string s)
 {
-	if (index < activetext.size ())
+	if (index < m_activetext.size ())
 	{
-		activetext [index] = s;
+		m_activetext [index] = s;
 	}
 }
 
 void TerosWindow::setfill (char fillchar)
 {
-	for (int i = 0; i < content.size (); i++)
+	for (int i = 0; i < m_content.size (); i++)
 	{
-		if (content [i] == fill)
+		if (m_content [i] == m_fill)
 		{
-			content [i] = fillchar;
+			m_content [i] = fillchar;
 		}
 	}
 
-	fill = fillchar;
+	m_fill = fillchar;
 }
 
 void TerosWindow::setcursorchar (char cursor)
 {
-	cursorchar = cursor;
+	m_cursorchar = cursor;
 }
 
 bool TerosWindow::putcursor (int index)
 {
-	if (index < cursors.size ())
+	if (index < m_cursors.size ())
 	{
-		return cursors [index];
+		return m_cursors [index];
 	}
 
 	return false;
@@ -190,47 +172,47 @@ bool TerosWindow::putcursor (int index)
 
 char TerosWindow::putatxtid ()
 {
-	return atxtid;
+	return m_atxtid;
 }
 
 char TerosWindow::putcursorid ()
 {
-	return cursorid;
+	return m_cursorid;
 }
 
 char TerosWindow::putfill ()
 {
-	return fill;
+	return m_fill;
 }
 
 char TerosWindow::putcursorchar ()
 {
-	return cursorchar;
+	return m_cursorchar;
 }
 
 char TerosWindow::puttranspid ()
 {
-	return transparency;
+	return m_transparency;
 }
 
-char TerosWindow::readcontent (int x, int y)
+std::string TerosWindow::readcontent (int x, int y)
 {
-	if (x >= 0 && x < width && y >= 0 && y < height)
+	if (x >= 0 && x < m_width && y >= 0 && y < m_height)
 	{
-		return content [(height - y - 1)*width + x];
+		//return m_content [(m_height - y - 1)*m_width + x];
 	}
 
-	return ' ';
+	return " ";
 }
 
 int TerosWindow::putwidth ()
 {
-	return width;
+	return m_width;
 }
 
 int TerosWindow::putheight ()
 {
-	return height;
+	return m_height;
 }
 
 int TerosWindow::putxpos ()
@@ -245,140 +227,75 @@ int TerosWindow::putypos ()
 
 int TerosWindow::cursorcount ()
 {
-	return cursors.size ();
+	return m_cursors.size ();
 }
 
 int TerosWindow::activetextcount ()
 {
-	return activetext.size ();
+	return m_activetext.size ();
 }
 
 string TerosWindow::putactivetext (int index)
 {
-	if (index < activetext.size ())
+	if (index < m_activetext.size ())
 	{
-		return activetext [index];
+		return m_activetext [index];
 	}
 
 	return NULL;
 }
 
-TerosScreen::TerosScreen ()
+
+
+
+TerosScreen::TerosScreen (_SharedPtr<ncursesWindow> owner, int xpos, int ypos, _SharedPtr<GraphChart> renderObject) : Widget(owner)
 {
-	clrscr ();
+	m_xpos = xpos;
+    m_ypos = ypos;
+    m_height = m_parent->getY();
+    m_width = m_parent->getX();
+    m_parent->clearScreen();
+    m_graphChart = renderObject;
+    
 }
 
-void TerosScreen::clrscr ()
-{
-	int x = 0;
-	int y = SCRHEIGHT - 1;
+void TerosScreen::drawAt(int x, int y, std::string output){
 
-	while (x < SCRWIDTH || y > 0)
-	{
-		display [x][y] = ' ';
+    m_graphChart->addRawChartPoint(_SharedPtr<GraphChartPoint>(new GraphChartPoint(x, y, COLOR_PAIR(1), output)));
+    
+}
 
-		x++;
 
-		if (x >= SCRWIDTH && y > 0)
-		{
-			x = 0;
-			y--;
-		}
-	}
+void TerosScreen::drawAt(int x, int y, char c){
+
+    std::string output(&c);
+    
+    m_graphChart->addRawChartPoint(_SharedPtr<GraphChartPoint>(new GraphChartPoint(x, y, COLOR_PAIR(1), output)));
+    
 }
 
 void TerosScreen::buildscr ()
 {
-	clrscr ();
 
-	for (int i = 0; i < layers.size (); i++)
-	{
-		int x = 0;
-		int y = SCRHEIGHT - 1;
-
-		int acdetect = 0;
-		int ccursor = 0;
-
-		while (x < SCRWIDTH || y > 0)
-		{
-			if (x >= layers [i] -> putxpos () && x < layers [i] -> putxpos () + layers [i] -> putwidth () && y <= layers [i] -> putypos () && y > layers [i] -> putypos () - layers [i] -> putheight ())
-			{
-				if (layers [i] -> readcontent (x - layers [i] -> putxpos (), y - (layers [i] -> putypos () - layers [i] -> putheight () + 1)) != layers [i] -> putatxtid () && layers [i] -> readcontent (x - layers [i] -> putxpos (), y - (layers [i] -> putypos () - layers [i] -> putheight () + 1)) != layers [i] -> putcursorid () && layers [i] -> readcontent (x - layers [i] -> putxpos (), y - (layers [i] -> putypos () - layers [i] -> putheight () + 1)) != layers [i] -> puttranspid ())
-				{
-					display [x][y] = layers [i] -> readcontent (x - layers [i] -> putxpos (), y - (layers [i] -> putypos () - layers [i] -> putheight () + 1));
-				}
-				else if (layers [i] -> readcontent (x - layers [i] -> putxpos (), y - (layers [i] -> putypos () - layers [i] -> putheight () + 1)) == layers [i] -> putcursorid ())
-				{
-					if (layers [i] -> putcursor (ccursor))
-					{
-							display [x][y] = layers [i] -> putcursorchar ();
-					}
-					else if (layers [i] -> putfill () != layers [i] -> puttranspid ())
-					{
-						display [x][y] = layers [i] -> putfill ();
-					}
-
-					ccursor++;
-				}
-				else if (layers [i] -> readcontent (x - layers [i] -> putxpos (), y - (layers [i] -> putypos () - layers [i] -> putheight () + 1)) == layers [i] -> putatxtid ())
-				{
-					string activec = layers [i] -> putactivetext (acdetect);
-
-					for (int ac = 0; ac < activec.size () && x + ac < layers [i] -> putxpos () + layers [i] -> putwidth () && x + ac < SCRWIDTH; ac++)
-					{
-						display [x + ac][y] = activec [ac];
-	
-						if (ac + 1 >= activec.size () || x + ac + 1 >= layers [i] -> putxpos () + layers [i] -> putwidth () || x + ac + 1 >= SCRWIDTH)
-						{
-							x += ac;
-						}
-					}
-
-					acdetect++;
-				}
-			}
-
-			x++;
-
-			if (x >= SCRWIDTH && y > 0)
-			{
-				x = 0;
-				y--;
-			}
-		}
-	}
+    //m_graphChart->clearAllChartPoints();
+    //m_graphChart->clearAllRawChartPoints();
+    for(int x = 0; x < m_display.size(); x++){
+        m_graphChart->addRawChartPoint(m_display.at(x));
+    }
+    
 }
 
 void TerosScreen::displayscr ()
 {
 	buildscr ();
 
-	int x = 0;
-	int y = SCRHEIGHT - 1;
-
-	cout << "\n ";
-
-	while (x < SCRWIDTH && y > 0)
-	{
-		cout << display [x][y];
-
-		x++;
-
-		if (x >= SCRWIDTH && y > 0)
-		{
-			cout << "\n ";
-
-			x = 0;
-			y--;
-		}
-	}
+    //m_graphChart->render();
+    
 }
 
-void TerosScreen::addlayer (TerosWindow * overlay)
+void TerosScreen::addlayer ( _SharedPtr<TerosWindow> overlay)
 {
-	layers.resize (layers.size () + 1);
-
-	layers [layers.size () - 1] = overlay;
+	layers.push_back(overlay);
 }
 
 void TerosScreen::dellayer (int index)
@@ -393,14 +310,14 @@ void TerosScreen::swaplayer (int index1, int index2)
 {
 	if (index1 < layers.size () && index2 < layers.size ())
 	{
-		TerosWindow * temp = layers [index1];
+		 _SharedPtr<TerosWindow> temp = layers [index1];
 
 		layers [index1] = layers [index2];
 		layers [index2] = temp;
 	}
 }
 
-void TerosScreen::modlayer (int index, TerosWindow * replacement)
+void TerosScreen::modlayer (int index,  _SharedPtr<TerosWindow> replacement)
 {
 	if (index < layers.size ())
 	{
@@ -413,7 +330,7 @@ int TerosScreen::layercount ()
 	return layers.size ();
 }
 
-TerosWindow * TerosScreen::putlayer (int index)
+ _SharedPtr<TerosWindow> TerosScreen::putlayer(int index)
 {
 	if (index < layers.size () && index >= 0)
 	{

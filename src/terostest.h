@@ -14,6 +14,8 @@
 #include "window.h"
 #include "widget.h"
 #include "connectionwidget.h"
+#include "teros.h"
+#include "graphchart.h"
 
 #include <ncurses.h>
 #include <vector>
@@ -31,6 +33,8 @@ public:
 private:
     
     void doNothing(){};
+    _SharedPtr<TerosScreen> m_terosScreen;
+    _SharedPtr<GraphChart> m_graphController;
     
 };
 
