@@ -10,10 +10,22 @@
 #include <stdlib.h>
 #include <algorithm>
 
-GraphChart::GraphChart(_SharedPtr<ncursesWindow> parent, int xSize, int ySize) : Widget(parent){
+GraphChart::GraphChart(_SharedPtr<ncursesWindow> parent, int xpos, int ypos) : Widget(parent, xpos, ypos){
     
     m_showBars = true;
     m_showBorder = true;
+    
+    m_xSize = 3;
+    m_ySize = 4;
+    
+    getmaxyx(getParent()->get(), m_height, m_width);
+    
+    generateChart();
+    
+}
+
+void GraphChart::setSize(int xSize, int ySize){
+    
     
     if(xSize < 2)
         m_xSize = 2;
@@ -25,37 +37,34 @@ GraphChart::GraphChart(_SharedPtr<ncursesWindow> parent, int xSize, int ySize) :
     else
         m_ySize = ySize;
     
-    getmaxyx(getParent()->get(), m_height, m_width);
-
-    generateChart();
-
 }
 
 void GraphChart::fill(){
-
+    
     wattrset(m_parent->get(), m_parent->getNormalColor());
-
+    
     for(int x = 0; x < m_width; x++){
         for(int y = 0; y < m_height; y++){
-            if(!(x % m_xSize)){
+            if(!(x % m_xSize) && !(y % m_ySize)){
                 if(m_showBars)
-                    mvwprintw(getParent()->get(), y, x,"%c", '|');
-                //wrefresh(getParent()->get());
+                    getParent()->drawAt(x + getXpos(), y + getYpos(), '+');
+            }
+            else if(!(x % m_xSize)){
+                if(m_showBars)
+                    getParent()->drawAt(x + getXpos(), y + getYpos(), '|');
             }
             else if(!(y % m_ySize)){
                 if(m_showBars)
-                    mvwprintw(getParent()->get(), y, x,"%c", '=');
-                //wrefresh(getParent()->get());
+                    getParent()->drawAt(x + getXpos(), y + getYpos(), '=');
             }
-            
         }
     }
     
     if(m_showBorder)
         getParent()->setborder('|', '|', '=', '=', '+', '+', '+', '+');
-
+    
     wrefresh(getParent()->get());
-
+    
 }
 
 
@@ -71,6 +80,7 @@ void GraphChart::generateChart(){
     
     m_rows = m_height / m_ySize;
     m_cols = m_width / m_xSize;
+    
 }
 
 
@@ -80,7 +90,7 @@ void GraphChart::placeRawPoint(_SharedPtr<GraphChartPoint> point){
         if( point->m_Y > 0 && point->m_Y < m_height){
             if(point->m_X > 0 && point->m_X < m_width){
                 wattrset(m_parent->get(), COLOR_PAIR(point->m_color));
-                mvwprintw(getParent()->get(), point->m_Y, point->m_X,"%s", point->m_symbol.c_str());
+                getParent()->drawAt( point->m_X + getXpos(), point->m_Y + getYpos(), point->m_symbol);
                 wattrset(m_parent->get(), m_parent->getNormalColor());
             }
         }
@@ -108,9 +118,8 @@ void GraphChart::placeAllPoints(){
                                     if(m_showBorder){
                                         if( y > 0){
                                             wattrset(m_parent->get(), COLOR_PAIR(m_chartPoints.at(chartX)->m_color));
-                                            mvwprintw(getParent()->get(), y, x,"%s", m_chartPoints.at(chartX)->m_symbol.c_str());
+                                            getParent()->drawAt( x + getXpos(), y + getYpos(), m_chartPoints.at(chartX)->m_symbol);
                                             wattrset(m_parent->get(), m_parent->getNormalColor());
-                                            
                                         }
                                     }
                                 }
@@ -126,7 +135,7 @@ void GraphChart::placeAllPoints(){
             if( m_rawchartPoints.at(rawchartX)->m_Y > 0 && m_rawchartPoints.at(rawchartX)->m_Y < m_height){
                 if(m_rawchartPoints.at(rawchartX)->m_X > 0 && m_rawchartPoints.at(rawchartX)->m_X < m_width){
                     wattrset(m_parent->get(), COLOR_PAIR(m_rawchartPoints.at(rawchartX)->m_color));
-                    mvwprintw(getParent()->get(), m_rawchartPoints.at(rawchartX)->m_Y, m_rawchartPoints.at(rawchartX)->m_X,"%s", m_rawchartPoints.at(rawchartX)->m_symbol.c_str());
+                    getParent()->drawAt( m_rawchartPoints.at(rawchartX)->m_X + getXpos(), m_rawchartPoints.at(rawchartX)->m_Y + getYpos(), m_rawchartPoints.at(rawchartX)->m_symbol);
                     wattrset(m_parent->get(), m_parent->getNormalColor());
                 }
             }
@@ -147,35 +156,29 @@ void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
         for(int x = 0; x < m_width; x++){
             for(int y = 0; y < m_height; y++){
                 if( (y % m_ySize+1) && (x % m_xSize)){
-                    
                     if((x > m_xSize*pointX) && (x < (m_xSize*pointX)+m_xSize+1)){
                         if((y > m_ySize*pointY) && (y < (m_ySize*pointY)+m_ySize+1)){
-                            
-                            //mvwprintw(getParent()->get(), y, x,"%c", ' ');
-
-                                if(y == ((m_ySize*pointY)+m_ySize) || y < m_height-1)
-                                    if( y > 0){
-                                        mvwprintw(getParent()->get(), y, x,"%c", ' ');
-                                    }
-                            
-                        
-                        if(m_showBars){
-                            if(y == ((m_ySize*pointY)+m_ySize) && y < m_height-1)
-                                mvwprintw(getParent()->get(), y, x,"%c", '=');
-                        }
-                        if(m_showBorder){
-                            if( y == m_height-1)
-                                mvwprintw(getParent()->get(), y, x,"%c", '=');
-                        }
-                        if(!m_showBorder){
-                            if( y == m_height-1)
-                                mvwprintw(getParent()->get(), y, x,"%c", ' ');
+                            if(y == ((m_ySize*pointY)+m_ySize) || y < m_height-1)
+                                if( y > 0){
+                                    getParent()->drawAt( x + getXpos(), y + getYpos()," ");
+                                }
+                            if(m_showBars){
+                                if(y == ((m_ySize*pointY)+m_ySize) && y < m_height-1)
+                                    getParent()->drawAt( x + getXpos(), y + getYpos(), "=");
+                            }
+                            if(m_showBorder){
+                                if( y == m_height-1)
+                                    getParent()->drawAt( x + getXpos(), y + getYpos(), "=");
+                            }
+                            if(!m_showBorder){
+                                if( y == m_height-1)
+                                    getParent()->drawAt( x + getXpos(), y + getYpos(), " ");
+                            }
                         }
                     }
                 }
             }
         }
-    }
     }
     wrefresh(getParent()->get());
 }
@@ -208,6 +211,28 @@ void GraphChart::removeChartPoint(_SharedPtr<GraphChartPoint> point){
     }
 }
 
+
+void GraphChart::clearAllChartPoints(){
+    /*
+    for(int x=0; x < m_chartPoints.size(); x++){
+        getParent()->drawAt( m_chartPoints.at(x)->m_X, m_chartPoints.at(x)->m_Y," ");
+    }
+    */
+    m_chartPoints.clear();
+
+}
+
+void GraphChart::clearAllRawChartPoints(){
+   
+    for(int x=0; x < m_rawchartPoints.size(); x++){
+        removePoint(m_rawchartPoints.at(x));
+    }
+    wrefresh(getParent()->get());
+    m_rawchartPoints.clear();
+    
+}
+
+
 void GraphChart::refresh(){
     
     fill();
@@ -230,5 +255,5 @@ void GraphChart::resize(int xSize, int ySize){
 
 void GraphChart::handleKeys(int input){
     
-
+    
 }

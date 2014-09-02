@@ -29,5 +29,6 @@ client
 
 # Apple Stuff
 # include my xcode project now 
+xcuserdata/
 # *.xcodeproj
 .DS_Store

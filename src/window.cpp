@@ -142,7 +142,18 @@ void ncursesWindow::handleKeys(int input){
     
 }
 
+void ncursesWindow::drawAt(int x, int y, std::string output){
+    
+    mvwprintw(m_window, y, x, "%s", output.c_str());
 
+}
+
+
+void ncursesWindow::drawAt(int x, int y, char c){
+    
+    mvwprintw(m_window, y, x, "%c", c);
+    
+}
 
 
 void ncursesWindow::addWidget(_SharedPtr<Widget> target){

@@ -22,7 +22,7 @@ ncursesMenu::ncursesMenu(std::vector<std::pair<std::string, _STD_FUNCTION(void()
     m_menuSize = menuList.size();
     m_showTitle = true;
     m_highlightTitle = true;
-    m_subMenuOpen = 0;
+    m_subMenuOpen = false;
     
     init_pair(1, COLOR_GREEN, COLOR_BLACK); // A default Background Color
     setBGColor(COLOR_BLACK);
@@ -46,6 +46,7 @@ ncursesMenu::ncursesMenu(std::vector<std::pair<std::string, _STD_FUNCTION(void()
     m_width = 0;
     m_height = 0;
     setHorizontal(horizontal);
+    m_placement = 0;
     
     
 }
@@ -189,7 +190,7 @@ void ncursesMenu::render(){
                 if(m_showBorder){
                     
                     wattrset(m_parent->get(), m_borderColor);
-
+                    
                     if(!m_showTitle){
                         mvwprintw(m_parent->get(), m_ypos, m_xpos+charCounter+1, "%c", m_border->m_tr);
                         mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%c", m_border->m_rs);
@@ -199,7 +200,7 @@ void ncursesMenu::render(){
                             mvwprintw(m_parent->get(), m_ypos+2, line, "%c", m_border->m_bs);
                             
                         }
-
+                        
                     }
                     else{
                         mvwprintw(m_parent->get(), m_ypos, m_xpos+charCounter+1, "%c", m_border->m_tr);
@@ -210,7 +211,7 @@ void ncursesMenu::render(){
                             mvwprintw(m_parent->get(), m_ypos+2, line, "%c", m_border->m_bs);
                             
                         }
-
+                        
                     }
                     
                     mvwprintw(m_parent->get(), m_ypos, m_xpos, "%c", m_border->m_tl);
@@ -218,7 +219,7 @@ void ncursesMenu::render(){
                     mvwprintw(m_parent->get(), m_ypos+2, m_xpos, "%c", m_border->m_bl);
                     
                     wattrset(m_parent->get(), m_normalColor);
-
+                    
                 }
             }
             
@@ -286,7 +287,8 @@ void ncursesMenu::render(){
                     
                     // Here we are printing the item out
                     if( x < m_menuList.size()){
-                        mvwprintw(m_parent->get(), m_ypos+1+x, m_xpos+1, "%s", m_menuList.at(x).first.c_str());
+                        std::string output = m_menuList.at(x).first+" ";
+                        mvwprintw(m_parent->get(), m_ypos+1+x, m_xpos+1, "%s", output.c_str());
                     }
                     
                     wattroff(m_parent->get(), A_REVERSE);
@@ -382,17 +384,48 @@ void ncursesMenu::addSubMenu(_SharedPtr<ncursesMenu> menu, int keyID){
     }
     menu->hide();
     if(m_horizontal){
-        int correction = 0;
-        if(m_showTitle){
-            correction += m_name.length()+1;
-        }
-        for(size_t x = 0; x < m_menuList.size(); x++){
-            if(x < keyID-1){
-                correction += m_menuList.at(x).first.length();
+        // Top Placement with submenu opening above this menu
+        if(m_placement == 0){
+            int correction = 0;
+            if(m_showTitle){
+                correction += m_name.length()+1;
             }
+            for(size_t x = 0; x < m_menuList.size(); x++){
+                if(x < keyID-1){
+                    correction += m_menuList.at(x).first.length();
+                }
+            }
+            
+            
+            int heightCorrection = menu->getMenuSize();
+            
+            menu->move(m_ypos-heightCorrection-1, m_xpos+correction+keyID+2);
         }
         
-        menu->move(m_ypos+2, m_xpos+correction+keyID);
+        // Right Placement
+        if(m_placement == 1){
+            menu->move(m_ypos+keyID-1, m_xpos+m_width+1);
+        }
+        
+        // Below Placement
+        if(m_placement == 2){
+            int correction = 0;
+            if(m_showTitle){
+                correction += m_name.length()+1;
+            }
+            for(size_t x = 0; x < m_menuList.size(); x++){
+                if(x < keyID-1){
+                    correction += m_menuList.at(x).first.length();
+                }
+            }
+            
+            menu->move(m_ypos+2, m_xpos+correction+keyID);
+        }
+        
+        // Left Placement (needs fixing)
+        if(m_placement == 1){
+            menu->move(m_ypos+keyID-1, m_xpos+m_width+1);
+        }
     }
     else{
         menu->move(m_ypos+keyID-1, m_xpos+m_width+1);
