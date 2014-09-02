@@ -39,6 +39,9 @@ void TerosTestInterface::init(){
     zrotation = 0;
     xrotation = 0;
     
+    direction = 0;
+    m_zoom = 10;
+    m_rotate = true;
 
     TerosPolygon ls1;
 	TerosPolygon ls2;
@@ -137,11 +140,15 @@ void TerosTestInterface::init(){
     
     double p1[3]{0,0,0};
     double p2[3]{0,0,0};
-    m_terosCam->applyrotation(1, 1, 1, p1, p2, *m_terosObject);
+    double p3[3]{0,0,0};
+
+    //m_terosCam->cambasisx;
+    //m_terosCam->applyrotation(1, 1, 1, p1, p2, *m_terosObject);
 
     m_terosCam->drawobjects();
     
-    
+    m_terosObject->ctrscaleoff(0.00, 0.00, 0.00);
+    //m_terosObject->rot('x', 1.0);
 
     m_terosScreen->displayscr();
     
@@ -154,7 +161,51 @@ void TerosTestInterface::init(){
 
 void TerosTestInterface::run(){
 
-    m_terosCam->rotatecam('x', -0.1);
+    //m_mainWindow->clearScreen();
+    m_mainWindow->drawAt(m_mainWindow->getX()/2, 7, "                                            ");
+    m_mainWindow->drawAt(m_mainWindow->getX()/2, 10, "R - Reset ");
+    m_mainWindow->drawAt(m_mainWindow->getX()/2, 11, "x/X: Rotate on X axis");
+    m_mainWindow->drawAt(m_mainWindow->getX()/2, 12, "y/Y: Rotate on Y axis");
+    m_mainWindow->drawAt(m_mainWindow->getX()/2, 13, "z/XZ: Rotate on Z axis");
+    m_mainWindow->drawAt(m_mainWindow->getX()/2, 14, "spacebar: Pause/Unpause rotation");
+    m_mainWindow->drawAt(m_mainWindow->getX()/2, 15, "Up/Down: Zoom in/out");
+
+
+
+
+    
+    if(m_rotate){
+        if(direction == 0){
+            m_terosObject->rot('x', 0.05);
+            m_mainWindow->drawAt(m_mainWindow->getX()/2, 7, "Rotating on X Axis");
+        }
+        else if(direction == 1){
+            m_terosObject->rot('x', -0.05);
+            m_mainWindow->drawAt(m_mainWindow->getX()/2, 7, "Rotating on reverse X Axis");
+        }
+        else if(direction == 2){
+            m_terosObject->rot('y', 0.05);
+            m_mainWindow->drawAt(m_mainWindow->getX()/2, 7, "Rotating on Y Axis");
+        }
+        else if(direction == 3){
+            m_terosObject->rot('y', -0.05);
+            m_mainWindow->drawAt(m_mainWindow->getX()/2, 7, "Rotating on reverse Y Axis");
+        }
+        else if(direction == 4){
+            m_terosObject->rot('z', 0.05);
+            m_mainWindow->drawAt(m_mainWindow->getX()/2, 7, "Rotating on Z Axis");
+        }
+        else if(direction == 5){
+            m_terosObject->rot('z', -0.05);
+            m_mainWindow->drawAt(m_mainWindow->getX()/2, 7, "Rotating on reverse Z Axis");
+        }
+    }
+    else{
+        m_graphController->refresh();
+        m_mainWindow->drawAt(m_mainWindow->getX()/2, 7, "Rotation Paused");
+    }
+
+
     m_terosCam->drawobjects();
 
     m_terosWindow->loadfromvector(m_terosCam->putview(), 70);
@@ -164,7 +215,7 @@ void TerosTestInterface::run(){
     //m_mainWindow->clearScreen();
     m_mainWindow->drawAt(m_mainWindow->getX()/2, 3, "3D Rendering Test");
     
-    //m_mainWindow->render();
+    m_mainWindow->render();
 
 //    l_testWindow->loadfromfile("example.txt");
     
@@ -174,23 +225,59 @@ void TerosTestInterface::run(){
 void TerosTestInterface::handleKeys(int input){
     switch(input){
             
-        case KEY_DOWN:
- 
+        case 'x':
+            direction = 0;
+            m_terosObject->rot('x', 0.05);
+            m_terosCam->drawobjects();
+            break;
+        case 'X':
+            direction = 1;
+            m_terosObject->rot('x', -0.05);
+            m_terosCam->drawobjects();
+            break;
+        case 'y':
+            direction = 2;
+            m_terosObject->rot('y', 0.05);
+            m_terosCam->drawobjects();
+            break;
+        case 'Y':
+            direction = 3;
+            m_terosObject->rot('y', -0.05);
+            m_terosCam->drawobjects();
+            break;
+        case 'z':
+            direction = 4;
+            m_terosObject->rot('z', 0.05);
+            m_terosCam->drawobjects();
+            break;
+        case 'Z':
+            direction = 5;
+            m_terosObject->rot('z', -0.05);
+            m_terosCam->drawobjects();
+            break;
+        case 'R':
+            direction = 0;
+            m_terosObject->basisreset();
+            m_terosCam->basisreset();
+            m_rotate = false;
+            break;
+            
+        case KEY_UP:
+            m_terosCam->setzoomfactor(m_zoom + 5);
+            m_zoom += 5;
             m_terosCam->drawobjects();
             break;
             
-        case KEY_RIGHT:
-            m_terosCam->rotatecam('x', -0.2);
-            //xrotation++;
+        case KEY_DOWN:
+            m_terosCam->setzoomfactor(m_zoom - 5);
+            m_zoom -= 5;
             m_terosCam->drawobjects();
-
             break;
-        case KEY_LEFT:
-            m_terosCam->rotatecam('x', 0.2);
-            //yrotation++;
+        case ' ':
+            m_rotate = !m_rotate;
             m_terosCam->drawobjects();
-
             break;
+            
         default:
             m_mainWindow->handleKeys(input);
             break;

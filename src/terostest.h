@@ -49,6 +49,9 @@ private:
     int xrotation;
     int zrotation;
     
+    int direction;
+    int m_zoom;
+    bool m_rotate;
 };
 
 
