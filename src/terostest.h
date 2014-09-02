@@ -18,6 +18,7 @@
 #include "graphchart.h"
 #include "terosR3.h"
 #include "terospolygon.h"
+#include "TreasureChest.h"
 
 #include <ncurses.h>
 #include <vector>
@@ -41,7 +42,7 @@ private:
     _SharedPtr<TerosR3Cam> m_terosCam;
     _SharedPtr<TerosR3Object> m_terosObject;
     _SharedPtr<TerosWindow> m_terosWindow;
-
+    _SharedPtr<TreasureChest> m_treasurechest;
 
     std::vector<TerosPolygon> m_terosPolygons;
 
@@ -53,6 +54,11 @@ private:
     int m_zoom;
     bool m_rotate;
     double m_rotspeed;
+    double xpos;
+    double ypos;
+    double zpos;
+    
+    bool m_tool;
 };
 
 
