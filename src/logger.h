@@ -5,7 +5,7 @@
 #define __LOGGER_H
 #include <string>
 #include <sys/types.h>
-
+#include <sstream>
 
 class logger {
 	public:

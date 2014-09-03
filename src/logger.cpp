@@ -19,10 +19,10 @@ logger::logger( const std::string lfile, const int llvl ) {
 	L_logfile = lfile;
 	L_loglevel = llvl;
 	logstream << "Logger Initialized.";
-	logToFile( 0 );
+	logToFile("log.txt", 0 );
 }
 
-void logger::logToFile( const int msglvl ) {
+void logger::logToFile( std::string logstream, const int msglvl ) {
 	logtext = logstream.str();
 	logstream.str("");
 	L_pid = _GetPid();
