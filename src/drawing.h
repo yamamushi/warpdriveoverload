@@ -14,5 +14,30 @@
 #ifndef __warpdriveoverloaded__drawing__
 #define __warpdriveoverloaded__drawing__
 
+void plotLine(int x0, int y0, int x1, int y1);
+void plotCircle(int xm, int ym, int r);
+void plotEllipseRect(int x0, int y0, int x1, int y1);
+void plotQuadBezierSeg(int x0, int y0, int x1, int y1, int x2, int y2);
+void plotLineAA(int x0, int y0, int x1, int y1);
+void plotQuadBezierSegAA(int x0, int y0, int x1, int y1, int x2, int y2);
+void plotLineWidth(int x0, int y0, int x1, int y1, float wd);
+void plotRotatedEllipseRect(int x0, int y0, int x1, int y1, long zd);
+void plotCubicBezierSeg(int x0, int y0, float x1, float y1, float x2, float y2, int x3, int y3);
+void plotOptimizedEllipse(int xm, int ym, int a, int b);
+void plotQuadBezier(int x0, int y0, int x1, int y1, int x2, int y2);
+void plotQuadRationalBezierSeg(int x0, int y0, int x1, int y1, int x2, int y2, float w);
+void plotQuadRationalBezier(int x0, int y0, int x1, int y1, int x2, int y2, float w);
+void plotRotatedEllipse(int x, int y, int a, int b, float angle);
+void plotRotatedEllipseRect(int x0, int y0, int x1, int y1, long zd);
+void plotCubicBezierSeg(int x0, int y0, float x1, float y1, float x2, float y2, int x3, int y3);
+void plotCubicBezier(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3);
+void plotCircleAA(int xm, int ym, int r);
+void plotEllipseRectAA(int x0, int y0, int x1, int y1);
+void plotQuadRationalBezierSegAA(int x0, int y0, int x1, int y1, int x2, int y2, float w);
+void plotCubicBezierSegAA(int x0, int y0, float x1, float y1, float x2, float y2, int x3, int y3);
+void plotQuadSpline(int n, int x[], int y[]);
+void plotCubicSpline(int n, int x[], int y[]);
+
+
 
 #endif /* defined(__warpdriveoverloaded__drawing__) */
