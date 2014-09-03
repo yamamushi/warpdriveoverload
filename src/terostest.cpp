@@ -233,7 +233,7 @@ void TerosTestInterface::handleKeys(int input){
             else
                 m_treasurechest->rotchest('z', -0.05);
             m_terosCam->drawobjects();
-            
+            break;
         case 't':
             m_tool = !m_tool;
             break;

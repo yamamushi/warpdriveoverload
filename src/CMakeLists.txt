@@ -24,6 +24,7 @@ add_executable(client main.cpp
             terosR3.cpp
             terostest.cpp
             TreasureChest.cpp
+            drawing.cpp
             )
 
 set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses")
