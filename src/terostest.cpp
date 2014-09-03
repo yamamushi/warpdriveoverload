@@ -50,12 +50,15 @@ void TerosTestInterface::init(){
     direction = 5;
     m_zoom = 9.5;
     m_rotate = true;
+    m_camx = -2;
+    m_camy = 1;
+    m_camz = 0;
     
     //m_treasurechest = _SharedPtr<TreasureChest>(new TreasureChest); //Declaring an example TreasureChest object.
     
 	//m_terosCam->setcampos(-5.00, 3, 1.50); //Adjusting the camera position to center its view of the object.
     m_terosCam->rotatecam('x', 3.1415926535897932384626433); // Rotate our camera as close to pi as I can remember right now
-    m_terosCam->setcampos(-2, 1, 0);
+    m_terosCam->setcampos(m_camx, m_camy, m_camz);
     m_terosCam->rotatecam('z', -0.7);
     //m_terosCam->rotatecam('x', -0.2);
 
@@ -104,9 +107,9 @@ void TerosTestInterface::run(){
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 16, "                                 ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 17, "                                 ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 18, "t - Change Item to Rotate        ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-34), 19, "x/X: Rotate Camera on X axis     ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-34), 20, "y/Y: Rotate Camera on Y axis     ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-34), 21, "z/Z: Rotate Camera on Z axis     ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-34), 19, "x/y/z: Sphere Rotation           ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-34), 20, "w/a/s/d: Move Camera             ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-34), 21, "j/i/k/l: Move Camera             ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 22, "Up/Down: Zoom in/out             ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 23, "+/- : Modify rotation speed      ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 24, "Spacebar: Pause Rotation         ");
@@ -153,7 +156,10 @@ void TerosTestInterface::run(){
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 9, "Camera Selected");
     }
     else{
-        m_mainWindow->drawAt((m_mainWindow->getX()-34), 9, "Object Selected");
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 10, "PositionX: " + std::to_string(m_camx));
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 11, "PositionY: " + std::to_string(m_camy));
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 12, "PositionZ: " + std::to_string(m_camz));
+
     }
 
     m_graphController->refresh();
@@ -228,25 +234,51 @@ void TerosTestInterface::handleKeys(int input){
             m_tool = !m_tool;
             break;
 
-        case 'j':
-            xpos -= 0.5;
-            break;
-        case 'k':
-            ypos -= 0.5;
-            break;
-        case 'l':
-            zpos -= 0.5;
+        case 'w':
+            m_camx += 0.05;
+            m_terosCam->setcampos(m_camx, m_camy, m_camz);
             break;
             
-        case 'J':
-            xpos += 0.5;
+        case 's':
+            m_camx -= 0.05;
+            m_terosCam->setcampos(m_camx, m_camy, m_camz);
             break;
-        case 'K':
-            ypos += 0.5;
+            
+        case 'a':
+            //m_camx -= 0.05;
+            //m_terosCam->setcampos(m_camx, m_camy, m_camz);
+            m_terosCam->rotatecam('z', 0.05);
             break;
-        case 'L':
-            zpos += 0.5;
+        case 'd':
+            //m_camx -= 0.05;
+            //m_terosCam->setcampos(m_camx, m_camy, m_camz);
+            m_terosCam->rotatecam('z', -0.05);
             break;
+            
+            // THIS IS BACKWARDS ON PURPOSE
+        case 'k':
+            //m_camx -= 0.05;
+            //m_terosCam->setcampos(m_camx, m_camy, m_camz);
+            m_terosCam->rotatecam('y', 0.05);
+            break;
+        case 'i':
+            //m_camx -= 0.05;
+            //m_terosCam->setcampos(m_camx, m_camy, m_camz);
+            m_terosCam->rotatecam('y', -0.05);
+            break;
+            
+        case 'j':
+            //m_camx -= 0.05;
+            //m_terosCam->setcampos(m_camx, m_camy, m_camz);
+            m_terosCam->rotatecam('x', 0.05);
+            break;
+        case 'l':
+            //m_camx -= 0.05;
+            //m_terosCam->setcampos(m_camx, m_camy, m_camz);
+            m_terosCam->rotatecam('x', -0.05);
+            break;
+        
+            
         case '-':
             if( m_rotspeed > 0)
                 m_rotspeed -= 0.05;

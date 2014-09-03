@@ -59,6 +59,7 @@ private:
     double zpos;
     
     bool m_tool;
+    double m_camx, m_camy, m_camz;
 };
 
 
