@@ -19,6 +19,7 @@
 #include "terosR3.h"
 #include "terospolygon.h"
 #include "TreasureChest.h"
+#include "TRModel.h"
 
 #include <ncurses.h>
 #include <vector>
@@ -43,15 +44,14 @@ private:
     _SharedPtr<TerosR3Object> m_terosObject;
     _SharedPtr<TerosWindow> m_terosWindow;
     _SharedPtr<TreasureChest> m_treasurechest;
-
-    std::vector<TerosPolygon> m_terosPolygons;
+    _SharedPtr<TRModel> m_trModel;
 
     int yrotation;
     int xrotation;
     int zrotation;
     
     int direction;
-    int m_zoom;
+    double m_zoom;
     bool m_rotate;
     double m_rotspeed;
     double xpos;

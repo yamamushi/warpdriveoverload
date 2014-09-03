@@ -13,6 +13,10 @@
 		741A817219B555BE000D6DEF /* terosR3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 741A817019B555BE000D6DEF /* terosR3.cpp */; };
 		741A817519B55E0D000D6DEF /* terostest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 741A817319B55E0D000D6DEF /* terostest.cpp */; };
 		741A817919B5EE1D000D6DEF /* TreasureChest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 741A817719B5EE1D000D6DEF /* TreasureChest.cpp */; };
+		741A817C19B6BCBF000D6DEF /* TRModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 741A817A19B6BCBF000D6DEF /* TRModel.cpp */; };
+		741A817F19B6C283000D6DEF /* SphereModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 741A817D19B6C283000D6DEF /* SphereModel.cpp */; };
+		741A818519B6FCAF000D6DEF /* vector2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 741A818319B6FCAF000D6DEF /* vector2d.cpp */; };
+		741A818819B6FCCB000D6DEF /* vector3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 741A818619B6FCCB000D6DEF /* vector3d.cpp */; };
 		7449EFDB19AEFA9200CDDFF9 /* logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7449EFD919AEFA9200CDDFF9 /* logger.cpp */; };
 		7449EFDE19AEFC5B00CDDFF9 /* shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7449EFDC19AEFC5B00CDDFF9 /* shell.cpp */; };
 		7449EFE219AF0F5C00CDDFF9 /* term_control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7449EFE119AF0F5C00CDDFF9 /* term_control.cpp */; };
@@ -58,6 +62,14 @@
 		741A817419B55E0D000D6DEF /* terostest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = terostest.h; sourceTree = "<group>"; };
 		741A817719B5EE1D000D6DEF /* TreasureChest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TreasureChest.cpp; sourceTree = "<group>"; };
 		741A817819B5EE1D000D6DEF /* TreasureChest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreasureChest.h; sourceTree = "<group>"; };
+		741A817A19B6BCBF000D6DEF /* TRModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TRModel.cpp; sourceTree = "<group>"; };
+		741A817B19B6BCBF000D6DEF /* TRModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRModel.h; sourceTree = "<group>"; };
+		741A817D19B6C283000D6DEF /* SphereModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SphereModel.cpp; sourceTree = "<group>"; };
+		741A817E19B6C283000D6DEF /* SphereModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SphereModel.h; sourceTree = "<group>"; };
+		741A818319B6FCAF000D6DEF /* vector2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector2d.cpp; sourceTree = "<group>"; };
+		741A818419B6FCAF000D6DEF /* vector2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector2d.h; sourceTree = "<group>"; };
+		741A818619B6FCCB000D6DEF /* vector3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector3d.cpp; sourceTree = "<group>"; };
+		741A818719B6FCCB000D6DEF /* vector3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector3d.h; sourceTree = "<group>"; };
 		743836F819A420AA0041E097 /* warpdriveoverloaded */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = warpdriveoverloaded; sourceTree = BUILT_PRODUCTS_DIR; };
 		7438372019A422780041E097 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		7438372219A422780041E097 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -146,6 +158,10 @@
 				741A816E19B55562000D6DEF /* terospolygon.h */,
 				741A817019B555BE000D6DEF /* terosR3.cpp */,
 				741A817119B555BE000D6DEF /* terosR3.h */,
+				741A818319B6FCAF000D6DEF /* vector2d.cpp */,
+				741A818419B6FCAF000D6DEF /* vector2d.h */,
+				741A818619B6FCCB000D6DEF /* vector3d.cpp */,
+				741A818719B6FCCB000D6DEF /* vector3d.h */,
 			);
 			name = terosengine;
 			sourceTree = "<group>";
@@ -155,6 +171,10 @@
 			children = (
 				741A817719B5EE1D000D6DEF /* TreasureChest.cpp */,
 				741A817819B5EE1D000D6DEF /* TreasureChest.h */,
+				741A817A19B6BCBF000D6DEF /* TRModel.cpp */,
+				741A817B19B6BCBF000D6DEF /* TRModel.h */,
+				741A817D19B6C283000D6DEF /* SphereModel.cpp */,
+				741A817E19B6C283000D6DEF /* SphereModel.h */,
 			);
 			name = 3dobjects;
 			sourceTree = "<group>";
@@ -374,16 +394,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				741A817F19B6C283000D6DEF /* SphereModel.cpp in Sources */,
 				749983AC19A43D8A005493E6 /* sqlite.cpp in Sources */,
 				7449EFFF19B1013600CDDFF9 /* debugWindow.cpp in Sources */,
 				7449EFDE19AEFC5B00CDDFF9 /* shell.cpp in Sources */,
 				741A816819B42E84000D6DEF /* teros.cpp in Sources */,
 				7449EFE819AF564700CDDFF9 /* menu.cpp in Sources */,
 				749983A419A43C64005493E6 /* player.cpp in Sources */,
+				741A818819B6FCCB000D6DEF /* vector3d.cpp in Sources */,
 				741A817519B55E0D000D6DEF /* terostest.cpp in Sources */,
 				749983A619A43C64005493E6 /* ship.cpp in Sources */,
 				7449EFEB19AF581A00CDDFF9 /* drawing.cpp in Sources */,
-				7449EFDB19AEFA9200CDDFF9 /* logger.cpp in Sources */,
 				7449EFE519AF2B8C00CDDFF9 /* window.cpp in Sources */,
 				741A816C19B54307000D6DEF /* TimeWidget.cpp in Sources */,
 				741A817919B5EE1D000D6DEF /* TreasureChest.cpp in Sources */,
@@ -391,8 +412,11 @@
 				7449EFE219AF0F5C00CDDFF9 /* term_control.cpp in Sources */,
 				749983A519A43C64005493E6 /* room.cpp in Sources */,
 				749983A319A43C64005493E6 /* main.cpp in Sources */,
+				7449EFDB19AEFA9200CDDFF9 /* logger.cpp in Sources */,
+				741A817C19B6BCBF000D6DEF /* TRModel.cpp in Sources */,
 				74F0160319B173B200907621 /* navigation.cpp in Sources */,
 				749983A219A43C64005493E6 /* item.cpp in Sources */,
+				741A818519B6FCAF000D6DEF /* vector2d.cpp in Sources */,
 				741A816F19B55562000D6DEF /* terospolygon.cpp in Sources */,
 				749983A919A43CF7005493E6 /* game_engine.cpp in Sources */,
 				7449EFEE19AF582500CDDFF9 /* graphchart.cpp in Sources */,
