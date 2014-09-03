@@ -17,44 +17,26 @@
 
 class sqliteDB {
     
-public:
+	public:
+		static sqliteDB* instance();
+		bool openDB(std::string pathname);
+		bool checkForDB(std::string dbName);
+		void run(){};
     
-    static sqliteDB* instance();
-    
-    bool openDB(std::string pathname);
-    bool checkForDB(std::string dbName);
-    
-    
-    void run(){};
-    
-private:
-    
-    sqliteDB();
-    
-    void initDB();
-    bool executeStatement(std::string statement);
-
-    
-    sqliteDB(sqliteDB const&);
-    sqliteDB& operator=(sqliteDB const&);
-    static sqliteDB* m_pInstance;
-
-    bool m_dbOpen;
-    
-
-    
-    sqlite3 *m_db;
-    
-    
-protected:
-    
-    // Callback
-
-    static int dbcallback(void *NotUsed, int argc, char **argv, char **azColName);
-    void resultcontainer(std::vector<std::pair<std::string, std::string> > output);
-
-    std::vector<std::pair<std::string, std::string> > m_dataContainer;
-    
+	private:
+		sqliteDB();
+		void initDB();
+		bool execQuery(std::string statement);
+		sqliteDB(sqliteDB const&);
+		sqliteDB& operator=(sqliteDB const&);
+		static sqliteDB* m_pInstance;
+		bool m_dbOpen;
+		sqlite3 *m_db;
+	protected:
+		// Callback
+		static int dbcallback(void *NotUsed, int argc, char **argv, char **azColName);
+		void resultcontainer(std::vector<std::pair<std::string, std::string> > output);
+		std::vector<std::pair<std::string, std::string> > m_dataContainer;
 };
 
 #endif /* defined(__warpdriveoverloaded__sqlite__) */
