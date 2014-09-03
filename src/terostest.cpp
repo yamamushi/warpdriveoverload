@@ -48,7 +48,7 @@ void TerosTestInterface::init(){
     
     m_rotspeed = 0.1;
     direction = 5;
-    m_zoom = 13;
+    m_zoom = 9.5;
     m_rotate = true;
     
     //m_treasurechest = _SharedPtr<TreasureChest>(new TreasureChest); //Declaring an example TreasureChest object.
@@ -60,9 +60,9 @@ void TerosTestInterface::init(){
     //m_terosCam->rotatecam('x', -0.2);
 
     //m_terosObject->rot('z', -1);
-    m_terosObject->rot('x', 1.0);
+    //m_terosObject->rot('x', 1.0);
     
-    m_terosObject->rot('y', -1.0);
+    //m_terosObject->rot('y', -1.0);
 
 
 	//m_terosCam->addobject (_treasurechest->putchest()); //Adding the instantaneous R3Object data for chest0 to the camera's field of vision.

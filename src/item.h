@@ -9,9 +9,9 @@
 #ifndef __warpdriveoverloaded__item__
 #define __warpdriveoverloaded__item__
 
-#include <iostream>
+/*
 class item : private Entity {
 
 };
-
+*/
 #endif /* defined(__warpdriveoverloaded__item__) */

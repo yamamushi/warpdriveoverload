@@ -17,10 +17,10 @@ SphereModel::SphereModel() : TRModel() {
     std::vector<Vector3D> m_spherePoints;
     m_mesh = _SharedPtr<MeshModel>(new MeshModel);
 
-    int recursion = 0;
+    int recursion = 2;
     initialize_sphere(m_spherePoints, recursion);  // where DEPTH should be the subdivision depth
 
-    logger logmaker("log.txt", 0);
+    //logger logmaker("log.txt", 0);
     
 
 
@@ -28,48 +28,19 @@ SphereModel::SphereModel() : TRModel() {
         
         
             _SharedPtr<TerosPolygon> l_triangle = _SharedPtr<TerosPolygon>(new TerosPolygon);
-            l_triangle->modp(0, m_points.at(m_triangles.at(x)->v1).p1, m_points.at(m_triangles.at(x)->v1).p2, m_points.at(m_triangles.at(x)->v1).p3);
-            l_triangle->modp(1, m_points.at(m_triangles.at(x)->v2).p1, m_points.at(m_triangles.at(x)->v2).p2, m_points.at(m_triangles.at(x)->v2).p3);
-            l_triangle->modp(2, m_points.at(m_triangles.at(x)->v3).p1, m_points.at(m_triangles.at(x)->v3).p2, m_points.at(m_triangles.at(x)->v3).p3);
+            l_triangle->modp(0, m_spherePoints.at(m_triangles.at(x)->v1).x, m_spherePoints.at(m_triangles.at(x)->v1).y, m_spherePoints.at(m_triangles.at(x)->v1).z);
+            l_triangle->modp(1, m_spherePoints.at(m_triangles.at(x)->v2).x, m_spherePoints.at(m_triangles.at(x)->v2).y, m_spherePoints.at(m_triangles.at(x)->v2).z);
+            l_triangle->modp(2, m_spherePoints.at(m_triangles.at(x)->v3).x, m_spherePoints.at(m_triangles.at(x)->v3).y, m_spherePoints.at(m_triangles.at(x)->v3).z);
 
-
-            l_triangle->setfill(x+33);
+        if(x%2)
+            l_triangle->setfill('#');
+        else
+            l_triangle->setfill('@');
             //l_triangle->settexturemode(false);
             m_buffer.push_back(l_triangle);
-            logmaker.logToFile("Points0: " + std::to_string(m_points.at(m_triangles.at(x)->v1).p1) + " " + std::to_string(m_points.at(m_triangles.at(x)->v1).p2) + " " + std::to_string(m_points.at(m_triangles.at(x)->v1).p3), 0);
-        logmaker.logToFile("Points1: " + std::to_string(m_points.at(m_triangles.at(x)->v2).p1) + " " + std::to_string(m_points.at(m_triangles.at(x)->v2).p2) + " " + std::to_string(m_points.at(m_triangles.at(x)->v2).p3), 0);
-
-        logmaker.logToFile("Points2: " + std::to_string(m_points.at(m_triangles.at(x)->v3).p1) + " " + std::to_string(m_points.at(m_triangles.at(x)->v3).p2) + " " + std::to_string(m_points.at(m_triangles.at(x)->v3).p3), 0);
-
-    
 
     }
- 
-    /*
-    _SharedPtr<TerosPolygon> a_triangle = _SharedPtr<TerosPolygon>(new TerosPolygon);
-    a_triangle->modp(0, 2.5, -0.5, -0.5);
-	a_triangle->modp (1, 3.5, -0.5, -0.5);
-	a_triangle->modp (2, 3.5, -0.5, 0.5);
-    m_buffer.push_back(a_triangle);
-    _SharedPtr<TerosPolygon> b_triangle = _SharedPtr<TerosPolygon>(new TerosPolygon);
-    b_triangle->modp(0, 3.5, -0.5, 0.5);
-	b_triangle->modp (1, 2.5, -0.5, 0.5);
-	b_triangle->modp (2, 2.5, -0.5, -0.5);
-    m_buffer.push_back(b_triangle);
 
-    _SharedPtr<TerosPolygon> c_triangle = _SharedPtr<TerosPolygon>(new TerosPolygon);
-    c_triangle->modp(0, 2.5, 0.5, -0.5);
-    c_triangle->modp(1, 3.5, 0.5, -0.5);
-    c_triangle->modp (2, 3.5, 0.5, 0.5);
-    m_buffer.push_back(c_triangle);
-
-    _SharedPtr<TerosPolygon> d_triangle = _SharedPtr<TerosPolygon>(new TerosPolygon);
-    d_triangle->modp(0, 3.5, 0.5, 0.5);
-	d_triangle->modp(1, 2.5, 0.5, 0.5);
-	d_triangle->modp(2, 2.5, 0.5, -0.5);
-    m_buffer.push_back(d_triangle);
-
-    */
     
     for(int x = 0; x < m_buffer.size(); x++){
         m_model->addside(m_buffer.at(x).get());
@@ -85,31 +56,7 @@ SphereModel::SphereModel() : TRModel() {
 int SphereModel::getMiddlePointID(int p1, int p2)
 {
     return 0;
- /*   // first check if we have it already
-    bool firstIsSmaller = p1 < p2;
-    int smallerIndex = firstIsSmaller ? p1 : p2;
-    int greaterIndex = firstIsSmaller ? p2 : p1;
-    
-    int ret;
-    if (this.middlePointIndexCache.TryGetValue(key, out ret))
-    {
-        return ret;
-    }
-    
-    // not in cache, calculate it
-    Point3D point1 = this.geometry.Positions[p1];
-    Point3D point2 = this.geometry.Positions[p2];
-    Point3D middle = new Point3D(
-                                 (point1.X + point2.X) / 2.0,
-                                 (point1.Y + point2.Y) / 2.0,
-                                 (point1.Z + point2.Z) / 2.0);
-    
-    // add vertex makes sure point is on unit sphere
-    //int i = addVertex(middle);
-    
-    // store it, return index
-    this.middlePointIndexCache.Add(key, i);
-    return i; */
+
 }
 
 
@@ -119,7 +66,7 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
 
     
     auto icosaVertices = new Vector3D[12];
-        
+    
     double theta = 26.56505117707799 * PI / 180.0; // refer paper for theta value
     
     double stheta = std::sin(theta);
@@ -144,7 +91,7 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
     }
     
     icosaVertices[11] = Vector3D(0.0f, 0.0f, 1.0f).Normalize(); // the upper vertex
-
+    
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(0, 2, 1)));
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(0, 3, 2)));
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(0, 4, 3)));
@@ -162,22 +109,26 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(3, 9, 8)));
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(4, 10, 9)));
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(5, 6, 10)));
-
+    
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(6, 7, 11)));
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(7, 8, 11)));
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(8, 9, 11)));
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(9, 10, 11)));
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(10, 6, 11)));
-
-
-
-
-    for(int i = 0; i < 12; i++){
-
-        m_points.push_back(Point3d(icosaVertices[i].x, icosaVertices[i].y, icosaVertices[i].z));
     
+    
+    
+    
+    for(int i = 0; i < 12; i++){
+        
+        sphere_points.push_back(icosaVertices[i]);
+        
     }
 
+    for(int i = 0; i < 20; i++){
+        
+        subdivide(sphere_points.at(m_triangles.at(i)->v1), sphere_points.at(m_triangles.at(i)->v2), sphere_points.at(m_triangles.at(i)->v3), sphere_points, depth);
+    }
     
 }
 
@@ -185,9 +136,13 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
 void SphereModel::subdivide(const Vector3D &v1, const Vector3D &v2, const Vector3D &v3, vector<Vector3D> &sphere_points, const unsigned int depth) {
     
     if(depth == 0) {
+        int index = sphere_points.size();
         sphere_points.push_back(v1);
         sphere_points.push_back(v2);
         sphere_points.push_back(v3);
+        
+        m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(index, index+1, index+2)));
+
         return;
     }
     const Vector3D v12 = (v1 + v2).Normalize();

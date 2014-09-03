@@ -112,9 +112,13 @@ void TerosWindow::loadfromvector (vector<char> input, int column)
                 m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, 20, " ")));
             }
             else{
-
-                
-                m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, 20, output)));
+                if(input [(i*l_width) + j] == '@'){
+                    init_pair(25, COLOR_GREEN, COLOR_BLACK);
+                    m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, 25, output)));
+                }
+                else{
+                    m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, 20, output)));
+                }
             }
 
 		}

@@ -26,7 +26,7 @@ class sqliteDB {
 	private:
 		sqliteDB();
 		void initDB();
-		bool execQuery(std::string statement);
+		bool executeStatement(std::string statement);
 		sqliteDB(sqliteDB const&);
 		sqliteDB& operator=(sqliteDB const&);
 		static sqliteDB* m_pInstance;
