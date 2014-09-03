@@ -11,7 +11,7 @@ class logger {
 	public:
 		logger( const std::string lfile, const int llvl );
 		std::stringstream logstream;
-		void logToFile( const std::string text, const int msglvl );
+        void logToFile( const int msglvl );
 		void logException( const int errornumber, const std::string ctext );
 	private:
 		pid_t L_pid;

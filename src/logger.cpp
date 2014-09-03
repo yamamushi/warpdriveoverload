@@ -19,15 +19,19 @@ logger::logger( const std::string lfile, const int llvl ) {
 	L_logfile = lfile;
 	L_loglevel = llvl;
 	logstream << "Logger Initialized.";
-	logToFile("log.txt", 0 );
+	logToFile( 0 );
 }
 
-void logger::logToFile( std::string logstream, const int msglvl ) {
-	logtext = logstream.str();
+void logger::logToFile( const int msglvl ) {
+    
+    std::string logtext = logstream.str();
+    
 	logstream.str("");
+    
 	L_pid = _GetPid();
 	unsigned long TID = getThreadID();
 	std::string date = tStamp();
+    
 	logstream << date << " [" << L_pid << "] (" << TID << ") [";
 	switch ( msglvl ) {
 		case 0:
@@ -53,8 +57,8 @@ void logger::logToFile( std::string logstream, const int msglvl ) {
 			break;
 		default:
 			logstream << "FATAL] : No message level passed to logger. Shutting down." << std::endl;
-			std::string errstr = mstream.str();
-			writeToFile( errstr );
+			//std::string errstr = mstream.str();
+			//writeToFile( errstr );
 			// placeholder for error handler.
 			exit(1);
 			break;
@@ -95,7 +99,7 @@ void logger::logException( const int errornumber, const std::string ctext ) {
 			break;
 	}
 	std::string otext = exstream.str();
-	logToFile( otext, elvl );
+	logToFile( elvl );
 	if ( elvl > 4 ) {
 		exit(1);
 	}
