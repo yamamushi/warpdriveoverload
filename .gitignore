@@ -32,3 +32,8 @@ client
 # xcuserdata/
 *.xcodeproj
 .DS_Store
+
+
+CMakeFiles/
+*CMakeFiles/*
+CMakeCache.txt
