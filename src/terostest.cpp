@@ -268,14 +268,14 @@ void TerosTestInterface::handleKeys(int input){
             break;
             
         case KEY_UP:
-            m_terosCam->setzoomfactor(m_zoom);
             m_zoom += 0.5;
+            m_terosCam->setzoomfactor(m_zoom);
             m_terosCam->drawobjects();
             break;
             
         case KEY_DOWN:
-            m_terosCam->setzoomfactor(m_zoom);
             m_zoom -= 0.5;
+            m_terosCam->setzoomfactor(m_zoom);
             m_terosCam->drawobjects();
             break;
         case ' ':
