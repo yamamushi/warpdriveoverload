@@ -160,7 +160,7 @@ void TerosTestInterface::move(double speedws, double distance){
 
 void TerosTestInterface::run(){
 
-    //m_mainWindow->clearScreen();
+    //m_mainWindow->refresh();
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 4,  "                                 ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 5,  "        3D Rendering Test        ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 6,  "                                 ");
@@ -177,7 +177,7 @@ void TerosTestInterface::run(){
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 20, "w/a/s/d: Move Camera             ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 21, "j/i/k/l: Move Camera             ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 22, "Up/Down: Zoom in/out             ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-34), 23, "+/- : Modify rotation speed      ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-34), 23, "+/- : Modify camera speed        ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 24, "Spacsebar: Pause Rotation         ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 10, "Camera Zoom is: " + std::to_string(m_zoom));
 
@@ -187,7 +187,7 @@ void TerosTestInterface::run(){
     
     if(m_rotate){
         
-        m_mainWindow->drawAt((m_mainWindow->getX()-34), 8, "Camera Speed is: " + std::to_string(m_camspeed));
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 9, "Camera Speed is: " + std::to_string(m_camspeed));
 
         if(direction == 0){
             m_terosObject->rot('x', m_rotspeed);
@@ -218,10 +218,9 @@ void TerosTestInterface::run(){
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 7, "Rotation Paused");
     }
     
-    if(!m_tool){
-        m_mainWindow->drawAt((m_mainWindow->getX()-34), 9, "Camera Selected");
-    }
-    else{
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 8, "Camera Zoom is: " + std::to_string(m_zoom));
+    
+
         
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 10, "PositionX: " + std::to_string(m_camx));
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 11, "PositionY: " + std::to_string(m_camy));
@@ -231,7 +230,7 @@ void TerosTestInterface::run(){
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 14, "Angle Y: " + std::to_string(m_terosCam->getAngleY()));
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 15, "Angle Z: " + std::to_string(m_terosCam->getAngleZ()));
 
-    }
+
 
     m_graphController->refresh();
 

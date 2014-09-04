@@ -21,16 +21,16 @@ SphereModel::SphereModel() : TRModel() {
     initialize_sphere(m_spherePoints, recursion);  // where DEPTH should be the subdivision depth
 
     //logger logmaker("log.txt", 0);
-    
+    int m_size = 1;
 
 
     for(int x = 0; x < m_triangles.size(); x++){
         
         
             _SharedPtr<TerosPolygon> l_triangle = _SharedPtr<TerosPolygon>(new TerosPolygon);
-            l_triangle->modp(0, m_spherePoints.at(m_triangles.at(x)->v1).x, m_spherePoints.at(m_triangles.at(x)->v1).y, m_spherePoints.at(m_triangles.at(x)->v1).z);
-            l_triangle->modp(1, m_spherePoints.at(m_triangles.at(x)->v2).x, m_spherePoints.at(m_triangles.at(x)->v2).y, m_spherePoints.at(m_triangles.at(x)->v2).z);
-            l_triangle->modp(2, m_spherePoints.at(m_triangles.at(x)->v3).x, m_spherePoints.at(m_triangles.at(x)->v3).y, m_spherePoints.at(m_triangles.at(x)->v3).z);
+            l_triangle->modp(0, m_spherePoints.at(m_triangles.at(x)->v1).x*m_size, m_spherePoints.at(m_triangles.at(x)->v1).y*m_size, m_spherePoints.at(m_triangles.at(x)->v1).z*m_size);
+            l_triangle->modp(1, m_spherePoints.at(m_triangles.at(x)->v2).x*m_size, m_spherePoints.at(m_triangles.at(x)->v2).y*m_size, m_spherePoints.at(m_triangles.at(x)->v2).z*m_size);
+            l_triangle->modp(2, m_spherePoints.at(m_triangles.at(x)->v3).x*m_size, m_spherePoints.at(m_triangles.at(x)->v3).y*m_size, m_spherePoints.at(m_triangles.at(x)->v3).z*m_size);
 
         if(x%2)
             l_triangle->setfill('#');

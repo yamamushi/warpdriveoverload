@@ -108,7 +108,7 @@ void TerosWindow::loadfromvector (vector<char> input, int column)
             test = input [(i*l_width) + j];
             std::string output(&test);
 
-            if(input [(i*l_width) + j] == ' ' || j == l_width - 1){
+            if(input [(i*l_width) + j] == ' ' || j > l_width - 3){
                 m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j, i, 20, " ")));
             }
             else{
