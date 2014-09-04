@@ -1,4 +1,6 @@
-include_directories(${WPOServer_SOURCE_DIR}/src/)
+include_directories(${wpoclient_SOURCE_DIR}/src/ 
+			${wpoclient_SOURCE_DIR}/src/vmmlib/include/
+			)
 
 set(
 CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/

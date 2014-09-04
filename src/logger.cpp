@@ -19,14 +19,14 @@ logger::logger( const std::string lfile, const int llvl ) {
 	L_logfile = lfile;
 	L_loglevel = llvl;
 	logstream << "Logger Initialized.";
-	logToFile( 0 );
+	logToFile(  0 );
 }
 
-void logger::logToFile( const int msglvl ) {
+
+void logger::logToFile(  const int msglvl ) {
     
     std::string logtext = logstream.str();
     
-	logstream.str("");
     
 	L_pid = _GetPid();
 	unsigned long TID = getThreadID();
@@ -69,6 +69,14 @@ void logger::logToFile( const int msglvl ) {
 		writeToFile( logmsg );
 	}
 }
+
+void logger::logToFile( std::string output, const int msglvl ) {
+    
+    logstream << output;
+    logToFile( msglvl);
+    
+}
+
 
 unsigned long logger::getThreadID() {
 	std::string threadID = boost::lexical_cast<std::string>(std::this_thread::get_id() );
