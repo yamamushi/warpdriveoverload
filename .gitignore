@@ -37,3 +37,4 @@ client
 CMakeFiles/
 *CMakeFiles/*
 CMakeCache.txt
+Makefile
