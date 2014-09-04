@@ -1,0 +1,3 @@
+[submodule "src/vmmlib"]
+	path = src/vmmlib
+	url = https://github.com/VMML/vmmlib

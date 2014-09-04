@@ -24,6 +24,8 @@ Please make sure you are on the proper branch, "Develop". You can switch branche
 
 Building:
 
+    git submodule init
+    git submodule update
     mkdir build;
     cd build;
     cmake .. && make
