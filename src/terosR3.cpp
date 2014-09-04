@@ -1427,6 +1427,29 @@ void TerosR3Cam::rotatecam (char absnorm, double angle)
 	}
 }
 
+
+double TerosR3Cam::getAngleX(){
+    
+    double cangle;
+    cangle = findang (cambasisx [1], cambasisx [2]);
+    return cangle;
+    
+}
+double TerosR3Cam::getAngleY(){
+    
+    double cangle;
+    cangle = findang (cambasisx [0], cambasisx [2]);
+    return cangle;
+    
+}
+double TerosR3Cam::getAngleZ(){
+    
+    double cangle;
+    cangle = findang (cambasisx [0], cambasisx [1]);
+    return cangle;
+    
+}
+
 void TerosR3Cam::basisreset ()
 {
 	cambasisx [0] = 1;

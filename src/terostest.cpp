@@ -57,6 +57,7 @@ void TerosTestInterface::init(){
     //m_treasurechest = _SharedPtr<TreasureChest>(new TreasureChest); //Declaring an example TreasureChest object.
     
 	//m_terosCam->setcampos(-5.00, 3, 1.50); //Adjusting the camera position to center its view of the object.
+    // MEASURE IN RADIANS
     m_terosCam->rotatecam('x', 3.1415926535897932384626433); // Rotate our camera as close to pi as I can remember right now
     m_terosCam->setcampos(m_camx, m_camy, m_camz);
     m_terosCam->rotatecam('z', -0.7);
@@ -92,6 +93,18 @@ void TerosTestInterface::init(){
 }
 
 
+
+
+void moveDirection(double x, double z, double distance){
+ 
+    double l_newX, l_newY, l_newZ;
+    
+    
+    
+}
+
+
+
 void TerosTestInterface::run(){
 
     //m_mainWindow->clearScreen();
@@ -112,7 +125,7 @@ void TerosTestInterface::run(){
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 21, "j/i/k/l: Move Camera             ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 22, "Up/Down: Zoom in/out             ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 23, "+/- : Modify rotation speed      ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-34), 24, "Spacebar: Pause Rotation         ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-34), 24, "Spacsebar: Pause Rotation         ");
     m_mainWindow->drawAt((m_mainWindow->getX()-34), 10, "Camera Zoom is: " + std::to_string(m_zoom));
 
 
@@ -156,9 +169,14 @@ void TerosTestInterface::run(){
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 9, "Camera Selected");
     }
     else{
+        
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 10, "PositionX: " + std::to_string(m_camx));
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 11, "PositionY: " + std::to_string(m_camy));
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 12, "PositionZ: " + std::to_string(m_camz));
+        
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 13, "Angle X: " + std::to_string(m_terosCam->getAngleX()));
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 14, "Angle Y: " + std::to_string(m_terosCam->getAngleY()));
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 15, "Angle Z: " + std::to_string(m_terosCam->getAngleZ()));
 
     }
 
