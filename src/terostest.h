@@ -16,7 +16,8 @@
 #include "connectionwidget.h"
 #include "teros.h"
 #include "graphchart.h"
-#include "terosR3.h"
+#include "teroscam.h"
+#include "terosobject.h"
 #include "terospolygon.h"
 #include "TreasureChest.h"
 #include "TRModel.h"
@@ -43,33 +44,31 @@ private:
     
     _SharedPtr<TerosScreen> m_terosScreen;
     _SharedPtr<GraphChart> m_graphController;
-    _SharedPtr<TerosR3Cam> m_terosCam;
-    _SharedPtr<TerosR3Object> m_terosObject;
+    _SharedPtr<TerosCam> m_terosCam;
+    _SharedPtr<TerosCam> m_terosCam2;
+
+    _SharedPtr<TerosObject> m_terosObject;
+    
     _SharedPtr<TerosWindow> m_terosWindow;
+    _SharedPtr<TerosWindow> m_terosWindow2;
+
     _SharedPtr<TreasureChest> m_treasurechest;
     _SharedPtr<TRModel> m_trModel;
 
     void move(double speed, double distance);
     
-    int yrotation;
-    int xrotation;
-    int zrotation;
+    int m_direction;
     
-    int direction;
     double m_zoom;
     bool m_rotate;
+    bool m_objectSelected;
     double m_rotspeed;
-    double xpos;
-    double ypos;
-    double zpos;
     
-    bool m_tool;
     double m_camx, m_camy, m_camz;
-    
     double m_camspeed;
     
-    vmml::vector<4, double> m_camPosition;
-    vmml::vector<4, double> m_camRotation;
+    
+
 };
 
 

@@ -23,7 +23,8 @@ add_executable(client main.cpp
             TimeWidget.cpp
             teros.cpp
             terospolygon.cpp
-            terosR3.cpp
+            terosobject.cpp
+            teroscam.cpp
             terostest.cpp
             TreasureChest.cpp
             drawing.cpp

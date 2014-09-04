@@ -66,12 +66,12 @@ void TreasureChest::rotchest (char axis, double angle) //The simplicity of this 
 	chest.rot (axis, angle); //Rotating the chest R3Object about the specified axis through a given angle (in radians).
 }
 
-TerosR3Object * TreasureChest::putchest ()
+TerosObject * TreasureChest::putchest ()
 {
 	return &chest; //Returning a pointer to the chest R3Object.
 }
 
-TerosR3Object * TreasureChest::putlid ()
+TerosObject * TreasureChest::putlid ()
 {
 	return &lid; //Returning a pointer to the lid R3Object.
 }

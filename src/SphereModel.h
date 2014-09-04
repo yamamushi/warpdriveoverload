@@ -14,7 +14,6 @@
 
 #include "teros.h"
 #include "terospolygon.h"
-#include "terosR3.h"
 #include "TRModel.h"
 #include "vector2d.h"
 #include "vector3d.h"
