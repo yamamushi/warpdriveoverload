@@ -15,37 +15,20 @@
 #include "teros.h"
 #include "terospolygon.h"
 #include "TRModel.h"
-#include "vector2d.h"
-#include "vector3d.h"
 
 #include <vector>
 
 
+
 class TRModel;
 
-struct TriangleIndice
-{
-    int v1;
-    int v2;
-    int v3;
-    
-    TriangleIndice(int p1, int p2, int p3) : v1(p1), v2(p2), v3(p3) {};
-};
 
-struct Point3d{
-    
-    double p1;
-    double p2;
-    double p3;
-    
-    Point3d(double v1, double v2, double v3) : p1(v1), p2(v2), p3(v3) {};
 
-};
 
 struct MeshModel {
     
-    //std::vector<_SharedPtr<TriangleIndices> > indices;
-    std::vector<_SharedPtr<Vector3D> >         points;
+    std::vector<_SharedPtr<TriangleIndice> > m_indices;
+    std::vector<Vector3D> m_points;
     
 };
 
@@ -76,7 +59,7 @@ private:
     std::vector<_SharedPtr<TerosPolygon> > m_buffer;
     
     std::vector<_SharedPtr<TriangleIndice> > m_triangles;
-    std::vector<Point3d> m_points;
+    std::vector<Vector3D> m_spherePoints;
 
 };
 

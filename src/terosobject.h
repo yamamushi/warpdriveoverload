@@ -17,7 +17,6 @@
 
 #include "teros.h"
 #include "terospolygon.h"
-#include "vector3d.h"
 
 #include <string>
 #include <vector>

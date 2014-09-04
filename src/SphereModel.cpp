@@ -14,7 +14,6 @@
 SphereModel::SphereModel() : TRModel() {
         
 
-    std::vector<Vector3D> m_spherePoints;
     m_mesh = _SharedPtr<MeshModel>(new MeshModel);
 
     int recursion = 2;
@@ -28,9 +27,9 @@ SphereModel::SphereModel() : TRModel() {
         
         
             _SharedPtr<TerosPolygon> l_triangle = _SharedPtr<TerosPolygon>(new TerosPolygon);
-            l_triangle->modp(0, m_spherePoints.at(m_triangles.at(x)->v1).x*m_size, m_spherePoints.at(m_triangles.at(x)->v1).y*m_size, m_spherePoints.at(m_triangles.at(x)->v1).z*m_size);
-            l_triangle->modp(1, m_spherePoints.at(m_triangles.at(x)->v2).x*m_size, m_spherePoints.at(m_triangles.at(x)->v2).y*m_size, m_spherePoints.at(m_triangles.at(x)->v2).z*m_size);
-            l_triangle->modp(2, m_spherePoints.at(m_triangles.at(x)->v3).x*m_size, m_spherePoints.at(m_triangles.at(x)->v3).y*m_size, m_spherePoints.at(m_triangles.at(x)->v3).z*m_size);
+            l_triangle->modp(0, m_spherePoints.at(m_triangles.at(x)->x()).x()*m_size, m_spherePoints.at(m_triangles.at(x)->x()).y()*m_size, m_spherePoints.at(m_triangles.at(x)->x()).z()*m_size);
+            l_triangle->modp(1, m_spherePoints.at(m_triangles.at(x)->y()).x()*m_size, m_spherePoints.at(m_triangles.at(x)->y()).y()*m_size, m_spherePoints.at(m_triangles.at(x)->y()).z()*m_size);
+            l_triangle->modp(2, m_spherePoints.at(m_triangles.at(x)->z()).x()*m_size, m_spherePoints.at(m_triangles.at(x)->z()).y()*m_size, m_spherePoints.at(m_triangles.at(x)->z()).z()*m_size);
 
         if(x%2)
             l_triangle->setfill('#');
@@ -77,20 +76,18 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
     // the lower pentagon
     double phi = PI / 5.0;
     for (int i = 1; i < 6; ++i) {
-        icosaVertices[i] = Vector3D(ctheta * std::cos(phi), ctheta * std::sin(phi), -stheta).Normalize();
-        
+        icosaVertices[i] = Vector3D(ctheta * std::cos(phi), ctheta * std::sin(phi), -stheta);
         phi += (2.0 * PI) / 5.0;
     }
     
     // the upper pentagon
     phi = 0.0;
     for (int i = 6; i < 11; ++i) {
-        icosaVertices[i] = Vector3D(theta * std::cos(phi), ctheta * std::sin(phi), stheta).Normalize();
-        
+        icosaVertices[i] = Vector3D(theta * std::cos(phi), ctheta * std::sin(phi), stheta);
         phi += (2.0 * PI) / 5.0;
     }
     
-    icosaVertices[11] = Vector3D(0.0f, 0.0f, 1.0f).Normalize(); // the upper vertex
+    icosaVertices[11] = Vector3D(0.0f, 0.0f, 1.0f);// the upper vertex
     
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(0, 2, 1)));
     m_triangles.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(0, 3, 2)));
@@ -127,7 +124,7 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
 
     for(int i = 0; i < 20; i++){
         
-        subdivide(sphere_points.at(m_triangles.at(i)->v1), sphere_points.at(m_triangles.at(i)->v2), sphere_points.at(m_triangles.at(i)->v3), sphere_points, depth);
+        subdivide(sphere_points.at(m_triangles.at(i)->x()), sphere_points.at(m_triangles.at(i)->y()), sphere_points.at(m_triangles.at(i)->z()), sphere_points, depth);
     }
     
 }
@@ -145,9 +142,13 @@ void SphereModel::subdivide(const Vector3D &v1, const Vector3D &v2, const Vector
 
         return;
     }
-    const Vector3D v12 = (v1 + v2).Normalize();
-    const Vector3D v23 = (v2 + v3).Normalize();
-    const Vector3D v31 = (v3 + v1).Normalize();
+    Vector3D v12 = Vector3D(v1 + v2);
+    v12.normalize();
+    Vector3D v23 = Vector3D(v2 + v3);
+    v23.normalize();
+    Vector3D v31 = Vector3D(v3 + v1);
+    v31.normalize();
+    
     subdivide(v1, v12, v31, sphere_points, depth - 1);
     subdivide(v2, v23, v12, sphere_points, depth - 1);
     subdivide(v3, v31, v23, sphere_points, depth - 1);

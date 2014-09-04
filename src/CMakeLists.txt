@@ -30,9 +30,7 @@ add_executable(client main.cpp
             drawing.cpp
             TRModel.cpp
             SphereModel.cpp
-            vector2d.cpp
-            vector3d.cpp
-            logger.cpp  
+            logger.cpp
             )
 
 set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses")
