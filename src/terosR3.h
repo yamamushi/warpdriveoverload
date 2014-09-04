@@ -16,6 +16,7 @@
 
 #include "teros.h"
 #include "terospolygon.h"
+#include "vector3d.h"
 
 #include <string>
 #include <vector>
@@ -34,6 +35,8 @@ private:
     double ybasis [3];
     double zbasis [3];
     double scalep [3];
+    
+    std::vector<_SharedPtr<Vector3D> > m_points;
     
     bool ctrscale;
     
@@ -108,6 +111,10 @@ private:
     double cambasisy [3];
     double cambasisz [3];
     
+    Vector3D m_position[3];
+    Vector3D m_velocity[3];
+
+    
     int viewcolumns;
     
 public:
@@ -148,6 +155,11 @@ public:
     double putcamx ();
     double putcamy ();
     double putcamz ();
+    
+    double getAngleX();
+    double getAngleY();
+    double getAngleZ();
+    
     double putzoomfactor ();
     
     std::vector<char> putview ();

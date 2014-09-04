@@ -18,51 +18,65 @@
 logger::logger( const std::string lfile, const int llvl ) {
 	L_logfile = lfile;
 	L_loglevel = llvl;
-	logToFile( "Warp Drive Overload Logging utility has started.", 6 );
+	logstream << "Logger Initialized.";
+	logToFile(  0 );
 }
 
-void logger::logToFile( const std::string text, const int msglvl ) {
+
+void logger::logToFile(  const int msglvl ) {
+    
+    std::string logtext = logstream.str();
+    
+    
 	L_pid = _GetPid();
 	unsigned long TID = getThreadID();
 	std::string date = tStamp();
-	std::stringstream mstream;
-	mstream << date << " [" << L_pid << "] (" << TID << ") [";
+    
+	logstream << date << " [" << L_pid << "] (" << TID << ") [";
 	switch ( msglvl ) {
 		case 0:
-			mstream << "DEBUG] :";
+			logstream << "DEBUG] :";
 			break;
 		case 1:
-			mstream << "INFO] :";
+			logstream << "INFO] :";
 			break;
 		case 2:
-			mstream << "WARNING] :";
+			logstream << "WARNING] :";
 			break;
 		case 3:
-			mstream << "ERROR] :";
+			logstream << "ERROR] :";
 			break;
 		case 4:
-			mstream << "CRIT] :";
+			logstream << "CRIT] :";
 			break;
 		case 5:
-			mstream << "FATAL] :";
+			logstream << "FATAL] :";
 			break;
 		case 6:
-			mstream << "INFO] :";
+			logstream << "INFO] :";
 			break;
 		default:
-			mstream << "FATAL] : No message level passed to logger. Shutting down." << std::endl;
-			std::string errstr = mstream.str();
-			writeToFile( errstr );
+			logstream << "FATAL] : No message level passed to logger. Shutting down." << std::endl;
+			//std::string errstr = mstream.str();
+			//writeToFile( errstr );
 			// placeholder for error handler.
 			exit(1);
 			break;
 	}
-	mstream << " " << text << std::endl;
-	std::string logmsg = mstream.str();
+	logstream << " " << logtext << std::endl;
+	std::string logmsg = logstream.str();
 	if ( msglvl >= L_loglevel ) {
 		writeToFile( logmsg );
 	}
 }
+
+void logger::logToFile( std::string output, const int msglvl ) {
+    
+    logstream << output;
+    logToFile( msglvl);
+    
+}
+
 
 unsigned long logger::getThreadID() {
 	std::string threadID = boost::lexical_cast<std::string>(std::this_thread::get_id() );
@@ -93,7 +107,7 @@ void logger::logException( const int errornumber, const std::string ctext ) {
 			break;
 	}
 	std::string otext = exstream.str();
-	logToFile( otext, elvl );
+	logToFile( elvl );
 	if ( elvl > 4 ) {
 		exit(1);
 	}

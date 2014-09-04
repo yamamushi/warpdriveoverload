@@ -19,6 +19,10 @@
 #include "terosR3.h"
 #include "terospolygon.h"
 #include "TreasureChest.h"
+#include "TRModel.h"
+#include <vmmlib/vector.hpp>
+#include <vmmlib/matrix.hpp>
+
 
 #include <ncurses.h>
 #include <vector>
@@ -43,15 +47,16 @@ private:
     _SharedPtr<TerosR3Object> m_terosObject;
     _SharedPtr<TerosWindow> m_terosWindow;
     _SharedPtr<TreasureChest> m_treasurechest;
+    _SharedPtr<TRModel> m_trModel;
 
-    std::vector<TerosPolygon> m_terosPolygons;
-
+    void move(double speed, double distance);
+    
     int yrotation;
     int xrotation;
     int zrotation;
     
     int direction;
-    int m_zoom;
+    double m_zoom;
     bool m_rotate;
     double m_rotspeed;
     double xpos;
@@ -59,6 +64,12 @@ private:
     double zpos;
     
     bool m_tool;
+    double m_camx, m_camy, m_camz;
+    
+    double m_camspeed;
+    
+    vmml::vector<4, double> m_camPosition;
+    vmml::vector<4, double> m_camRotation;
 };
 
 
