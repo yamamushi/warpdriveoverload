@@ -16,9 +16,10 @@ SphereModel::SphereModel(int smoothness) : TRModel() {
     int recursion = smoothness;
     initialize_sphere(m_spherePoints, recursion);  // where DEPTH should be the subdivision depth
 
+
     // This prepares our mesh as m_model (TRObject)
     constructFromMesh();
-    
+/*    
     TerosPolygon intersect;
     int index = findIntersectIndex(1.0, 1.0, 5.0);
     intersect.modp(0, m_mesh->m_points.at(m_mesh->m_indices.at(index).x()).x(), m_mesh->m_points.at(m_mesh->m_indices.at(index).x()).y(), m_mesh->m_points.at(m_mesh->m_indices.at(index).x()).z());
@@ -28,8 +29,7 @@ SphereModel::SphereModel(int smoothness) : TRModel() {
     
     m_model->addside(&intersect);
     
-    
-    
+  */  
     double center[3] = {0,0,0};
     m_model->center(center);
     m_model->ctrscaleoff(0, 0, 0);
@@ -48,7 +48,7 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
     double stheta = std::sin(theta);
     double ctheta = std::cos(theta);
     
-    icosaVertices[0] = Vector3D(0.0f, 0.0f, -1.0f); // the lower vertex
+    icosaVertices[0] = Vector3D(0.0, 0.0, -1.0); // the lower vertex
     
     // the lower pentagon
     double phi = PI / 5.0;
@@ -64,7 +64,7 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
         phi += (2.0 * PI) / 5.0;
     }
     
-    icosaVertices[11] = Vector3D(0.0f, 0.0f, 1.0f);// the upper vertex
+    icosaVertices[11] = Vector3D(0.0, 0.0, 1.0);// the upper vertex
     
     m_mesh->m_indices.push_back(TriangleIndice(0, 2, 1));
     m_mesh->m_indices.push_back(TriangleIndice(0, 3, 2));
@@ -106,22 +106,27 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
 }
 
 
-void SphereModel::subdivide(const Vector3D &v1, const Vector3D &v2, const Vector3D &v3, vector<Vector3D> &sphere_points, const unsigned int depth) {
+void SphereModel::subdivide(const Vector3D &v1, const Vector3D &v2, const Vector3D &v3, std::vector<Vector3D> &sphere_points, const unsigned int depth) {
     
     if(depth == 0) {
-        int index = (int)m_mesh->m_points.size();
+        int index = m_mesh->m_points.size();
         m_mesh->m_points.push_back(v1);
         m_mesh->m_points.push_back(v2);
         m_mesh->m_points.push_back(v3);
-        
-        m_mesh->m_indices.push_back(TriangleIndice(index, index+1, index+2));
-        //m_mesh->m_colors.push_back(ColorIndice(m_mesh->m_indices.size()-1, 'W', COLOR_BLUE, COLOR_BLACK, 0));
-        m_mesh->m_colors.push_back(ColorIndice(index, '~', COLOR_BLUE, COLOR_BLACK, 0));
+
+        m_mesh->m_colors.push_back(ColorIndice(index, '~', COLOR_BLUE, COLOR_BLACK));
         m_mesh->m_colors.push_back(ColorIndice(index+1, '^', COLOR_WHITE, COLOR_BLACK, 0));
-        m_mesh->m_colors.push_back(ColorIndice(index+2, '#', COLOR_GREEN, COLOR_BLACK, 0));
+	if(index%2)
+        	m_mesh->m_colors.push_back(ColorIndice(index+2, '=', COLOR_GREEN, COLOR_BLACK, 0));
+	else
+               	m_mesh->m_colors.push_back(ColorIndice(index+2, '#', COLOR_GREEN, COLOR_BLACK, 0));
+        m_mesh->m_colors.push_back(ColorIndice(index+3, 'M', COLOR_RED, COLOR_BLACK, 0));
+
+        m_mesh->m_indices.push_back(TriangleIndice(index, index+1, index+2));
 
         return;
     }
+
     Vector3D v12 = Vector3D(v1 + v2);
     v12.normalize();
     Vector3D v23 = Vector3D(v2 + v3);

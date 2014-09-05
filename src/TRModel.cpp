@@ -8,6 +8,7 @@
 
 #include "TRModel.h"
 #include "logger.h"
+#include <string>
 
 TRModel::TRModel(){
     
@@ -23,7 +24,7 @@ TRModel::TRModel(){
 
 void TRModel::constructFromMesh(_SharedPtr<MeshModel> source, int size){
     
-    //logger logmaker("log.txt", 0);
+    logger logmaker("log.txt", 0);
     
     if(size < 1)
         size = 1;
@@ -69,14 +70,13 @@ void TRModel::constructFromMesh(_SharedPtr<MeshModel> source, int size){
             
                 if(m_polygons.at(index)->getIndex() == index){
                     
-                    _SharedPtr<TerosPolygon> l_triangle = m_polygons.at(index);
+                    _SharedPtr<TerosPolygon> c_triangle = m_polygons.at(index);
                     
-                    l_triangle->setAttr(source->m_colors.at(x).s,
+                    c_triangle->setAttr(source->m_colors.at(x).s,
                                         source->m_colors.at(x).fg,
                                         source->m_colors.at(x).bg,
                                         source->m_colors.at(x).attr);
-                    
-                    l_triangle->setfill(source->m_colors.at(x).s);
+
                     
                 }
         }

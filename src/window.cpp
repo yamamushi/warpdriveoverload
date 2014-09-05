@@ -127,7 +127,7 @@ void ncursesWindow::refresh(){
 void ncursesWindow::handleKeys(int input){
 
     // We are going to let our WidgetManager as part of our interface list
-    // Handle keyboard management
+	    // Handle keyboard management
     
     /*
     for(size_t x = 0; x < m_menuList.size(); x++){
@@ -146,7 +146,6 @@ void ncursesWindow::drawAt(int x, int y, std::string output){
     wattrset(m_window, COLOR_PAIR(m_normalColor));
     mvwprintw(m_window, y, x, "%s", output.c_str());
     wattroff(m_window, COLOR_PAIR(m_normalColor));
-    
 }
 
 
@@ -167,7 +166,6 @@ void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int
         mvwchgat(m_window, y, x, output.length(), attr, 0, NULL);
     }
     wattroff(m_window, COLOR_PAIR(paircolor));
-
 }
 
 void ncursesWindow::drawAt(int x, int y, char c){
@@ -175,7 +173,7 @@ void ncursesWindow::drawAt(int x, int y, char c){
     wattrset(m_window, COLOR_PAIR(m_normalColor));
     mvwprintw(m_window, y, x, "%c", c);
     wattroff(m_window, COLOR_PAIR(m_normalColor));
-    
+    wrefresh(m_window);    
 }
 
 void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
@@ -197,7 +195,6 @@ void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
         mvwchgat( m_window, y, x, 1, attr, 0, NULL);
     }
     wattroff(m_window, COLOR_PAIR(m_normalColor));
-
     
 }
 
