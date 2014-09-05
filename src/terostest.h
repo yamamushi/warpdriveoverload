@@ -44,7 +44,10 @@ private:
     
     _SharedPtr<TerosScreen> m_terosScreen;
     _SharedPtr<GraphChart> m_graphController;
+    
     _SharedPtr<TerosCam> m_terosCam;
+
+    _SharedPtr<TerosCam> m_terosCam1;
     _SharedPtr<TerosCam> m_terosCam2;
 
     _SharedPtr<TerosObject> m_terosObject;

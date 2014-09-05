@@ -31,7 +31,6 @@ TerosCam::TerosCam ()
     m_position.set(m_camx, m_camy, m_camz, 1.0f);
 
 	basisreset ();
-    m_velocity.set(getAngleX(), getAngleY(), getAngleZ(), 0.0f);
 
 }
 
@@ -289,7 +288,7 @@ void TerosCam::setcampos (double x, double y, double z)
 	m_camz = z;
     
     m_position.set(m_camx, m_camy, m_camz, 1.0f);
-    
+    setViewMatrix();
 }
 
 void TerosCam::addobject (TerosObject * nextelement)
@@ -391,30 +390,33 @@ void TerosCam::rotatecam (char absnorm, double angle)
 		cambasisz [2] = radius*sin(cangle + angle);
 	}
     
-    m_velocity.set(getAngleX(), getAngleY(), getAngleZ(), 1.0f);
-
-}
-
-
-double TerosCam::getAngleX(){
-    
-    double cangle;
-    cangle = findang (cambasisx [0], cambasisx [1]);
-    return cangle;
+    setViewMatrix();
     
 }
-double TerosCam::getAngleY(){
+
+
+// These Get Angle functions don't do what I thought they did
+// Will rewrite.
+vmml::vector<4, double> TerosCam::getAngleX(){
     
-    double cangle;
-    cangle = findang (cambasisy [0], cambasisy [1]);
-    return cangle;
+    vmml::vector<4, double> angle;
+    angle = viewMatrix.get_row(0);
+    return angle;
+}
+
+vmml::vector<4, double> TerosCam::getAngleY(){
+    
+    vmml::vector<4, double> angle;
+    angle = viewMatrix.get_row(1);
+    return angle;
     
 }
-double TerosCam::getAngleZ(){
+
+vmml::vector<4, double> TerosCam::getAngleZ(){
     
-    double cangle;
-    cangle = findang (cambasisz [0], cambasisz [1]);
-    return cangle;
+    vmml::vector<4, double> angle;
+    angle = viewMatrix.get_row(2);
+    return angle;
     
 }
 
@@ -431,7 +433,21 @@ void TerosCam::basisreset ()
 	cambasisz [0] = 0;
 	cambasisz [1] = 0;
 	cambasisz [2] = 1;
+    
+    setViewMatrix();
+
 }
+
+
+void TerosCam::setViewMatrix(){
+    
+    viewMatrix.set_row(0,  vmml::vector<4, double>(cambasisx[0], cambasisx[1], cambasisx[2], 0.0));
+    viewMatrix.set_row(1,  vmml::vector<4, double>(cambasisy[0], cambasisy[1], cambasisy[2], 0.0));
+    viewMatrix.set_row(2,  vmml::vector<4, double>(cambasisz[0], cambasisz[1], cambasisz[2], 0.0));
+    viewMatrix.set_row(3,  vmml::vector<4, double>(m_camx, m_camy, m_camz, 1.0));
+
+}
+
 
 void TerosCam::cpybasis (char axis, double store [3])
 {
@@ -792,13 +808,6 @@ double TerosCam::putzoomfactor ()
 
 vector <char> TerosCam::putview ()
 {
-    /*
-     // We were using this to debug our window output
-     std::string str(view.begin(),view.end());
-     std::ofstream log("output.txt");
-     log << str;
-     log.close();
-     */
 	return view;
 }
 
@@ -823,16 +832,8 @@ void TerosCam::moveForward( double speed, double distance){
     
     m_speed = speed;
     
-    vmml::matrix<4, 4, double> viewMatrix;
-    
     //  Right - Up - Look
     //    X     Y     Z
-    
-    viewMatrix.set_row(0,  vmml::vector<4, double>(cambasisx[0], cambasisx[1], cambasisx[2], 0.0));
-    viewMatrix.set_row(1,  vmml::vector<4, double>(cambasisy[0], cambasisy[1], cambasisy[2], 0.0));
-    viewMatrix.set_row(2,  vmml::vector<4, double>(cambasisz[0], cambasisz[1], cambasisz[2], 0.0));
-    viewMatrix.set_row(3,  vmml::vector<4, double>(m_camx, m_camy, m_camz, 1.0));
-    
     viewMatrix = viewMatrix * (distance*m_speed);
     
     vmml::vector<4, double> translation;

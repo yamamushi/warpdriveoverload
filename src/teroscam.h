@@ -75,9 +75,9 @@ public:
     double putcamy ();
     double putcamz ();
     
-    double getAngleX();
-    double getAngleY();
-    double getAngleZ();
+    vmml::vector<4, double> getAngleX();
+    vmml::vector<4, double> getAngleY();
+    vmml::vector<4, double> getAngleZ();
     
     double putzoomfactor ();
     
@@ -103,13 +103,13 @@ private:
     double cambasisz [3];
     
     vmml::vector<4, double> m_position;
-    vmml::vector<4, double> m_velocity; // aka rotation
-    
+    vmml::matrix<4, 4, double> viewMatrix;
+    void setViewMatrix();
     
     int m_viewcolumns;
     double m_speed;
     
-    
+
     
 };
 

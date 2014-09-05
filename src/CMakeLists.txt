@@ -31,6 +31,7 @@ add_executable(client main.cpp
             TRModel.cpp
             SphereModel.cpp
             logger.cpp
+            bresenham2d.cpp
             )
 
 set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses")
