@@ -7,3 +7,52 @@
 //
 
 #include "TRModel.h"
+
+TRModel::TRModel(){
+    
+    
+    m_model = _SharedPtr<TerosObject>(new TerosObject);
+    m_mesh = _SharedPtr<MeshModel>(new MeshModel);
+    
+    m_position.set(m_posx, m_posy, m_posz, 1.0f);
+    m_velocity.set(-1.0, 0.0, 0.0, 0.0f);
+
+}
+
+
+void TRModel::constructFromMesh(_SharedPtr<MeshModel> source, int size){
+    
+    //logger logmaker("log.txt", 0)
+    
+    if(size < 1)
+        size = 1;
+    
+    
+    for(int x = 0; x < source->m_indices.size(); x++){
+        
+        
+        _SharedPtr<TerosPolygon> l_triangle = _SharedPtr<TerosPolygon>(new TerosPolygon);
+        l_triangle->modp(0, source->m_points.at(source->m_indices.at(x).x()).x()*size, source->m_points.at(source->m_indices.at(x).x()).y()*size, source->m_points.at(source->m_indices.at(x).x()).z()*size);
+        l_triangle->modp(1, source->m_points.at(source->m_indices.at(x).y()).x()*size, source->m_points.at(source->m_indices.at(x).y()).y()*size, source->m_points.at(source->m_indices.at(x).y()).z()*size);
+        l_triangle->modp(2, source->m_points.at(source->m_indices.at(x).z()).x()*size, source->m_points.at(source->m_indices.at(x).z()).y()*size, source->m_points.at(source->m_indices.at(x).z()).z()*size);
+        
+        if(x == 14 || x == 268)
+            l_triangle->setfill('F');
+        else if(x%2)
+            l_triangle->setfill('#');
+        else
+            l_triangle->setfill('@');
+
+        m_polygons.push_back(l_triangle);
+        
+    }
+    
+    for(int x = 0; x < m_polygons.size(); x++){
+        m_model->addside(m_polygons.at(x).get());
+    }
+
+    
+}
+
+
+

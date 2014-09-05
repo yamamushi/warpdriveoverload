@@ -18,47 +18,30 @@
 
 #include <vector>
 
-
-
 class TRModel;
 
 
-
-
-struct MeshModel {
-    
-    std::vector<_SharedPtr<TriangleIndice> > m_indices;
-    std::vector<Vector3D> m_points;
-    
-};
 
 class SphereModel : public TRModel //Declaring a new class, derivative of the R3Object class, for our advanced 'TreasureChest' object.
 {
     
 public:
     
-    SphereModel(); //Prototyping a constructor function for our TreasureChest class.
+    SphereModel(int smoothness=1); //Prototyping a constructor function for our TreasureChest class.
     
     void move(double xdisp, double ydisp, double zdisp);
     void rotate(char direction, double radians);
     void reset();
     
+    int findIntersectIndex(double x, double y, double length);
+    
+    bool rayIntersectsTriangle(Vector3D point, Vector3D direction, Vector3D pt1, Vector3D pt2, Vector3D pt3);
     
 private:
     
     void initialize_sphere(std::vector<Vector3D> &sphere_points, const unsigned int depth);
     void subdivide(const Vector3D &v1, const Vector3D &v2, const Vector3D &v3, std::vector<Vector3D> &sphere_points, const unsigned int depth);
-    void addVertex(Vector3D p);
-    int getMiddlePoint(double p1, double p2);
-    void constructFromMesh(_SharedPtr<MeshModel> mesh);
-    void subdivide(int depth);
-    int getMiddlePointID(int p1, int p2);
-
     
-    _SharedPtr<MeshModel> m_mesh;
-    std::vector<_SharedPtr<TerosPolygon> > m_buffer;
-    
-    std::vector<_SharedPtr<TriangleIndice> > m_triangles;
     std::vector<Vector3D> m_spherePoints;
 
 };

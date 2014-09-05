@@ -67,7 +67,10 @@ public:
     
     double getviewdepth (int, int);
     double getviewdepthraw (int);
-    void moveDir(char direction, double speed, double distance);
+    
+    // Passing this a negative distance will result in moving backwards
+    void moveForward( double speed, double distance);
+    
     double putcamx ();
     double putcamy ();
     double putcamz ();

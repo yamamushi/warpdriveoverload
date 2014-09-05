@@ -43,6 +43,7 @@ private:
     bool ctrscale;
     
 public:
+    
     TerosObject ();
     
     void addside (TerosPolygon *);

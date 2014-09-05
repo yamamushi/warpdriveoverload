@@ -17,7 +17,7 @@ void TerosTestInterface::init(){
 
     // Our variable initialization
     m_rotspeed = 0.1;
-    m_camspeed = 0.05;
+    m_camspeed = 1.0;
     m_direction = 5;
     m_zoom = 5.0;
     m_rotate = true;
@@ -65,7 +65,7 @@ void TerosTestInterface::init(){
 
     
     // Create a Model and set it as our object
-    m_trModel = _SharedPtr<SphereModel>(new SphereModel);
+    m_trModel = _SharedPtr<SphereModel>(new SphereModel(2));
     m_terosObject = m_trModel->getModel();
     
     // Create a new camera
@@ -118,7 +118,7 @@ void TerosTestInterface::init(){
 
 void TerosTestInterface::move(double speedws, double distance){
  
-    m_terosCam->moveDir('x', speedws, distance);
+    m_terosCam->moveForward( speedws, distance);
     
 }
 
@@ -187,13 +187,18 @@ void TerosTestInterface::run(){
     
 
         
-        m_mainWindow->drawAt((m_mainWindow->getX()-34), 10, "PositionX: " + std::to_string(m_camx));
-        m_mainWindow->drawAt((m_mainWindow->getX()-34), 11, "PositionY: " + std::to_string(m_camy));
-        m_mainWindow->drawAt((m_mainWindow->getX()-34), 12, "PositionZ: " + std::to_string(m_camz));
-        
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 10, "PositionX: " + std::to_string(m_terosCam->putcamx()));
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 11, "PositionY: " + std::to_string(m_terosCam->putcamy()));
+        m_mainWindow->drawAt((m_mainWindow->getX()-34), 12, "PositionZ: " + std::to_string(m_terosCam->putcamz()));
+    
+    
+    /*
+     // This doesn't do what I thought it did :)
+     
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 13, "Angle X: " + std::to_string(m_terosCam->getAngleX()));
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 14, "Angle Y: " + std::to_string(m_terosCam->getAngleY()));
         m_mainWindow->drawAt((m_mainWindow->getX()-34), 15, "Angle Z: " + std::to_string(m_terosCam->getAngleZ()));
+    */
 
 
 
@@ -273,11 +278,11 @@ void TerosTestInterface::handleKeys(int input){
             break;
 
         case 'w':
-            move(m_camspeed, 0.6);
+            move(m_camspeed, 0.05);
             break;
             
         case 's':
-            move(m_camspeed, -0.6);
+            move(m_camspeed, -0.05);
             break;
             
         case 'a':

@@ -399,21 +399,21 @@ void TerosCam::rotatecam (char absnorm, double angle)
 double TerosCam::getAngleX(){
     
     double cangle;
-    cangle = findang (cambasisx [1], cambasisx [2]);
+    cangle = findang (cambasisx [0], cambasisx [1]);
     return cangle;
     
 }
 double TerosCam::getAngleY(){
     
     double cangle;
-    cangle = findang (cambasisx [0], cambasisx [2]);
+    cangle = findang (cambasisy [0], cambasisy [1]);
     return cangle;
     
 }
 double TerosCam::getAngleZ(){
     
     double cangle;
-    cangle = findang (cambasisx [0], cambasisx [1]);
+    cangle = findang (cambasisz [0], cambasisz [1]);
     return cangle;
     
 }
@@ -819,45 +819,31 @@ TerosObject * TerosCam::putobj (int index)
 
 
 
-void TerosCam::moveDir(char direction, double speed, double distance){
+void TerosCam::moveForward( double speed, double distance){
     
-    m_velocity.set(getAngleX(), getAngleY(), getAngleZ(), 1.0f);
     m_speed = speed;
     
-    //vmml::matrix<4, 4, double> matrixRot = vmml::matrix<4, 4, double> rotate_x(m_camRotation->PositionX);
-    vmml::matrix<4, 4, double> identity;
-    identity.set_row(0,  vmml::vector<4, double>(1.0, 0.0, 0.0, 0.0));
-    identity.set_row(1,  vmml::vector<4, double>(0.0, 1.0, 0.0, 0.0));
-    identity.set_row(2,  vmml::vector<4, double>(0.0, 0.0, 1.0, 0.0));
-    identity.set_row(3,  vmml::vector<4, double>(0.0, 0.0, 0.0, 1.0));
+    vmml::matrix<4, 4, double> viewMatrix;
     
+    //  Right - Up - Look
+    //    X     Y     Z
     
-    vmml::matrix<4, 4, double> matrixRot_X = identity;
+    viewMatrix.set_row(0,  vmml::vector<4, double>(cambasisx[0], cambasisx[1], cambasisx[2], 0.0));
+    viewMatrix.set_row(1,  vmml::vector<4, double>(cambasisy[0], cambasisy[1], cambasisy[2], 0.0));
+    viewMatrix.set_row(2,  vmml::vector<4, double>(cambasisz[0], cambasisz[1], cambasisz[2], 0.0));
+    viewMatrix.set_row(3,  vmml::vector<4, double>(m_camx, m_camy, m_camz, 1.0));
     
-    matrixRot_X = matrixRot_X.rotate_x(m_velocity.x());
+    viewMatrix = viewMatrix * (distance*m_speed);
     
-    vmml::matrix<4, 4, double> matrixRot_Y = identity;
-    matrixRot_Y = matrixRot_Y.rotate_y(m_velocity.y());
-    
-    vmml::matrix<4, 4, double> matrixRot_Z = identity;
-    matrixRot_Z = matrixRot_Z.rotate_z(m_velocity.z());
-    
-    vmml::matrix<4, 4, double> matrixRot_final = matrixRot_X * matrixRot_Y * matrixRot_Z;
-    
-    vmml::vector<4, double> translation = matrixRot_final * vmml::vector<4, double>(distance, 0.0, 0.0, 0.0);
-    
-    translation = translation * speed;
-    
+    vmml::vector<4, double> translation;
+    translation = viewMatrix;
+
     m_position = m_position + translation;
-    
+
     m_camx = m_position.x();
     m_camy = m_position.y();
     m_camz = m_position.z();
     
     setcampos(m_camx, m_camy, m_camz);
-    m_velocity.set(getAngleX(), getAngleY(), getAngleZ(), 1.0f);
-
-  //  m_position.set(m_camx, m_camy, m_camz, 1.0f);
-    
     
 }
