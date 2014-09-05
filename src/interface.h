@@ -1,3 +1,4 @@
+#pragma once
 //
 //  interface.h
 //  warpdriveoverloaded
@@ -22,6 +23,7 @@
 #include "tr1_wrapper.h"
 #include "shell.h"
 #include "window.h"
+#include "WidgetManager.h"
 
 #include <ncurses.h>
 #include <vector>
@@ -31,6 +33,7 @@ class ncursesInterface;
 class ncursesWindow;
 class Widget;
 class Shell;
+class WidgetManager;
 
 class InterfaceHandler {
     
@@ -114,6 +117,8 @@ protected:
     int m_ID;
     
     std::string m_name;
+    
+    _SharedPtr<WidgetManager> m_widgetManager;
 
 };
 

@@ -52,6 +52,7 @@ Interface::Interface(_SharedPtr<Shell> owner) : m_owner(owner){
     m_initialized = false;
     m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(owner->m_rows, owner->m_cols, 0, 0)); // Initialize our root window
     getmaxyx(m_mainWindow->get(), m_sizeY, m_sizeX);
+    m_widgetManager = _SharedPtr<WidgetManager>(new WidgetManager(this));
 
 }
 

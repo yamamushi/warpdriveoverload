@@ -20,22 +20,19 @@ ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : m_hei
     
     m_showBorder = true;
     
+    setBorderColor(ColorManager::Instance()->checkColorPair(COLOR_RED, COLOR_BLACK));
     setborder('|', '|', '=', '=', '+', '+', '+', '+');
     
     
-    init_pair(1, COLOR_GREEN, COLOR_BLACK); // A default Background Color
     setBGColor(COLOR_BLACK);
     setFGColor(COLOR_GREEN);
-    setNormalColor(1);
     
-    init_pair(2, COLOR_BLUE, COLOR_BLACK); // A default Background Color
-    setCursorColor(2);
+    setNormalColor(m_fgColor, m_bgColor);
     
-    init_pair(3, COLOR_RED, COLOR_BLACK); // A default Background Color
-    setSelectedColor(3);
+    setCursorColor(COLOR_BLUE, COLOR_BLACK);
     
-    init_pair(4, COLOR_RED, COLOR_BLACK); // A default Background Color
-    setBorderColor(4);
+    setSelectedColor(COLOR_RED, COLOR_BLACK);
+    
     
 }
 
@@ -67,13 +64,8 @@ void ncursesWindow::close(){
     }
 }
 
-void ncursesWindow::closeAllMenus(){
-    
-    for(size_t x = 0; x < m_menuList.size(); x++){
-        m_menuList.at(x)->closeSubMenu();
-    }
-    
-}
+
+
 
 void ncursesWindow::clearScreen(){
     
@@ -92,17 +84,21 @@ void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char 
     m_border->m_bl = bl;
     m_border->m_br = br;
     
-    if(m_showBorder)
-        wborder(m_window, ls, rs, ts, bs, tl, tr, bl, br);
+    drawBorder();
 
 }
 
 
+
 void ncursesWindow::drawBorder(){
     
-    if(m_showBorder)
+    if(m_showBorder){
+        //wattron()
+        wattrset(m_window, COLOR_PAIR(m_borderColor));
         wborder(m_window, m_border->m_ls, m_border->m_rs, m_border->m_ts, m_border->m_bs, m_border->m_tl, m_border->m_tr, m_border->m_bl, m_border->m_br);
-            
+        standend();
+    }
+    
 }
 
 void ncursesWindow::render(){
@@ -111,9 +107,7 @@ void ncursesWindow::render(){
         m_widgetList.at(x)->render();
     }
     
-    for(size_t x = 0; x < m_menuList.size(); x++){
-        m_menuList.at(x)->render();
-    }
+
     drawBorder();
     wrefresh(m_window);
     
@@ -132,28 +126,141 @@ void ncursesWindow::refresh(){
 
 void ncursesWindow::handleKeys(int input){
 
+    // We are going to let our WidgetManager as part of our interface list
+    // Handle keyboard management
+    
+    /*
     for(size_t x = 0; x < m_menuList.size(); x++){
         m_menuList.at(x)->handleKeys(input);
     }
     
     for(size_t x = 0; x < m_widgetList.size(); x++){
         m_widgetList.at(x)->handleKeys(input);
-    }
+    } */
     
 }
+
 
 void ncursesWindow::drawAt(int x, int y, std::string output){
     
+    wattrset(m_window, COLOR_PAIR(m_normalColor));
     mvwprintw(m_window, y, x, "%s", output.c_str());
-
+    standend();
+    
 }
 
+
+void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg){
+    
+    if(fg == 0)
+        fg = m_fgColor;
+    if(bg == 0)
+        bg = m_bgColor;
+    
+    
+    int paircolor = ColorManager::Instance()->checkColorPair(fg, bg);
+    
+    wattrset(m_window, COLOR_PAIR(paircolor));
+    mvwprintw(m_window, y, x, "%s", output.c_str());
+    standend();
+}
 
 void ncursesWindow::drawAt(int x, int y, char c){
-    
+
+    wattrset(m_window, COLOR_PAIR(m_normalColor));
     mvwprintw(m_window, y, x, "%c", c);
+    standend();
     
 }
+
+void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg){
+    
+    if(fg == 0)
+        fg = m_fgColor;
+    if(bg == 0)
+        bg = m_bgColor;
+    
+    
+    int paircolor = ColorManager::Instance()->checkColorPair(fg, bg);
+    
+    wattrset(m_window, COLOR_PAIR(paircolor));
+    mvwprintw(m_window, y, x, "%c", c);
+    standend();
+    
+}
+
+void ncursesWindow::setNormalColor(int fg, int bg){
+   
+    if(fg == 0)
+        fg = m_fgColor;
+    if(bg == 0)
+        bg = m_bgColor;
+    
+    
+    m_normalColor = ColorManager::Instance()->checkColorPair(fg, bg);
+    
+}
+
+
+void ncursesWindow::setSelectedColor(int fg, int bg){
+    
+    if(fg == 0)
+        fg = m_fgColor;
+    if(bg == 0)
+        bg = m_bgColor;
+    
+    
+    m_selectedColor = ColorManager::Instance()->checkColorPair(fg, bg);
+    
+}
+
+
+void ncursesWindow::setCursorColor(int fg, int bg){
+    
+    if(fg == 0)
+        fg = m_fgColor;
+    if(bg == 0)
+        bg = m_bgColor;
+    
+    
+    m_cursorColor = ColorManager::Instance()->checkColorPair(fg, bg);
+}
+
+void ncursesWindow::setBorderColor(int fg, int bg){
+    
+    if(fg == 0)
+        fg = m_fgColor;
+    if(bg == 0)
+        bg = m_bgColor;
+    
+    
+    m_borderColor = ColorManager::Instance()->checkColorPair(fg, bg);
+    
+}
+
+
+void ncursesWindow::putPixel(_SharedPtr<Pixel> point){
+    
+    int l_fg, l_bg, l_attr;
+    l_attr = point->attr;
+    
+    if(l_fg == 0)
+        l_fg = m_fgColor;
+    if(l_bg == 0)
+        l_bg = m_bgColor;
+    
+    if(l_attr != 0)
+        wattron(m_window, l_attr);
+    
+    int paircolor = ColorManager::Instance()->checkColorPair(l_fg, l_bg);
+    
+    wattrset(m_window, COLOR_PAIR(paircolor));
+    
+    mvwprintw(m_window, point->y, point->x, "%s", point->s.c_str());
+    
+    standend();
+}
+
 
 
 void ncursesWindow::addWidget(_SharedPtr<Widget> target){
@@ -162,6 +269,32 @@ void ncursesWindow::addWidget(_SharedPtr<Widget> target){
     target->setParent(shared_from_this());
     m_widgetList.push_back(target);
     
+}
+
+
+void ncursesWindow::clearRow(int row, int from){
+    
+    if(row < 0 || row > m_height)
+        return;
+    
+    for(int x = from; x < m_length; x++){
+        
+        drawAt(x, row, " ");
+        
+    }
+    
+}
+
+void ncursesWindow::clearColumn(int column, int from){
+    
+    if(column < 0 || column > m_length)
+        return;
+    
+    for(int x = from; x < m_height; x++){
+        
+        drawAt(column, x, " ");
+        
+    }
 }
 
 

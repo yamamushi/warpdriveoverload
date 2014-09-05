@@ -28,7 +28,7 @@ public:
     
     void hide(){m_hidden = true;}
     void show(){m_hidden = false;}
-    void toggleHidnde(){m_hidden = !m_hidden;}
+    void toggleHidden(){m_hidden = !m_hidden;}
     
 protected:
     

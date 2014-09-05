@@ -65,9 +65,9 @@ public:
     void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
     void setAlignment(menuAlignment align = menuAlignment::LEFT);
     
-    void toggleHide(){m_hidden = !m_hidden; m_selected = 0; m_subMenuControl = 0;}
     void hide(){m_hidden = true; m_selected = 0; m_subMenuControl = 0;}
     void show(){m_hidden = false;}
+    
     bool getHidden(){return m_hidden;}
     void setSubMenuStatus(bool status){m_isSubMenu = status;}
     bool checkIfSubMenu(){return m_isSubMenu;}
@@ -84,6 +84,10 @@ public:
     void handleKeys(int input);
     
     void close();
+    
+    void clearArea();
+    
+    void subMenuHandleKeys(int input);
     
     
 private:

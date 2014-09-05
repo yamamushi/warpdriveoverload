@@ -63,7 +63,7 @@ void GraphChart::fill(){
     if(m_showBorder)
         getParent()->setborder('|', '|', '=', '=', '+', '+', '+', '+');
     
-    wrefresh(getParent()->get());
+    //wrefresh(getParent()->get());
     
 }
 

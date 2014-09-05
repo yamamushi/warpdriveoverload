@@ -30,6 +30,8 @@
 #include <iostream>
 #include <vector>
 
+#include "ColorManager.h"
+
 struct GraphChartPoint;
 
 class Interface;
@@ -101,6 +103,9 @@ protected:
     void printDebug();
     
     std::vector<_SharedPtr<Interface> > m_interfaceList;
+    
+private:
+    
     
 };
 

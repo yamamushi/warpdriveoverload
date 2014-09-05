@@ -49,7 +49,7 @@ void TerosTestInterface::init(){
     m_terosScreen = _SharedPtr<TerosScreen>(new TerosScreen(m_mainWindow, 0, 0, m_graphController));
     
     // Add our teros screen (Which handles our 3d object rendering) to the widget list of our parent.
-    m_mainWindow->addWidget(m_terosScreen);
+    m_widgetManager->addWidget(m_terosScreen);
     
     
     // Now we'll create a window for rendering our objects to.
@@ -355,7 +355,7 @@ void TerosTestInterface::handleKeys(int input){
             break;
             
         default:
-            m_mainWindow->handleKeys(input);
+            m_widgetManager->handleKeys(input);
             break;
     }
     

@@ -14,6 +14,7 @@
 #include "window.h"
 #include "widget.h"
 #include "connectionwidget.h"
+#include "MenuWidget.h"
 
 #include <ncurses.h>
 #include <vector>
@@ -46,6 +47,9 @@ private:
     
     void doNothing(){};
     
+    void getInput();
+    
+    std::string testString;
 };
 
 

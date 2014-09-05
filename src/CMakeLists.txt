@@ -32,6 +32,9 @@ add_executable(client main.cpp
             SphereModel.cpp
             logger.cpp
             bresenham2d.cpp
+            MenuWidget.cpp
+            WidgetManager.cpp
+            ColorManager.cpp
             )
 
 set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses")

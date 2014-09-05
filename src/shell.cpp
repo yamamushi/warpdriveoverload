@@ -55,6 +55,9 @@ bool Shell::init(){
         std::cout << "Your terminal does not support color\n" << std::endl;
 		exit(1);
 	}
+
+    getmaxyx(stdscr,m_rows,m_cols);
+
     
     //raw(); // disable line buffering
     cbreak();			// Line buffering disabled, Pass on
@@ -63,9 +66,7 @@ bool Shell::init(){
     start_color();			/* Start color 			*/
     curs_set(0);
     refresh();
-    
-    getmaxyx(stdscr,m_rows,m_cols);
-    
+        
     return true;
     
 }
@@ -108,6 +109,7 @@ bool Shell::run(){
 
 
 
+
 void Shell::initMainWindow(){
 
     m_topInterface = m_interfaceList.at(0);
@@ -147,7 +149,6 @@ void Shell::handleKeys(int input){
         case KEY_TAB: // This is defined in asciicodes.h
             m_topInterface->getWindow()->clearScreen();
             m_topInterface->getWindow()->refresh();
-            m_topInterface->getWindow()->closeAllMenus();
             m_topInterface = m_topInterface->getNext();
             m_topInterface->getWindow()->clearScreen();
             break;
