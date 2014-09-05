@@ -23,15 +23,15 @@ add_executable(client main.cpp
             TimeWidget.cpp
             teros.cpp
             terospolygon.cpp
-            terosR3.cpp
+            terosobject.cpp
+            teroscam.cpp
             terostest.cpp
             TreasureChest.cpp
             drawing.cpp
             TRModel.cpp
             SphereModel.cpp
-            vector2d.cpp
-            vector3d.cpp
-            logger.cpp  
+            logger.cpp
+            bresenham2d.cpp
             )
 
 set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses")

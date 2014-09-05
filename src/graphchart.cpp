@@ -212,6 +212,28 @@ void GraphChart::removeChartPoint(_SharedPtr<GraphChartPoint> point){
 }
 
 
+
+void GraphChart::drawAt(int x, int y, std::string symbol, int color){
+    
+    if(y == -1 || x == -1)
+        return;
+    
+    _SharedPtr<GraphChartPoint> point(new GraphChartPoint( x, y,color, symbol));
+    addRawChartPoint(point);
+    
+}
+
+
+
+
+void GraphChart::drawLine(int x1, int y1, int x2, int y2, std::string symbol, int color){
+    
+    bresenham2d(x1, y1, x2, y2, _STD_BIND(&GraphChart::drawAt, this, std::placeholders::_1, std::placeholders::_2, symbol, color));
+    
+}
+
+
+
 void GraphChart::clearAllChartPoints(){
     /*
     for(int x=0; x < m_chartPoints.size(); x++){

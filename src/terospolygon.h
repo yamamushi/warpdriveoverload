@@ -13,19 +13,17 @@
 #ifndef __warpdriveoverloaded__terospolygon__
 #define __warpdriveoverloaded__terospolygon__
 
+#include <vmmlib/vector.hpp>
+#include <vmmlib/matrix.hpp>
+
+typedef vmml::vector<3, int> TriangleIndice;
+typedef vmml::vector<3, double> Point3d;
+typedef vmml::vector<3, double> Vector3D;
+
 
 class TerosPolygon
 {
-private:
-    double xcoord [3];
-    double ycoord [3];
-    double zcoord [3];
-    
-    char fill;
-    char transparency;
-    
-    bool texturemode;
-    
+
 public:
     TerosPolygon();
     
@@ -47,6 +45,17 @@ public:
     double putpx (int);
     double putpy (int);
     double putpz (int);
+    
+private:
+    double xcoord [3];
+    double ycoord [3];
+    double zcoord [3];
+    
+    char fill;
+    char transparency;
+    
+    bool texturemode;
+    
 };
 
 

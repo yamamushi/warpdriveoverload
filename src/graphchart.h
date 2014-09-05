@@ -16,6 +16,9 @@
 #include "tr1_wrapper.h"
 #include "widget.h"
 
+#include "bresenham2d.h"
+#include "drawing.h"
+
 #include <string>
 #include <vector>
 
@@ -84,6 +87,14 @@ public:
     void generateChart();
     void fill();
 
+    
+    void drawAt(int x=-1, int y=-1, std::string symbol=" ", int color=0);
+    // A callback that does nothing
+    void failedAt(int x=-1, int y=-1){};
+    
+    void drawLine(int x1, int y1, int x2, int y2, std::string symbol, int color);
+
+    
 private:
 
     int m_xpos;
