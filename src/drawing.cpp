@@ -496,7 +496,7 @@ void plotCubicBezier(int x0, int y0, int x1, int y1,
     double t1 = xb*xb-xa*xc, t2, t[5];
     /* sub-divide curve at gradient sign changes */
     if (xa == 0) {                                               /* horizontal */
-        if (abs(xc) < 2*abs(xb)) t[n++] = xc/(2.0*xb);            /* one change */
+        if (abs((int)xc) < 2*abs((int)xb)) t[n++] = xc/(2.0*xb);            /* one change */
     } else if (t1 > 0.0) {                                      /* two changes */
         t2 = sqrt(t1);
         t1 = (xb-t2)/xa; if (fabs(t1) < 1.0) t[n++] = t1;
@@ -504,7 +504,7 @@ void plotCubicBezier(int x0, int y0, int x1, int y1,
     }
     t1 = yb*yb-ya*yc;
     if (ya == 0) {                                                 /* vertical */
-        if (abs(yc) < 2*abs(yb)) t[n++] = yc/(2.0*yb);            /* one change */
+        if (abs((int)yc) < 2*abs((int)yb)) t[n++] = yc/(2.0*yb);            /* one change */
     } else if (t1 > 0.0) {                                      /* two changes */
         t2 = sqrt(t1);
         t1 = (yb-t2)/ya; if (fabs(t1) < 1.0) t[n++] = t1;
@@ -578,7 +578,7 @@ void plotEllipseRectAA(int x0, int y0, int x1, int y1)
     if (a == 0 || b == 0) return plotLine(x0,y0, x1,y1);
     if (x0 > x1) { x0 = x1; x1 += a; }        /* if called with swapped points */
     if (y0 > y1) y0 = y1;                                  /* .. exchange them */
-    y0 += (b+1)/2; y1 = y0-b1;                               /* starting pixel */
+    y0 += (b+1)/2; y1 = y0-(int)b1;                               /* starting pixel */
     a = 8*a*a; b1 = 8*b*b;
     
     for (;;) {                             /* approximate ed=sqrt(dx*dx+dy*dy) */
@@ -589,7 +589,7 @@ void plotEllipseRectAA(int x0, int y0, int x1, int y1)
         //setPixelAA(x0,y0, i); setPixelAA(x0,y1, i);
         //setPixelAA(x1,y0, i); setPixelAA(x1,y1, i);
         
-        if (f = 2*err+dy >= 0) {                  /* x step, remember condition */
+        if ((f = 2*err+dy >= 0)) {                  /* x step, remember condition */
             if (x0 >= x1) break;
             i = ed*(err+dx);
             if (i < 255) {
@@ -660,7 +660,7 @@ void plotQuadRationalBezierSegAA(int x0, int y0, int x1, int y1,
             x1 = 255*fabs(err-dx-dy+xy)/ed;    /* get blend value by pixel error */
             if (x1 < 256)
                 ;//setPixelAA(x0,y0, x1);                   /* plot curve */
-            if (f = 2*err+dy < 0) {                                    /* y step */
+            if ((f = 2*err+dy < 0)) {                                    /* y step */
                 if (y0 == y2) return;             /* last pixel -> curve finished */
                 if (dx-err < ed)
                     ;//setPixelAA(x0+sx,y0, 255*fabs(dx-err)/ed);

@@ -41,8 +41,8 @@ void GraphChart::setSize(int xSize, int ySize){
 
 void GraphChart::fill(){
     
-    wattrset(m_parent->get(), m_parent->getNormalColor());
-    
+    //wattrset(m_parent->get(), m_parent->getNormalColor());
+    if(m_showBars)
     for(int x = 0; x < m_width; x++){
         for(int y = 0; y < m_height; y++){
             if(!(x % m_xSize) && !(y % m_ySize)){
@@ -62,8 +62,6 @@ void GraphChart::fill(){
     
     if(m_showBorder)
         getParent()->setborder('|', '|', '=', '=', '+', '+', '+', '+');
-    
-    //wrefresh(getParent()->get());
     
 }
 
@@ -89,14 +87,12 @@ void GraphChart::placeRawPoint(_SharedPtr<GraphChartPoint> point){
     if(!point->m_hidden){
         if( point->m_Y > 0 && point->m_Y < m_height){
             if(point->m_X > 0 && point->m_X < m_width){
-                wattrset(m_parent->get(), COLOR_PAIR(point->m_color));
-                getParent()->drawAt( point->m_X + getXpos(), point->m_Y + getYpos(), point->m_symbol);
-                wattrset(m_parent->get(), m_parent->getNormalColor());
+                getParent()->drawAt( point->m_X + getXpos(), point->m_Y + getYpos(), point->m_symbol, point->m_fg, point->m_bg, point->m_attr);
             }
         }
     }
     
-    wrefresh(getParent()->get());
+//    wrefresh(getParent()->get());
 }
 
 
@@ -117,9 +113,12 @@ void GraphChart::placeAllPoints(){
                                 if((y > m_ySize*pointY) && (y < (m_ySize*pointY)+m_ySize+1)){
                                     if(m_showBorder){
                                         if( y > 0){
-                                            wattrset(m_parent->get(), COLOR_PAIR(m_chartPoints.at(chartX)->m_color));
-                                            getParent()->drawAt( x + getXpos(), y + getYpos(), m_chartPoints.at(chartX)->m_symbol);
-                                            wattrset(m_parent->get(), m_parent->getNormalColor());
+                                            getParent()->drawAt( x + getXpos(),
+                                                                y + getYpos(),
+                                                                m_chartPoints.at(chartX)->m_symbol,
+                                                                m_chartPoints.at(chartX)->m_fg,
+                                                                m_chartPoints.at(chartX)->m_bg,
+                                                                m_chartPoints.at(chartX)->m_attr);
                                         }
                                     }
                                 }
@@ -134,9 +133,12 @@ void GraphChart::placeAllPoints(){
         if(!m_rawchartPoints.at(rawchartX)->m_hidden){
             if( m_rawchartPoints.at(rawchartX)->m_Y > 0 && m_rawchartPoints.at(rawchartX)->m_Y < m_height){
                 if(m_rawchartPoints.at(rawchartX)->m_X > 0 && m_rawchartPoints.at(rawchartX)->m_X < m_width){
-                    wattrset(m_parent->get(), COLOR_PAIR(m_rawchartPoints.at(rawchartX)->m_color));
-                    getParent()->drawAt( m_rawchartPoints.at(rawchartX)->m_X + getXpos(), m_rawchartPoints.at(rawchartX)->m_Y + getYpos(), m_rawchartPoints.at(rawchartX)->m_symbol);
-                    wattrset(m_parent->get(), m_parent->getNormalColor());
+                    getParent()->drawAt( m_rawchartPoints.at(rawchartX)->m_X + getXpos(),
+                                        m_rawchartPoints.at(rawchartX)->m_Y + getYpos(),
+                                        m_rawchartPoints.at(rawchartX)->m_symbol,
+                                        m_rawchartPoints.at(rawchartX)->m_fg,
+                                        m_rawchartPoints.at(rawchartX)->m_bg,
+                                        m_rawchartPoints.at(rawchartX)->m_attr);
                 }
             }
         }
@@ -145,7 +147,7 @@ void GraphChart::placeAllPoints(){
 
 void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
     
-    wattrset(m_parent->get(), m_parent->getNormalColor());
+    //wattrset(m_parent->get(), m_parent->getNormalColor());
     
     std::vector<_SharedPtr<GraphChartPoint> >::iterator it = std::find(m_chartPoints.begin(), m_chartPoints.end(), point);
     if (it != m_chartPoints.end()){
@@ -160,7 +162,7 @@ void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
                         if((y > m_ySize*pointY) && (y < (m_ySize*pointY)+m_ySize+1)){
                             if(y == ((m_ySize*pointY)+m_ySize) || y < m_height-1)
                                 if( y > 0){
-                                    getParent()->drawAt( x + getXpos(), y + getYpos()," ");
+                                    getParent()->drawAt( x + getXpos(), y + getYpos(), " ");
                                 }
                             if(m_showBars){
                                 if(y == ((m_ySize*pointY)+m_ySize) && y < m_height-1)
@@ -180,7 +182,7 @@ void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
             }
         }
     }
-    wrefresh(getParent()->get());
+    //wrefresh(getParent()->get());
 }
 
 void GraphChart::addRawChartPoint(_SharedPtr<GraphChartPoint> point){
@@ -213,12 +215,12 @@ void GraphChart::removeChartPoint(_SharedPtr<GraphChartPoint> point){
 
 
 
-void GraphChart::drawAt(int x, int y, std::string symbol, int color){
+void GraphChart::drawAt(int x, int y, std::string symbol, int fg, int bg, int attr){
     
     if(y == -1 || x == -1)
         return;
     
-    _SharedPtr<GraphChartPoint> point(new GraphChartPoint( x, y,color, symbol));
+    _SharedPtr<GraphChartPoint> point(new GraphChartPoint( x, y, symbol, fg, bg, attr));
     addRawChartPoint(point);
     
 }
@@ -226,20 +228,16 @@ void GraphChart::drawAt(int x, int y, std::string symbol, int color){
 
 
 
-void GraphChart::drawLine(int x1, int y1, int x2, int y2, std::string symbol, int color){
+void GraphChart::drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg, int bg, int attr){
     
-    bresenham2d(x1, y1, x2, y2, _STD_BIND(&GraphChart::drawAt, this, std::placeholders::_1, std::placeholders::_2, symbol, color));
+    bresenham2d(x1, y1, x2, y2, _STD_BIND(&GraphChart::drawAt, this, std::placeholders::_1, std::placeholders::_2, symbol, fg, bg, attr));
     
 }
 
 
 
 void GraphChart::clearAllChartPoints(){
-    /*
-    for(int x=0; x < m_chartPoints.size(); x++){
-        getParent()->drawAt( m_chartPoints.at(x)->m_X, m_chartPoints.at(x)->m_Y," ");
-    }
-    */
+
     m_chartPoints.clear();
 
 }

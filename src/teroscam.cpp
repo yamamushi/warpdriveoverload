@@ -71,13 +71,13 @@ void TerosCam::drawpolygon (TerosPolygon cTerosPolygon, TerosObject obj)
 			return;
 		}
         
-		drawline (p1, p2, cTerosPolygon.putfill ());
-		drawline (p2, p3, cTerosPolygon.putfill ());
-		drawline (p3, p1, cTerosPolygon.putfill ());
+		drawline (p1, p2, cTerosPolygon.putfill());
+		drawline (p2, p3, cTerosPolygon.putfill());
+		drawline (p3, p1, cTerosPolygon.putfill());
 	}
 }
 
-void TerosCam::drawline (double p1 [3], double p2 [3], char fill)
+void TerosCam::drawline (double p1 [3], double p2 [3], char fill, int fg, int bg, int attr)
 {
 	double snorm = 0;
     
@@ -275,7 +275,11 @@ void TerosCam::drawline (double p1 [3], double p2 [3], char fill)
         
 		if (((norm/normdispxy)*(p1 [0] - p2 [0])) + p2 [0] > 0 && (((norm/normdispxy)*(p1 [0] - p2 [0])) + p2 [0] < viewdepth [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))] || viewdepth [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))] == -1))
 		{
-			view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))] = fill;
+			view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))].c = fill;
+            view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))].fg = fg;
+            view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))].bg = bg;
+            view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))].attr = attr;
+            
 			viewdepth [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))] = norm/normdispxy*(p1 [0] - p2 [0]) + p2 [0];
 		}
 	}
@@ -318,7 +322,7 @@ void TerosCam::clearview ()
 {
 	for (int i = 0; i < view.size (); i++)
 	{
-		view [i] = ' ';
+		view [i].c = ' ';
 		viewdepth [i] = -1.0;
 	}
 }
@@ -485,7 +489,7 @@ void TerosCam::modview (char elem, int x, int y)
 {
 	if (getelementindex (x, y) != -1)
 	{
-		view [getelementindex (x, y)] = elem;
+		view [getelementindex (x, y)].c = elem;
 	}
 }
 
@@ -607,7 +611,12 @@ void TerosCam::texturepolygon (TerosPolygon cTerosPolygon, TerosObject obj)
         
 		if (((-1*d - c*y - b*x)/a < viewdepth [getelementindex (x, y)] || viewdepth [getelementindex (x, y)] == -1) && (-1*d - c*y - b*x)/a > 0 && angletotal > 2*PI - 0.01 && angletotal < 2*PI + 0.01)
 		{
-			view [getelementindex (x, y)] = cTerosPolygon.putfill ();
+			view [getelementindex (x, y)].c = cTerosPolygon.putfill ();
+            view [getelementindex (x, y)].fg = cTerosPolygon.getfg ();
+            view [getelementindex (x, y)].bg = cTerosPolygon.getbg ();
+            view [getelementindex (x, y)].attr = cTerosPolygon.getattr ();
+
+
 			viewdepth [getelementindex (x, y)] = (-1*d - c*y - b*x)/a;
 		}
         
@@ -725,7 +734,7 @@ char TerosCam::getelement (int x, int y)
 {
 	if (getelementindex (x, y) != -1)
 	{
-		return view [getelementindex (x, y)];
+		return view [getelementindex (x, y)].c;
 	}
     
 	return ' ';
@@ -735,7 +744,7 @@ char TerosCam::getelementraw (int index)
 {
 	if (index < view.size ())
 	{
-		return view [index];
+		return view [index].c;
 	}
     
 	return ' ';
@@ -753,12 +762,12 @@ int TerosCam::getelementindex (int x, int y)
 
 int TerosCam::objectnum ()
 {
-	return objects.size ();
+	return (int)objects.size ();
 }
 
 int TerosCam::putviewsize ()
 {
-	return view.size ();
+	return (int)view.size ();
 }
 
 int TerosCam::putviewcolumns ()
@@ -806,7 +815,7 @@ double TerosCam::putzoomfactor ()
 	return m_zoomfactor;
 }
 
-vector <char> TerosCam::putview ()
+vector <TerosView> TerosCam::putview ()
 {
 	return view;
 }

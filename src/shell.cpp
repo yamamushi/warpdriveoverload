@@ -146,10 +146,16 @@ void Shell::handleKeys(int input){
     
     switch(input)
     {
-        case KEY_TAB: // This is defined in asciicodes.h
+        // This is defined in asciicodes.h
+        case KEY_TAB:
             m_topInterface->getWindow()->clearScreen();
             m_topInterface->getWindow()->refresh();
-            m_topInterface = m_topInterface->getNext();
+            
+            if(m_topInterface->getNext() == m_interfaceList.at(0))
+                m_topInterface = m_interfaceList.at(1);
+            else
+                m_topInterface = m_topInterface->getNext();
+
             m_topInterface->getWindow()->clearScreen();
             break;
             
@@ -183,11 +189,11 @@ void Shell::loadInterfaces(_SharedPtr<Shell> parent){
     _SharedPtr<DebugInterface> debugInterface(new DebugInterface(parent));
     addToInterfaceList(debugInterface);
     
-    _SharedPtr<NavigationInterface> navigationInterface(new NavigationInterface(parent));
-    addToInterfaceList(navigationInterface);
-
     _SharedPtr<TerosTestInterface> terosTest(new TerosTestInterface(parent));
     addToInterfaceList(terosTest);
+    
+    _SharedPtr<NavigationInterface> navigationInterface(new NavigationInterface(parent));
+    addToInterfaceList(navigationInterface);
     
     initMainWindow();
 

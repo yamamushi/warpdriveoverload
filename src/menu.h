@@ -46,7 +46,7 @@ public:
     void showBorder(bool show);
     void highlightTitle(bool toggle = true){m_highlightTitle = toggle;}
     void showTitle(bool toggle = true){m_showTitle = toggle;}
-    int getMenuSize(){return m_menuList.size();}
+    int getMenuSize(){return (int)m_menuList.size();}
     
     void setBGColor(int color){m_bgColor = color;}
     void setNormalColor(int color){m_normalColor = COLOR_PAIR(color);}

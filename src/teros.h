@@ -23,6 +23,8 @@
 #include "widget.h"
 #include "tr1_wrapper.h"
 #include "graphchart.h"
+#include "teroscam.h"
+
 
 #define SCRHEIGHT 50
 #define SCRWIDTH 78
@@ -39,7 +41,7 @@ double findang (double, double);
 string doubletostring (double);
 
 class TerosScreen;
-
+class TerosView;
 
 class TerosWindow
 {
@@ -62,6 +64,8 @@ public:
     
     void loadfromfile(std::string target);
     void loadfromvector (std::vector <char>, int);
+    void loadfromvector (std::vector <TerosView>, int);
+
     void modcontent (char, int, int);
     void tlrepos (int, int);
     void setcursor (int, bool);
@@ -127,8 +131,8 @@ public:
     int getwidth(){return m_width;}
     int getheight(){return m_height;}
     
-    void drawAt(int x, int y, std::string output);
-    void drawAt(int x, int y, char c);
+    void drawAt(int x, int y, std::string output, int fg=0, int bg=0, int attr=0);
+    void drawAt(int x, int y, char c, int fg=0, int bg=0, int attr=0);
     
     int getxpos(){return m_xpos;}
     int getypos(){return m_ypos;}

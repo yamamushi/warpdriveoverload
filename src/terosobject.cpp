@@ -34,7 +34,7 @@ TerosObject::TerosObject ()
 	basisreset ();
 }
 
-void TerosObject::addside (TerosPolygon * side)
+void TerosObject::addside (TerosPolygon *side)
 {
 	sides.resize (sides.size () + 1);
     
@@ -210,16 +210,16 @@ void TerosObject::rot (char norm, double angle)
     
 	if (norm == 'z' || norm == 'Z')
 	{
-		rnum = rzlink.size ();
+		rnum = (int)rzlink.size ();
 		
 	}
 	else if (norm == 'x' || norm == 'X')
 	{
-		rnum = rxlink.size ();
+		rnum = (int)rxlink.size ();
 	}
 	else if (norm == 'y' || norm == 'Y')
 	{
-		rnum = rylink.size ();
+		rnum = (int)rylink.size ();
 	}
     
 	for (int i = -1; i < rnum; i++)
@@ -827,27 +827,27 @@ bool TerosObject::putctrscale ()
 
 int TerosObject::sidenum ()
 {
-	return sides.size ();
+	return (int)sides.size ();
 }
 
 int TerosObject::olinknum ()
 {
-	return olink.size ();
+	return (int)olink.size ();
 }
 
 int TerosObject::rzlinknum ()
 {
-	return rzlink.size ();
+	return (int)rzlink.size ();
 }
 
 int TerosObject::rxlinknum ()
 {
-	return rxlink.size ();
+	return (int)rxlink.size ();
 }
 
 int TerosObject::rylinknum ()
 {
-	return rylink.size ();
+	return (int)rylink.size ();
 }
 
 int TerosObject::loadobj (std::string filename)
@@ -934,7 +934,7 @@ int TerosObject::loadobj (std::string filename)
 
 int TerosObject::loadsidenum ()
 {
-	return loadsides.size ();
+	return (int)loadsides.size ();
 }
 
 double TerosObject::centerx ()

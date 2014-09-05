@@ -16,6 +16,7 @@ void term_clear(){
         if (result <= 0) return;
     }
     
-    putp( tigetstr( "clear" ) );
+    char clear[] = {"clear"};
+    putp( tigetstr( clear ) );
 }
 

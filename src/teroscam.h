@@ -26,6 +26,17 @@
 #include <vmmlib/matrix.hpp>
 
 
+class TerosObject;
+
+struct TerosView{
+    
+    char c;
+    int fg;
+    int bg;
+    int attr;
+    
+};
+
 
 class TerosCam
 {
@@ -38,7 +49,7 @@ public:
     void drawobjects ();
     void drawobject (TerosObject);
     void drawpolygon (TerosPolygon, TerosObject);
-    void drawline (double [3], double [3], char);
+    void drawline (double [3], double [3], char fill, int fg=0, int bg=0, int attr=0);
     void setcampos (double, double, double);
     void addobject (TerosObject *);
     void delobject (int);
@@ -81,7 +92,7 @@ public:
     
     double putzoomfactor ();
     
-    std::vector<char> putview ();
+    std::vector<TerosView> putview ();
     std::vector<double> putviewdepth ();
     
     TerosObject * putobj (int);
@@ -89,7 +100,7 @@ public:
     
 private:
     
-    std::vector<char> view;
+    std::vector<TerosView> view;
     std::vector<double> viewdepth;
     std::vector<TerosObject *> objects;
     

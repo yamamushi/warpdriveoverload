@@ -36,7 +36,7 @@ void NavigationInterface::init(){
     graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 0, 0));
     m_widgetManager->addWidget(graphController);
     
-    _SharedPtr<TimeWidget> w_timeWidget = _SharedPtr<TimeWidget> (new TimeWidget(m_mainWindow, (graphController->getCols()/2)-getName().length()+18, 1));
+    _SharedPtr<TimeWidget> w_timeWidget = _SharedPtr<TimeWidget> (new TimeWidget(m_mainWindow, (graphController->getCols()/2)-(int)getName().length()+18, 1));
     m_widgetManager->addWidget(w_timeWidget);
 
     // Here we populate our random points
@@ -47,7 +47,7 @@ void NavigationInterface::init(){
     //graphController->move(3, 3);
     //graphController->resizeWindow(10, 20);
     
-    _SharedPtr<GraphChartPoint> point(new GraphChartPoint( 3, 3,COLOR_PAIR(5),"O"));
+    _SharedPtr<GraphChartPoint> point(new GraphChartPoint( 3, 3, "O", COLOR_RED, COLOR_BLACK));
     graphController->addChartPoint(point);
     
 /*
@@ -95,9 +95,9 @@ void NavigationInterface::drawAt(int x, int y){
     if(y == -1 || x == -1)
         return;
     
-    init_pair(5, COLOR_GREEN, COLOR_BLACK); // A default Background Color
+    //init_pair(5, COLOR_GREEN, COLOR_BLACK); // A default Background Color
 
-    _SharedPtr<GraphChartPoint> point(new GraphChartPoint(x,y,COLOR_PAIR(5),"*"));
+    _SharedPtr<GraphChartPoint> point(new GraphChartPoint(x, y, "*"));
     graphController->addRawChartPoint(point);
     
 }
@@ -106,12 +106,12 @@ void NavigationInterface::drawAt(int x, int y){
 void NavigationInterface::run(){
     
     // Print our name out to the Interface
-    m_mainWindow->drawAt( (m_sizeY - getName().size())/2, 1, getName());
+    m_mainWindow->drawAt( (m_sizeY - (int)getName().size())/2, 1, getName(), COLOR_WHITE, COLOR_BLACK, A_BOLD | A_BLINK);
     
     std::string rowMessage = std::to_string(graphController->getRows()) + " : Rows";
     std::string colMessage = std::to_string(graphController->getCols()) + " : Cols";
-    m_mainWindow->drawAt((m_mainWindow->getX()/2)-getName().length(), 1, rowMessage);
-    m_mainWindow->drawAt((m_mainWindow->getX()/2)-getName().length(), 2, colMessage);
+    m_mainWindow->drawAt((m_mainWindow->getX()/2)-(int)getName().length(), 1, rowMessage);
+    m_mainWindow->drawAt((m_mainWindow->getX()/2)-(int)getName().length(), 2, colMessage);
     
 
     m_mainWindow->drawAt((m_mainWindow->getX()/2), (m_mainWindow->getY()/2), testString);

@@ -77,9 +77,9 @@ public:
     void clearScreen();
     
     void drawAt(int x, int y, std::string output);
-    void drawAt(int x, int y, std::string output, int fg, int bg=0);
+    void drawAt(int x, int y, std::string output, int fg, int bg=0, int attr=0);
     void drawAt(int x, int y, char c);
-    void drawAt(int x, int y, char c, int fg, int bg=0);
+    void drawAt(int x, int y, char c, int fg, int bg=0, int attr=0);
     
     void putPixel(_SharedPtr<Pixel> point);
     

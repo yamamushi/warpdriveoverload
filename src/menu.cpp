@@ -19,7 +19,7 @@ ncursesMenu::ncursesMenu(std::vector<std::pair<std::string, _STD_FUNCTION(void()
     m_hidden = false;
     m_selected = 0;
     m_showBorder = true;
-    m_menuSize = menuList.size();
+    m_menuSize = (int)menuList.size();
     m_showTitle = true;
     m_highlightTitle = true;
     m_subMenuOpen = false;
@@ -59,11 +59,11 @@ void ncursesMenu::setHorizontal(bool option){
 void ncursesMenu::resize(){
     
     if(!m_horizontal){
-        m_width = m_name.length()+2;
-        m_height = m_menuList.size()+1;
+        m_width = (int)m_name.length()+2;
+        m_height = (int)m_menuList.size()+1;
         for(size_t x = 0; x < m_menuList.size(); x++){
             if(m_menuList.at(x).first.length()+2 > m_width){
-                m_width = m_menuList.at(x).first.length()+2;
+                m_width = (int)m_menuList.at(x).first.length()+2;
             }
         }
     }
@@ -197,8 +197,8 @@ void ncursesMenu::render(){
                         mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%c", m_border->m_rs);
                         mvwprintw(m_parent->get(), m_ypos+2, m_xpos+charCounter+1, "%c", m_border->m_br);
                         for(size_t line = m_xpos; line < m_width-m_menuSize; line++){
-                            mvwprintw(m_parent->get(), m_ypos, line, "%c", m_border->m_ts);
-                            mvwprintw(m_parent->get(), m_ypos+2, line, "%c", m_border->m_bs);
+                            mvwprintw(m_parent->get(), m_ypos, (int)line, "%c", m_border->m_ts);
+                            mvwprintw(m_parent->get(), m_ypos+2, (int)line, "%c", m_border->m_bs);
                             
                         }
                         
@@ -208,8 +208,8 @@ void ncursesMenu::render(){
                         mvwprintw(m_parent->get(), m_ypos+1, m_xpos+charCounter+1, "%c", m_border->m_rs);
                         mvwprintw(m_parent->get(), m_ypos+2, m_xpos+charCounter+1, "%c", m_border->m_br);
                         for(size_t line = m_xpos; line < m_width-m_menuSize+1; line++){
-                            mvwprintw(m_parent->get(), m_ypos, line, "%c", m_border->m_ts);
-                            mvwprintw(m_parent->get(), m_ypos+2, line, "%c", m_border->m_bs);
+                            mvwprintw(m_parent->get(), m_ypos, (int)line, "%c", m_border->m_ts);
+                            mvwprintw(m_parent->get(), m_ypos+2, (int)line, "%c", m_border->m_bs);
                             
                         }
                         
@@ -238,7 +238,7 @@ void ncursesMenu::render(){
                             else{
                                 wattroff(m_parent->get(), A_REVERSE);
                             }
-                            mvwprintw(m_parent->get(), m_ypos, m_xpos + ((m_width)/2) - (m_name.length()/2), "%s", m_name.c_str());
+                            mvwprintw(m_parent->get(), m_ypos, (int)m_xpos + ((m_width)/2) -(int) (m_name.length()/2), "%s", m_name.c_str());
                             wattroff(m_parent->get(), A_REVERSE);
                         }
                         //wattroff(m_parent->get(), A_REVERSE);
@@ -253,11 +253,11 @@ void ncursesMenu::render(){
                         for(size_t line = 0; line < m_width; line++){
                             if(m_showTitle){
                                 if((line < (m_xpos + ((m_width)/2) - (m_name.length()/2))) || (line > (m_xpos + ((m_width)/2) + (m_name.length()/2))) ) {
-                                    mvwprintw(m_parent->get(), m_ypos, line+m_xpos, "%c", m_border->m_ts);
+                                    mvwprintw(m_parent->get(), m_ypos, (int)line+m_xpos, "%c", m_border->m_ts);
                                 }
                             }
                             else{
-                                mvwprintw(m_parent->get(), m_ypos, line, "%c", m_border->m_ts);
+                                mvwprintw(m_parent->get(), m_ypos, (int)line, "%c", m_border->m_ts);
                             }
                         }
                         
@@ -289,7 +289,7 @@ void ncursesMenu::render(){
                     // Here we are printing the item out
                     if( x < m_menuList.size()){
                         std::string output = m_menuList.at(x).first+" ";
-                        mvwprintw(m_parent->get(), m_ypos+1+x, m_xpos+1, "%s", output.c_str());
+                        mvwprintw(m_parent->get(), m_ypos+1+(int)x, m_xpos+1, "%s", output.c_str());
                     }
                     
                     wattroff(m_parent->get(), A_REVERSE);
@@ -298,8 +298,8 @@ void ncursesMenu::render(){
                         
                         wattrset(m_parent->get(), m_borderColor);
                         if(x != 0){
-                            mvwprintw(m_parent->get(), m_ypos+x, m_xpos, "%c", m_border->m_ls);
-                            mvwprintw(m_parent->get(), m_ypos+x, m_xpos+m_width, "%c", m_border->m_rs);
+                            mvwprintw(m_parent->get(), m_ypos+(int)x, m_xpos, "%c", m_border->m_ls);
+                            mvwprintw(m_parent->get(), m_ypos+(int)x, m_xpos+m_width, "%c", m_border->m_rs);
                         }
                     }
                     
@@ -309,7 +309,7 @@ void ncursesMenu::render(){
                         if(m_showBorder){
                             wattrset(m_parent->get(), m_borderColor);
                             for(size_t line = 0; line < m_width; line++){
-                                mvwprintw(m_parent->get(), m_ypos+m_height, line+1+m_xpos, "%c", m_border->m_bs);
+                                mvwprintw(m_parent->get(), m_ypos+(int)m_height, (int)line+1+m_xpos, "%c", m_border->m_bs);
                             }
                             mvwprintw(m_parent->get(), m_ypos+m_height, m_xpos, "%c", m_border->m_bl);
                             mvwprintw(m_parent->get(), m_ypos+m_height, m_xpos+m_width, "%c", m_border->m_br);
@@ -512,7 +512,7 @@ void ncursesMenu::selectPrev(){
             m_selected--;
         }
         else{
-            m_selected = m_menuList.size();
+            m_selected = (int)m_menuList.size();
         }
     }
 }

@@ -100,6 +100,7 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
     for(int i = 0; i < 20; i++){
         
         subdivide(m_mesh->m_points.at(m_mesh->m_indices.at(i).x()), m_mesh->m_points.at(m_mesh->m_indices.at(i).y()), m_mesh->m_points.at(m_mesh->m_indices.at(i).z()), m_mesh->m_points, depth);
+        m_mesh->m_colors.push_back(ColorIndice(i, 'D', COLOR_YELLOW, COLOR_BLACK, 0));
     }
     
 }
@@ -108,12 +109,16 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
 void SphereModel::subdivide(const Vector3D &v1, const Vector3D &v2, const Vector3D &v3, vector<Vector3D> &sphere_points, const unsigned int depth) {
     
     if(depth == 0) {
-        int index = m_mesh->m_points.size();
+        int index = (int)m_mesh->m_points.size();
         m_mesh->m_points.push_back(v1);
         m_mesh->m_points.push_back(v2);
         m_mesh->m_points.push_back(v3);
         
         m_mesh->m_indices.push_back(TriangleIndice(index, index+1, index+2));
+        //m_mesh->m_colors.push_back(ColorIndice(m_mesh->m_indices.size()-1, 'W', COLOR_BLUE, COLOR_BLACK, 0));
+        m_mesh->m_colors.push_back(ColorIndice(index, '~', COLOR_BLUE, COLOR_BLACK, 0));
+        m_mesh->m_colors.push_back(ColorIndice(index+1, '^', COLOR_WHITE, COLOR_BLACK, 0));
+        m_mesh->m_colors.push_back(ColorIndice(index+2, '#', COLOR_GREEN, COLOR_BLACK, 0));
 
         return;
     }
@@ -136,31 +141,6 @@ void SphereModel::subdivide(const Vector3D &v1, const Vector3D &v2, const Vector
 int SphereModel::findIntersectIndex(double x, double y, double length){
     
     logger logangle("log.txt", 0);
-    /*
-    vmml::matrix<4, 4, double> identity;
-    identity.set_row(0,  vmml::vector<4, double>(1.0, 0.0, 0.0, 0.0));
-    identity.set_row(1,  vmml::vector<4, double>(0.0, 1.0, 0.0, 0.0));
-    identity.set_row(2,  vmml::vector<4, double>(0.0, 0.0, 1.0, 0.0));
-    identity.set_row(3,  vmml::vector<4, double>(0.0, 0.0, 0.0, 1.0));
-    
-    
-    vmml::matrix<4, 4, double> matrixRot_X = identity;
-    
-    matrixRot_X = matrixRot_X.rotate_x(x);
-    
-    vmml::matrix<4, 4, double> matrixRot_Y = identity;
-    matrixRot_Y = matrixRot_Y.rotate_y(y);
-    
-    vmml::matrix<4, 4, double> matrixRot_Z = identity;
-    matrixRot_Z = matrixRot_Z.rotate_z(m_velocity.z());
-    
-    vmml::matrix<4, 4, double> matrixRot_final = matrixRot_X * matrixRot_Y * matrixRot_Z;
-    
-    vmml::vector<4, double> translation = matrixRot_final * vmml::vector<4, double>(length, 0.0, 0.0, 0.0);
-    
-    //m_position = m_position + translation;
-    
-    vmml::vector<4, double> */
     
     int index = 0;
     

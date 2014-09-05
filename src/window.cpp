@@ -93,10 +93,10 @@ void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char 
 void ncursesWindow::drawBorder(){
     
     if(m_showBorder){
-        //wattron()
+        
         wattrset(m_window, COLOR_PAIR(m_borderColor));
         wborder(m_window, m_border->m_ls, m_border->m_rs, m_border->m_ts, m_border->m_bs, m_border->m_tl, m_border->m_tr, m_border->m_bl, m_border->m_br);
-        standend();
+        wattroff(m_window, COLOR_PAIR(m_borderColor));
     }
     
 }
@@ -145,47 +145,59 @@ void ncursesWindow::drawAt(int x, int y, std::string output){
     
     wattrset(m_window, COLOR_PAIR(m_normalColor));
     mvwprintw(m_window, y, x, "%s", output.c_str());
-    standend();
+    wattroff(m_window, COLOR_PAIR(m_normalColor));
     
 }
 
 
-void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg){
+void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int attr){
     
     if(fg == 0)
         fg = m_fgColor;
     if(bg == 0)
         bg = m_bgColor;
     
+
     
     int paircolor = ColorManager::Instance()->checkColorPair(fg, bg);
     
     wattrset(m_window, COLOR_PAIR(paircolor));
     mvwprintw(m_window, y, x, "%s", output.c_str());
-    standend();
+    if(attr > 0){
+        mvwchgat(m_window, y, x, output.length(), attr, 0, NULL);
+    }
+    wattroff(m_window, COLOR_PAIR(paircolor));
+
 }
 
 void ncursesWindow::drawAt(int x, int y, char c){
 
     wattrset(m_window, COLOR_PAIR(m_normalColor));
     mvwprintw(m_window, y, x, "%c", c);
-    standend();
+    wattroff(m_window, COLOR_PAIR(m_normalColor));
     
 }
 
-void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg){
+void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
     
     if(fg == 0)
         fg = m_fgColor;
     if(bg == 0)
         bg = m_bgColor;
     
+
+
+    
     
     int paircolor = ColorManager::Instance()->checkColorPair(fg, bg);
     
     wattrset(m_window, COLOR_PAIR(paircolor));
     mvwprintw(m_window, y, x, "%c", c);
-    standend();
+    if(attr > 0){
+        mvwchgat( m_window, y, x, 1, attr, 0, NULL);
+    }
+    wattroff(m_window, COLOR_PAIR(m_normalColor));
+
     
 }
 
@@ -241,24 +253,28 @@ void ncursesWindow::setBorderColor(int fg, int bg){
 
 void ncursesWindow::putPixel(_SharedPtr<Pixel> point){
     
-    int l_fg, l_bg, l_attr;
+    int l_fg, l_bg;
+    int l_attr;
+    
     l_attr = point->attr;
+    l_fg = point->fg;
+    l_bg = point->bg;
     
     if(l_fg == 0)
         l_fg = m_fgColor;
     if(l_bg == 0)
         l_bg = m_bgColor;
     
-    if(l_attr != 0)
-        wattron(m_window, l_attr);
-    
     int paircolor = ColorManager::Instance()->checkColorPair(l_fg, l_bg);
     
     wattrset(m_window, COLOR_PAIR(paircolor));
     
     mvwprintw(m_window, point->y, point->x, "%s", point->s.c_str());
+    if(l_attr > 0)
+        mvwchgat(m_window, point->y, point->x, point->s.length(), point->attr, paircolor, NULL);
     
-    standend();
+    wattroff(m_window, COLOR_PAIR(paircolor));
+    
 }
 
 
