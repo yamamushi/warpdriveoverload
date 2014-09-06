@@ -41,7 +41,7 @@ public:
 private:
     
     void initialize_sphere(std::vector<Vector3D> &sphere_points, const unsigned int depth);
-    void subdivide(const Vector3D &v1, const Vector3D &v2, const Vector3D &v3, std::vector<Vector3D> &sphere_points, const unsigned int depth);
+    void subdivide( Vector3D v1, Vector3D v2, Vector3D v3, std::vector<_SharedPtr<Vector3D> > &sphere_points, const unsigned int depth);
     
     std::vector<Vector3D> m_spherePoints;
 

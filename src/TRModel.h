@@ -35,9 +35,9 @@ struct ColorIndice {
 
 struct MeshModel {
     
-    std::vector<TriangleIndice> m_indices;
-    std::vector<Vector3D> m_points;
-    std::vector<ColorIndice> m_colors;
+    std::vector<_SharedPtr<TriangleIndice> > m_indices;
+    std::vector<_SharedPtr<Vector3D> > m_points;
+    std::vector<_SharedPtr<ColorIndice> > m_colors;
     
 };
 

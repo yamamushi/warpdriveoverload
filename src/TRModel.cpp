@@ -34,17 +34,17 @@ void TRModel::constructFromMesh(_SharedPtr<MeshModel> source, int size){
         
         
         _SharedPtr<TerosPolygon> l_triangle = _SharedPtr<TerosPolygon>(new TerosPolygon);
-        l_triangle->modp(0, source->m_points.at(source->m_indices.at(x).x()).x()*size,
-                         source->m_points.at(source->m_indices.at(x).x()).y()*size,
-                         source->m_points.at(source->m_indices.at(x).x()).z()*size);
+        l_triangle->modp(0, source->m_points.at(source->m_indices.at(x)->x())->x()*size,
+                         source->m_points.at(source->m_indices.at(x)->x())->y()*size,
+                         source->m_points.at(source->m_indices.at(x)->x())->z()*size);
         
-        l_triangle->modp(1, source->m_points.at(source->m_indices.at(x).y()).x()*size,
-                         source->m_points.at(source->m_indices.at(x).y()).y()*size,
-                         source->m_points.at(source->m_indices.at(x).y()).z()*size);
+        l_triangle->modp(1, source->m_points.at(source->m_indices.at(x)->y())->x()*size,
+                         source->m_points.at(source->m_indices.at(x)->y())->y()*size,
+                         source->m_points.at(source->m_indices.at(x)->y())->z()*size);
         
-        l_triangle->modp(2, source->m_points.at(source->m_indices.at(x).z()).x()*size,
-                         source->m_points.at(source->m_indices.at(x).z()).y()*size,
-                         source->m_points.at(source->m_indices.at(x).z()).z()*size);
+        l_triangle->modp(2, source->m_points.at(source->m_indices.at(x)->z())->x()*size,
+                         source->m_points.at(source->m_indices.at(x)->z())->y()*size,
+                         source->m_points.at(source->m_indices.at(x)->z())->z()*size);
         
 
         l_triangle->setIndex(x);
@@ -64,7 +64,7 @@ void TRModel::constructFromMesh(_SharedPtr<MeshModel> source, int size){
     
     for(int x = 0; x < source->m_colors.size(); x++){
         
-        int index = source->m_colors.at(x).index;
+        int index = source->m_colors.at(x)->index;
         
         if(index > -1 && index < m_polygons.size()){
             
@@ -72,10 +72,10 @@ void TRModel::constructFromMesh(_SharedPtr<MeshModel> source, int size){
                     
                     _SharedPtr<TerosPolygon> c_triangle = m_polygons.at(index);
                     
-                    c_triangle->setAttr(source->m_colors.at(x).s,
-                                        source->m_colors.at(x).fg,
-                                        source->m_colors.at(x).bg,
-                                        source->m_colors.at(x).attr);
+                    c_triangle->setAttr(source->m_colors.at(x)->s,
+                                        source->m_colors.at(x)->fg,
+                                        source->m_colors.at(x)->bg,
+                                        source->m_colors.at(x)->attr);
 
                     
                 }
