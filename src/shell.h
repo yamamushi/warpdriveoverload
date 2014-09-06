@@ -66,6 +66,9 @@ public:
 
     void quit();
 
+    void doNothing(){};
+    void printDebug();
+    
 
 protected:
     
@@ -95,9 +98,7 @@ protected:
     
     bool checkForResize();
 
-    void doNothing(){};
-    void printDebug();
-    
+
     std::vector<_SharedPtr<Interface> > m_interfaceList;
     
 private:

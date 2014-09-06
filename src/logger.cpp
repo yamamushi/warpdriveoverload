@@ -18,7 +18,7 @@
 logger::logger( const std::string lfile, const int llvl ) {
 	L_logfile = lfile;
 	L_loglevel = llvl;
-	logstream << "Logger Initialized.";
+	//logstream << "Logger Initialized.";
 	logToFile(  0 );
 }
 
@@ -31,7 +31,7 @@ void logger::logToFile(  const int msglvl ) {
 	L_pid = _GetPid();
 	unsigned long TID = getThreadID();
 	std::string date = tStamp();
-    
+    /*
 	logstream << date << " [" << L_pid << "] (" << TID << ") [";
 	switch ( msglvl ) {
 		case 0:
@@ -62,16 +62,18 @@ void logger::logToFile(  const int msglvl ) {
 			// placeholder for error handler.
 			exit(1);
 			break;
-	}
-	logstream << " " << logtext << std::endl;
+	}*/
+	logstream << " " << std::endl;
 	std::string logmsg = logstream.str();
 	if ( msglvl >= L_loglevel ) {
 		writeToFile( logmsg );
 	}
+    logstream.clear();
 }
 
 void logger::logToFile( std::string output, const int msglvl ) {
     
+    logstream.clear();
     logstream << output;
     logToFile( msglvl);
     

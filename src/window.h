@@ -18,6 +18,7 @@
 #include "ColorManager.h"
 
 #include <string>
+#include <ncurses.h>
 
 class ncursesMenu;
 class Widget;
@@ -69,6 +70,8 @@ public:
     void showBorder(){m_showBorder = true;}
     void hideBorder(){m_showBorder = false;}
     void toggleBorder(){m_showBorder = !m_showBorder;}
+    
+    int colored_chtype(char ch, int attr, int colorPair);
     
     void render();
     void refresh();
@@ -126,7 +129,7 @@ public:
     void setBorderColor(int fg, int bg=0);
     int getBorderColor(){return m_borderColor;}
     
-    void setBorderColorfg(int fg, int bg=0){ m_borderColorfg = fg; m_borderColorbg = bg;};
+    void setBorderColorfg(int fg){ m_borderColorfg = fg;};
     int getBorderColorfg(){return m_borderColorfg;}
     
     void setBorderColorbg(int bg){ m_borderColorbg = bg;};

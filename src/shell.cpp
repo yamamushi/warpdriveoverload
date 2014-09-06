@@ -17,6 +17,13 @@
 #include "asciicodes.h"
 #include "terostest.h"
 
+#include "Hermes.h"
+#include "NetworkMessage.h"
+
+#include "shipdata.pb.h"
+
+#include "logger.h"
+
 #include <algorithm>
 
 void Shell::boot(){
@@ -66,7 +73,57 @@ bool Shell::init(){
     start_color();			/* Start color 			*/
     curs_set(0);
     refresh();
-        
+    
+    
+    
+    std::cout << "Command Queue Starting" << std::endl;
+    Hermes::Instance()->addToCommandQueue(_STD_BIND(&Shell::doNothing, this));
+    sleep(1);
+    
+    std::cout << "Network Message Interface Starting" << std::endl;
+
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+    WarpDriveOverloaded::User *testUser = new WarpDriveOverloaded::User;
+    
+    testUser->set_name("Bob Saget");
+    testUser->set_id(1);
+    testUser->set_email("bob.saget@gmail.com");
+    
+    WarpDriveOverloaded::User_Character testCharacter = testUser->character();
+    testUser->character().name();
+    testCharacter.set_name("test");
+    
+    std::string output;
+    testUser->SerializeToString(&output);
+    //testUser->Serializeto
+
+    
+   // archive << newMessage;
+    
+    logger m_logmaker("proto.log", 0);
+   // m_logmaker.logToFile(newUser.name(),0);
+    
+    
+
+    NetworkMessage netMessage;
+    netMessage.body_length(std::strlen(output.c_str()));
+    std::string testarray;
+    testUser->SerializeToArray(netMessage.body(), netMessage.body_length());
+    //std::memcpy(netMessage.body(), &output, netMessage.body_length());
+    
+    
+    WarpDriveOverloaded::User newUser;
+    newUser.ParseFromString(netMessage.body());
+    m_logmaker.logToFile(newUser.name(),0);
+    
+    
+    netMessage.encode_header();
+    Hermes::Instance()->addToNetworkQueue(netMessage);
+
+    
+    //Hermes::Instance()->startNetworkQueue();
+    
     return true;
     
 }
@@ -147,7 +204,7 @@ void Shell::execute(){
     }
 
     if(!m_topInterface->initialized()){
-        //m_topInterface->getWindow()->clearScreen();
+        m_topInterface->getWindow()->clearScreen();
         m_topInterface->init();
     }
     
@@ -163,14 +220,14 @@ void Shell::handleKeys(int input){
         // This is defined in asciicodes.h
         case KEY_TAB:
             m_topInterface->getWindow()->clearScreen();
-            //m_topInterface->getWindow()->refresh();
+            m_topInterface->getWindow()->refresh();
             
             if(m_topInterface->getNext() == m_interfaceList.at(0))
                 m_topInterface = m_interfaceList.at(1);
             else
                 m_topInterface = m_topInterface->getNext();
 
-            //m_topInterface->getWindow()->clearScreen();
+            m_topInterface->getWindow()->clearScreen();
             break;
             
         default:

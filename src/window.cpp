@@ -13,36 +13,37 @@
 #include <algorithm>
 #include <stdlib.h>
 
+#include "logger.h"
 #include "bresenham2d.h"
 
 ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : m_height(height), m_length(length), m_ypos(ypos), m_xpos(xpos)
 {
     
     m_window = newwin(height, length, ypos, xpos);
-    m_border = _SharedPtr<winBorder>(new winBorder);
     
-    m_showBorder = true;
-    setborder('|', '|', '=', '=', '+', '+', '+', '+');
-    
-    setBorderColorfg(COLOR_BLUE);
-    setBorderColorbg(COLOR_BLACK);
-    setBorderColor(getBorderColorfg(), getBorderColorbg());
-    
+
     setBGColor(COLOR_BLACK);
     setFGColor(COLOR_GREEN);
     setNormalColor(getFGColor(), getBGColor());
     
+    m_border = _SharedPtr<winBorder>(new winBorder);
+    m_showBorder = true;
+    setBorderColorfg(COLOR_BLUE);
+    setBorderColorbg(COLOR_BLACK);
+    setBorderColor(getBorderColorfg(), getBorderColorbg());
+    setborder('|', '|', '=', '=', '+', '+', '+', '+');
+
     
     setCursorColorfg(COLOR_BLUE);
     setCursorColorbg(COLOR_BLACK);
     setCursorColor(getCursorColorfg(), getCursorColorbg());
     
-    
     setSelectedColorfg(COLOR_RED);
     setSelectedColorbg(COLOR_BLACK);
     setSelectedColor(getSelectedColorfg(), getSelectedColorbg());
     
-    
+    wrefresh(m_window);
+
 }
 
 
@@ -78,8 +79,10 @@ void ncursesWindow::close(){
 
 void ncursesWindow::clearScreen(){
     
-    wclear(get());
-
+    //standout();
+    //wclear(get());
+    werase(m_window);
+    
 }
 
 void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br){
@@ -93,8 +96,6 @@ void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char 
     m_border->m_bl = bl;
     m_border->m_br = br;
     
-    drawBorder();
-
 }
 
 
@@ -102,12 +103,22 @@ void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char 
 void ncursesWindow::drawBorder(){
     
     if(m_showBorder){
-        
+
+        setBorderColor(getBorderColorfg(), getBorderColorbg());
+
         wattrset(m_window, COLOR_PAIR(m_borderColor));
-        wborder(m_window, m_border->m_ls, m_border->m_rs, m_border->m_ts, m_border->m_bs, m_border->m_tl, m_border->m_tr, m_border->m_bl, m_border->m_br);
+        
+        // Just showing how we can use this function to set border attributes
+        wborder(m_window, colored_chtype(m_border->m_ls, A_NORMAL, m_borderColor), m_border->m_rs, m_border->m_ts, m_border->m_bs, m_border->m_tl, m_border->m_tr, m_border->m_bl, m_border->m_br);
+
         wattroff(m_window, COLOR_PAIR(m_borderColor));
     }
     
+}
+
+int ncursesWindow::colored_chtype(char ch, int attr, int colorPair){
+    
+    return ((ch) | (attr) | COLOR_PAIR(colorPair));
 }
 
 void ncursesWindow::render(){
@@ -257,9 +268,9 @@ void ncursesWindow::setCursorColor(int fg, int bg){
 
 void ncursesWindow::setBorderColor(int fg, int bg){
     
-    if(fg == 0)
+    if(fg < 0)
         fg = m_fgColor;
-    if(bg == 0)
+    if(bg < 0)
         bg = m_bgColor;
     
     

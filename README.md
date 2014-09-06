@@ -12,7 +12,7 @@ Dependencies:
     GCC 4.7+ or Clang (something C++11 Compatible)
     Sqlite
     Ncurses
-    
+    Google Protobufs
 
 Development:
 

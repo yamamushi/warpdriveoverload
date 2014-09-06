@@ -38,3 +38,7 @@ CMakeFiles/
 *CMakeFiles/*
 CMakeCache.txt
 Makefile
+
+# Protobuf generated files
+*.pb.cc
+*.pb.h
