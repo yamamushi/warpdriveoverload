@@ -120,7 +120,6 @@ void SphereModel::subdivide( Vector3D v1,  Vector3D v2, Vector3D v3, std::vector
         	m_mesh->m_colors.push_back(_SharedPtr<ColorIndice>(new ColorIndice(index+2, '=', COLOR_GREEN, COLOR_BLACK, 0)));
 	else
             m_mesh->m_colors.push_back(_SharedPtr<ColorIndice>(new ColorIndice(index+2, '#', COLOR_GREEN, COLOR_BLACK, 0)));
-       // m_mesh->m_colors.push_back(_SharedPtr<ColorIndice>(new ColorIndice(index+3, 'M', COLOR_RED, COLOR_BLACK, 0)));
 
         m_mesh->m_indices.push_back(_SharedPtr<TriangleIndice>(new TriangleIndice(index, index+1, index+2)));
 
