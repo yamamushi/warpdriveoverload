@@ -153,7 +153,7 @@ void TerosTestInterface::draw(){
     std::string fpscount(std::to_string(m_owner->getfps()) + " fps");
     m_mainWindow->drawAt((m_mainWindow->getX()-2)-(int)fpscount.length(), 1, fpscount);
     
-    m_mainWindow->drawAt((m_mainWindow->getX()-8), 2, "                                 ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-8), 2, "        ");
     std::string termSize( "Size: " + std::to_string(m_owner->getWidth()) + " x " + std::to_string(m_owner->getHeight()) );
     m_mainWindow->drawAt((m_mainWindow->getX()-(int)termSize.length()-2), 2, termSize);
     
@@ -279,51 +279,51 @@ void TerosTestInterface::handleKeys(int input){
 
         case 'w':
             move(m_camspeed, 0.05);
-            draw();
+            run();
             break;
             
         case 's':
             move(m_camspeed, -0.05);
-            draw();
+            run();
             break;
             
         case 'a':
             m_terosCam->rotatecam('z', 0.05);
-            draw();
+            run();
             break;
         case 'd':
             m_terosCam->rotatecam('z', -0.05);
-            draw();
+            run();
             break;
             
             // THIS IS BACKWARDS ON PURPOSE
         case 'k':
             m_terosCam->rotatecam('y', 0.05);
-            draw();
+            run();
             break;
         case 'i':
             m_terosCam->rotatecam('y', -0.05);
-            draw();
+            run();
             break;
             
         case 'j':
             m_terosCam->rotatecam('x', 0.05);
-            draw();
+            run();
             break;
         case 'l':
             m_terosCam->rotatecam('x', -0.05);
-            draw();
+            run();
             break;
         
             
         case '-':
             if( m_camspeed > 0.0)
                 m_camspeed -= 0.01;
-            draw();
+            run();
             break;
         case '+':
             m_camspeed += 0.01;
-            draw();
+            run();
             break;
             
             
@@ -331,19 +331,19 @@ void TerosTestInterface::handleKeys(int input){
             m_zoom += 0.5;
             m_terosCam->setzoomfactor(m_zoom);
             //m_terosCam->drawobjects();
-            draw();
+            run();
             break;
             
         case KEY_DOWN:
             m_zoom -= 0.5;
             m_terosCam->setzoomfactor(m_zoom);
             //m_terosCam->drawobjects();
-            draw();
+            run();
             break;
         case ' ':
             m_rotate = !m_rotate;
             //m_terosCam->drawobjects();
-            draw();
+            run();
             break;
             
         default:

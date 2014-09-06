@@ -1,5 +1,5 @@
 include_directories(${wpoclient_SOURCE_DIR}/src/ 
-			${wpoclient_SOURCE_DIR}/src/vmmlib/include/
+			${wpoclient_SOURCE_DIR}/deps/vmmlib/include/
 			)
 
 include_directories(${ProtobufIncludePath})
@@ -46,8 +46,9 @@ add_executable(client main.cpp
             )
             
 target_link_libraries(client messages)
-            
-set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf")
+
+#set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf")
+SET_TARGET_PROPERTIES(client PROPERTIES  LINK_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf")
 
 if(UNIX AND NOT APPLE)
 	set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf -lrt")
