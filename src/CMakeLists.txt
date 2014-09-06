@@ -49,3 +49,6 @@ target_link_libraries(client messages)
             
 set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf")
 
+if(UNIX AND NOT APPLE)
+	set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf -lrt")
+endif()
