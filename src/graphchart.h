@@ -9,8 +9,6 @@
 #ifndef __warpdriveoverloaded__graphchart__
 #define __warpdriveoverloaded__graphchart__
 
-#include <ncurses.h>
-
 #include "shell.h"
 #include "window.h"
 #include "tr1_wrapper.h"

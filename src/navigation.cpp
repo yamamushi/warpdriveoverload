@@ -113,6 +113,9 @@ void NavigationInterface::run(){
     m_mainWindow->drawAt((m_mainWindow->getX()/2)-(int)getName().length(), 1, rowMessage);
     m_mainWindow->drawAt((m_mainWindow->getX()/2)-(int)getName().length(), 2, colMessage);
     
+    m_mainWindow->drawAt((m_mainWindow->getX()-10), 1, "           ");
+    std::string fpscount(std::to_string(m_owner->getfps()) + " fps");
+    m_mainWindow->drawAt((m_mainWindow->getX()-2)-(int)fpscount.length(), 1, fpscount);
 
     m_mainWindow->drawAt((m_mainWindow->getX()/2), (m_mainWindow->getY()/2), testString);
 

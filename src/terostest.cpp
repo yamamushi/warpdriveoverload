@@ -54,10 +54,10 @@ void TerosTestInterface::init(){
     
     // Now we'll create a window for rendering our objects to.
     // Create a new Teros Window with position 2,2
-    m_terosWindow = _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth()-1, m_terosScreen->getheight()/2, 2, 0));
+    m_terosWindow = _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth()-1, m_terosScreen->getheight()/2, 1, 0));
     
     // Create a new Teros Window with a position below our first
-    m_terosWindow2 = _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth()-1, m_terosScreen->getheight()/2, 2, m_terosScreen->getheight()/2));
+    m_terosWindow2 = _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth()-1, m_terosScreen->getheight()/2, 1, m_terosScreen->getheight()/2));
     
     // Attach these windows as a layer to our screen
     m_terosScreen->addlayer(m_terosWindow);
@@ -87,8 +87,8 @@ void TerosTestInterface::init(){
 
 
     // Adjust the view size for our Camera Render (this means we can fit multiple views in one window
-    m_terosCam1->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-45);
-    m_terosCam2->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-45);
+    m_terosCam1->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
+    m_terosCam2->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
 
     
     // Draw our objects, this doesn't mean render them, this means lay our 3d image into a 2d space and buffer it.
@@ -101,13 +101,14 @@ void TerosTestInterface::init(){
 
 
     // Tell our Window to load the view that our camera provides
-    m_terosWindow->loadfromvector(m_terosCam1->putview(), m_mainWindow->getX()-45);
-    m_terosWindow2->loadfromvector(m_terosCam2->putview(), m_mainWindow->getX()-45);
+    m_terosWindow->loadfromvector(m_terosCam1->putview(), m_mainWindow->getX()-41);
+    m_terosWindow2->loadfromvector(m_terosCam2->putview(), m_mainWindow->getX()-41);
 
     // Display the screen
     // This will cycle through all of the available windows and render them
     // Which gives us the ability to have two windows...
     m_terosScreen->displayscr();
+    draw();
 
     // Finally we give the all clear that our interface has been initialized.
     m_initialized = true;
@@ -127,110 +128,118 @@ void TerosTestInterface::move(double speedws, double distance){
 
 void TerosTestInterface::run(){
 
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 3,  "        3D Rendering Test        ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 6,  "                                 ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 7,  "                                 ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 8,  "                                 ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 9,  "                                 ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 10, "                                 ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 11, "                                 ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 12, "                                 ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 17, "                                 ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 18, "t - Change Selected Camera       ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 19, "x/y/z: Sphere Rotation           ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 20, "w/a/s/d: Move Camera             ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 21, "j/i/k/l: Move Camera             ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 22, "Up/Down: Zoom in/out             ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 23, "+/- : Modify camera speed        ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 24, "Spacebar: Pause Rotation         ");
-    m_mainWindow->drawAt((m_mainWindow->getX()-39), 10, "Camera Zoom is: " + std::to_string(m_zoom));
-
-
-
-
-    
-    if(m_rotate){
-        
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 9, "Camera Speed is: " + std::to_string(m_camspeed));
-
-        if(m_direction == 0){
-            m_terosObject->rot('x', m_rotspeed);
-            m_mainWindow->drawAt((m_mainWindow->getX()-39), 7, "Rotating on X Axis");
-        }
-        else if(m_direction == 1){
-            m_terosObject->rot('x', -m_rotspeed);
-            m_mainWindow->drawAt((m_mainWindow->getX()-39), 7, "Rotating on reverse X Axis");
-        }
-        else if(m_direction == 2){
-            m_terosObject->rot('y', m_rotspeed);
-            m_mainWindow->drawAt((m_mainWindow->getX()-39), 7, "Rotating on Y Axis");
-        }
-        else if(m_direction == 3){
-            m_terosObject->rot('y', -m_rotspeed);
-            m_mainWindow->drawAt((m_mainWindow->getX()-39), 7, "Rotating on reverse Y Axis");
-        }
-        else if(m_direction == 4){
-            m_terosObject->rot('z', m_rotspeed);
-            m_mainWindow->drawAt((m_mainWindow->getX()-39), 7, "Rotating on Z Axis");
-        }
-        else if(m_direction == 5){
-            m_terosObject->rot('z', -m_rotspeed);
-            m_mainWindow->drawAt((m_mainWindow->getX()-39), 7, "Rotating on reverse Z Axis");
-        }
-    }
-    else{
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 7, "Rotation Paused");
-    }
-    if(m_objectSelected){
-        
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 5, "Camera 2 Selected");
-
-    }
-    else{
-        
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 5, "Camera 1 Selected");
-        
-    }
-    
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 8, "Camera Zoom is: " + std::to_string(m_zoom));
-    
-
-        
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 10, "PositionX: " + std::to_string(m_terosCam->putcamx()));
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 11, "PositionY: " + std::to_string(m_terosCam->putcamy()));
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 12, "PositionZ: " + std::to_string(m_terosCam->putcamz()));
-    
-    
-    
-     // This doesn't do what I thought it did :)
-     
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 14, "Right : " + std::to_string(m_terosCam->getAngleX().x()) + ", " + std::to_string(m_terosCam->getAngleX().y()) + ", " + std::to_string(m_terosCam->getAngleX().z()));
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 15, "Up    : " + std::to_string(m_terosCam->getAngleY().x()) + ", " + std::to_string(m_terosCam->getAngleY().y()) + ", " + std::to_string(m_terosCam->getAngleY().z()));
-        m_mainWindow->drawAt((m_mainWindow->getX()-39), 16, "Look  : " + std::to_string(m_terosCam->getAngleZ().x()) + ", " + std::to_string(m_terosCam->getAngleZ().y()) + ", " + std::to_string(m_terosCam->getAngleZ().z()));
-    
-
-
-
-    m_graphController->refresh();
-
     m_terosCam1->drawobjects();
     m_terosCam2->drawobjects();
 
-    m_terosWindow->loadfromvector(m_terosCam1->putview(), m_mainWindow->getX()-45);
-    m_terosWindow2->loadfromvector(m_terosCam2->putview(), m_mainWindow->getX()-45);
+    m_terosWindow->loadfromvector(m_terosCam1->putview(), m_mainWindow->getX()-41);
+    m_terosWindow2->loadfromvector(m_terosCam2->putview(), m_mainWindow->getX()-41);
 
     m_terosScreen->displayscr();
     
-    m_graphController->drawLine((m_mainWindow->getX()-41), 1, (m_mainWindow->getX()-41), (m_mainWindow->getY()-1), "|", 1);
-    m_graphController->drawLine(1, (m_mainWindow->getY()/2)-1, (m_mainWindow->getX()-42), (m_mainWindow->getY()/2)-1, "-", 1);
-
-    
     m_graphController->render();
+    
+    draw();
+
+}
+
+
+
+void TerosTestInterface::draw(){
     
     m_mainWindow->drawAt(3, 1,"Camera 1");
     m_mainWindow->drawAt(3, (m_mainWindow->getY()/2),"Camera 2");
     
+    m_mainWindow->drawAt((m_mainWindow->getX()-10), 1, "           ");
+    std::string fpscount(std::to_string(m_owner->getfps()) + " fps");
+    m_mainWindow->drawAt((m_mainWindow->getX()-2)-(int)fpscount.length(), 1, fpscount);
     
+    m_mainWindow->drawAt((m_mainWindow->getX()-8), 2, "                                 ");
+    std::string termSize( "Size: " + std::to_string(m_owner->getWidth()) + " x " + std::to_string(m_owner->getHeight()) );
+    m_mainWindow->drawAt((m_mainWindow->getX()-(int)termSize.length()-2), 2, termSize);
+    
+    
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 5,  "        3D Rendering Test        ");
+    
+    if(m_objectSelected){
+        
+        m_mainWindow->drawAt((m_mainWindow->getX()-40), 7, "Camera 2 Selected");
+        
+    }
+    else{
+        
+        m_mainWindow->drawAt((m_mainWindow->getX()-40), 7, "Camera 1 Selected");
+        
+    }
+    
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 8,  "                                 ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 9,  "                                 ");
+
+    if(m_rotate){
+        
+        
+        if(m_direction == 0){
+            m_terosObject->rot('x', m_rotspeed);
+            m_mainWindow->drawAt((m_mainWindow->getX()-40), 9, "Rotating on X Axis");
+        }
+        else if(m_direction == 1){
+            m_terosObject->rot('x', -m_rotspeed);
+            m_mainWindow->drawAt((m_mainWindow->getX()-40), 9, "Rotating on reverse X Axis");
+        }
+        else if(m_direction == 2){
+            m_terosObject->rot('y', m_rotspeed);
+            m_mainWindow->drawAt((m_mainWindow->getX()-40), 9, "Rotating on Y Axis");
+        }
+        else if(m_direction == 3){
+            m_terosObject->rot('y', -m_rotspeed);
+            m_mainWindow->drawAt((m_mainWindow->getX()-40), 9, "Rotating on reverse Y Axis");
+        }
+        else if(m_direction == 4){
+            m_terosObject->rot('z', m_rotspeed);
+            m_mainWindow->drawAt((m_mainWindow->getX()-40), 9, "Rotating on Z Axis");
+        }
+        else if(m_direction == 5){
+            m_terosObject->rot('z', -m_rotspeed);
+            m_mainWindow->drawAt((m_mainWindow->getX()-40), 9, "Rotating on reverse Z Axis");
+        }
+    }
+    else{
+        m_mainWindow->drawAt((m_mainWindow->getX()-40), 9, "Rotation Paused");
+    }
+    
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 11,  "Camera Zoom is: " + std::to_string(m_zoom));
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 12,  "Camera Speed is: " + std::to_string(m_camspeed));
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 14, "PositionX: " + std::to_string(m_terosCam->putcamx()));
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 15, "PositionY: " + std::to_string(m_terosCam->putcamy()));
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 16, "PositionZ: " + std::to_string(m_terosCam->putcamz()));
+    
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 18, "Yaw   : " + std::to_string(m_terosCam->getAngleX().x()) + ", " + std::to_string(m_terosCam->getAngleX().y()) + ", " + std::to_string(m_terosCam->getAngleX().z()));
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 19, "Roll  : " + std::to_string(m_terosCam->getAngleY().x()) + ", " + std::to_string(m_terosCam->getAngleY().y()) + ", " + std::to_string(m_terosCam->getAngleY().z()));
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), 20, "Pitch : " + std::to_string(m_terosCam->getAngleZ().x()) + ", " + std::to_string(m_terosCam->getAngleZ().y()) + ", " + std::to_string(m_terosCam->getAngleZ().z()));
+
+
+    
+    
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), (m_mainWindow->getY()-11), "t - Change Selected Camera       ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), (m_mainWindow->getY()-10), "x/y/z: Sphere Rotation           ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), (m_mainWindow->getY()-9), "w/a/s/d: Move Camera             ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), (m_mainWindow->getY()-8), "j/i/k/l: Move Camera             ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), (m_mainWindow->getY()-7), "Up/Down: Zoom in/out             ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), (m_mainWindow->getY()-6), "+/- : Modify camera speed        ");
+    m_mainWindow->drawAt((m_mainWindow->getX()-40), (m_mainWindow->getY()-5), "Spacebar: Pause Rotation         ");
+    
+    
+
+
+    m_mainWindow->drawLine((m_mainWindow->getX()-42), 1, (m_mainWindow->getX()-42), (m_mainWindow->getY()-1), "|", m_mainWindow->getBorderColorfg(), m_mainWindow->getBorderColorbg());
+    m_mainWindow->drawLine(1, (m_mainWindow->getY()/2)-1, (m_mainWindow->getX()-43), (m_mainWindow->getY()/2)-1, "-", m_mainWindow->getBorderColorfg(), m_mainWindow->getBorderColorbg());
+    
+}
+
+
+void TerosTestInterface::resize(){
+
+    m_terosCam1->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
+    m_terosCam2->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
     
 }
 
@@ -240,51 +249,21 @@ void TerosTestInterface::handleKeys(int input){
             
         case 'x':
             m_direction = 0;
-            if(!m_objectSelected)
-                m_terosCam->rotatecam('x', 0.05);
-            else
-                m_terosObject->rot('x', 0.05);
-            m_terosCam->drawobjects();
             break;
         case 'X':
             m_direction = 1;
-            if(!m_objectSelected)
-                m_terosCam->rotatecam('x', -0.05);
-            else
-                m_terosObject->rot('x', -0.05);
-            m_terosCam->drawobjects();
             break;
         case 'y':
             m_direction = 2;
-            if(!m_objectSelected)
-                m_terosCam->rotatecam('y', 0.05);
-            else
-                m_terosObject->rot('y', 0.05);
-            m_terosCam->drawobjects();
             break;
         case 'Y':
             m_direction = 3;
-            if(!m_objectSelected)
-                m_terosCam->rotatecam('y', -0.05);
-            else
-                m_terosObject->rot('y', -0.05);
-            m_terosCam->drawobjects();
             break;
         case 'z':
             m_direction = 4;
-            if(!m_objectSelected)
-                m_terosCam->rotatecam('z', 0.05);
-            else
-                m_terosObject->rot('z', 0.05);
-            m_terosCam->drawobjects();
             break;
         case 'Z':
             m_direction = 5;
-            if(!m_objectSelected)
-                m_terosCam->rotatecam('z', -0.05);
-            else
-                m_terosObject->rot('z', -0.05);
-            m_terosCam->drawobjects();
             break;
             
         case 't':
@@ -300,58 +279,71 @@ void TerosTestInterface::handleKeys(int input){
 
         case 'w':
             move(m_camspeed, 0.05);
+            draw();
             break;
             
         case 's':
             move(m_camspeed, -0.05);
+            draw();
             break;
             
         case 'a':
             m_terosCam->rotatecam('z', 0.05);
+            draw();
             break;
         case 'd':
             m_terosCam->rotatecam('z', -0.05);
+            draw();
             break;
             
             // THIS IS BACKWARDS ON PURPOSE
         case 'k':
             m_terosCam->rotatecam('y', 0.05);
+            draw();
             break;
         case 'i':
             m_terosCam->rotatecam('y', -0.05);
+            draw();
             break;
             
         case 'j':
             m_terosCam->rotatecam('x', 0.05);
+            draw();
             break;
         case 'l':
             m_terosCam->rotatecam('x', -0.05);
+            draw();
             break;
         
             
         case '-':
             if( m_camspeed > 0.0)
                 m_camspeed -= 0.01;
+            draw();
             break;
         case '+':
             m_camspeed += 0.01;
+            draw();
             break;
             
             
         case KEY_UP:
             m_zoom += 0.5;
             m_terosCam->setzoomfactor(m_zoom);
-            m_terosCam->drawobjects();
+            //m_terosCam->drawobjects();
+            draw();
             break;
             
         case KEY_DOWN:
             m_zoom -= 0.5;
             m_terosCam->setzoomfactor(m_zoom);
-            m_terosCam->drawobjects();
+            //m_terosCam->drawobjects();
+            draw();
             break;
         case ' ':
             m_rotate = !m_rotate;
-            m_terosCam->drawobjects();
+            //m_terosCam->drawobjects();
+            draw();
             break;
             
         default:

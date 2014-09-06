@@ -86,6 +86,11 @@ bool Shell::run(){
     // This is about to get fun
     nodelay(stdscr, true);
     int keyInput;
+    
+    // Wait (int) seconds while loop is running
+    // 1000 = 1 Second
+    //timeout(1000);
+    setmaxfps(10);
 
     m_running = true;
 
@@ -93,13 +98,14 @@ bool Shell::run(){
 	{
         refresh();
         doupdate();
-        
+
         if((keyInput = getch()) == ERR){
             execute();
         }
         else{
             handleKeys(keyInput);
         }
+        FpsCounter::Instance()->update();
     }
     
     shutdown();
@@ -107,6 +113,19 @@ bool Shell::run(){
     return true;
 }
 
+void Shell::setmaxfps(int fps){
+    
+    if(fps < 1)
+        fps = 1;
+    
+    if(fps > 1000)
+        fps = 1000;
+    
+    m_maxfps = fps;
+    
+    timeout(1000/m_maxfps);
+
+};
 
 
 
@@ -123,22 +142,17 @@ void Shell::execute(){
     if(checkForResize()){
         m_topInterface->getWindow()->clearScreen();
         m_topInterface->getWindow()->resize(m_rows, m_cols, 0, 0);
+        m_topInterface->resize();
         m_topInterface->getWindow()->refresh();
     }
 
     if(!m_topInterface->initialized()){
-        m_topInterface->getWindow()->clearScreen();
+        //m_topInterface->getWindow()->clearScreen();
         m_topInterface->init();
     }
     
-    
-    // We give priority to the window render over the interface running, as we want to make sure our widgets
-    // And Menus have a chance to run before we do any manual drawing to the screen through the interface
-    
-    m_topInterface->getWindow()->render();
     m_topInterface->run();
-    //m_topInterface->getWindow()->render();
-    
+    m_topInterface->getWindow()->render();
 }
 
 
@@ -149,14 +163,14 @@ void Shell::handleKeys(int input){
         // This is defined in asciicodes.h
         case KEY_TAB:
             m_topInterface->getWindow()->clearScreen();
-            m_topInterface->getWindow()->refresh();
+            //m_topInterface->getWindow()->refresh();
             
             if(m_topInterface->getNext() == m_interfaceList.at(0))
                 m_topInterface = m_interfaceList.at(1);
             else
                 m_topInterface = m_topInterface->getNext();
 
-            m_topInterface->getWindow()->clearScreen();
+            //m_topInterface->getWindow()->clearScreen();
             break;
             
         default:
@@ -181,6 +195,16 @@ bool Shell::checkForResize(){
     else
         return false;
 }
+
+
+int Shell::getfps(){
+    
+    int fps = FpsCounter::Instance()->get();
+    
+    return fps;
+    
+}
+
 
 
 void Shell::loadInterfaces(_SharedPtr<Shell> parent){
@@ -306,7 +330,6 @@ void Shell::shutdown(){
     
     for(size_t x = 0; x < m_windows.size(); x++){
         m_windows.at(x)->close();
-        
     }
     endwin();
     

@@ -16,7 +16,6 @@
 #include "connectionwidget.h"
 #include "MenuWidget.h"
 
-#include <ncurses.h>
 #include <vector>
 
 class NavigationInterface : public Interface {
@@ -28,6 +27,11 @@ public:
     void init();
     void run();
     void handleKeys(int input);
+    void draw(){};
+    
+protected:
+    
+    void resize(){};
     
 private:
     
@@ -50,6 +54,8 @@ private:
     void getInput();
     
     std::string testString;
+    
+    
 };
 
 

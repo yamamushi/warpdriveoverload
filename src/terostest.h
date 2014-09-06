@@ -24,8 +24,8 @@
 #include <vmmlib/vector.hpp>
 #include <vmmlib/matrix.hpp>
 
+#include "Hermes.h"
 
-#include <ncurses.h>
 #include <vector>
 
 class TerosTestInterface : public Interface {
@@ -37,6 +37,10 @@ public:
     void init();
     void run();
     void handleKeys(int input);
+
+protected:
+    
+    void resize();
     
 private:
     
@@ -59,6 +63,7 @@ private:
     _SharedPtr<TRModel> m_trModel;
 
     void move(double speed, double distance);
+    void draw();
     
     int m_direction;
     

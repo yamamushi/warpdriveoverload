@@ -13,7 +13,7 @@
 #include "teros.h"
 #include "terospolygon.h"
 
-#include <ncurses.h>
+
 
 TerosWindow::TerosWindow(_SharedPtr<TerosScreen> owner, int width, int height, int posx, int posy)
 {

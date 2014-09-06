@@ -17,7 +17,6 @@
 
 #include <vector>
 #include <cmath>
-#include <ncurses.h>
 #include <string>
 
 struct ColorIndice {

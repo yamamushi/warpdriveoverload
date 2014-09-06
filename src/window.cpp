@@ -11,6 +11,9 @@
 #include "tr1_wrapper.h"
 #include <iostream>
 #include <algorithm>
+#include <stdlib.h>
+
+#include "bresenham2d.h"
 
 ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : m_height(height), m_length(length), m_ypos(ypos), m_xpos(xpos)
 {
@@ -19,19 +22,25 @@ ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : m_hei
     m_border = _SharedPtr<winBorder>(new winBorder);
     
     m_showBorder = true;
-    
-    setBorderColor(ColorManager::Instance()->checkColorPair(COLOR_RED, COLOR_BLACK));
     setborder('|', '|', '=', '=', '+', '+', '+', '+');
     
+    setBorderColorfg(COLOR_BLUE);
+    setBorderColorbg(COLOR_BLACK);
+    setBorderColor(getBorderColorfg(), getBorderColorbg());
     
     setBGColor(COLOR_BLACK);
     setFGColor(COLOR_GREEN);
+    setNormalColor(getFGColor(), getBGColor());
     
-    setNormalColor(m_fgColor, m_bgColor);
     
-    setCursorColor(COLOR_BLUE, COLOR_BLACK);
+    setCursorColorfg(COLOR_BLUE);
+    setCursorColorbg(COLOR_BLACK);
+    setCursorColor(getCursorColorfg(), getCursorColorbg());
     
-    setSelectedColor(COLOR_RED, COLOR_BLACK);
+    
+    setSelectedColorfg(COLOR_RED);
+    setSelectedColorbg(COLOR_BLACK);
+    setSelectedColor(getSelectedColorfg(), getSelectedColorbg());
     
     
 }
@@ -107,7 +116,6 @@ void ncursesWindow::render(){
         m_widgetList.at(x)->render();
     }
     
-
     drawBorder();
     wrefresh(m_window);
     
@@ -120,8 +128,7 @@ void ncursesWindow::refresh(){
     for(size_t x = 0; x < m_widgetList.size(); x++){
         m_widgetList.at(x)->refresh();
     }
-    drawBorder();
-    wrefresh(m_window);
+    
 }
 
 void ncursesWindow::handleKeys(int input){
@@ -149,14 +156,28 @@ void ncursesWindow::drawAt(int x, int y, std::string output){
 }
 
 
+void ncursesWindow::drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg, int bg, int attr){
+    
+    bresenham2d(x1, y1, x2, y2, _STD_BIND(&ncursesWindow::drawLineCallBack, this, std::placeholders::_1, std::placeholders::_2, symbol, fg, bg, attr)); //STD_BIND(&ncursesWindow::drawAt, this, x1, y1, fg, bg, attr));
+    
+}
+
+void ncursesWindow::drawLineCallBack(int x, int y, std::string output, int fg, int bg, int attr){
+    
+    drawAt(x, y, output, fg, bg, attr);
+    
+}
+
+
 void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int attr){
+    
+    if(x == -1 || y == -1)
+        return;
     
     if(fg == 0)
         fg = m_fgColor;
     if(bg == 0)
         bg = m_bgColor;
-    
-
     
     int paircolor = ColorManager::Instance()->checkColorPair(fg, bg);
     
@@ -173,18 +194,17 @@ void ncursesWindow::drawAt(int x, int y, char c){
     wattrset(m_window, COLOR_PAIR(m_normalColor));
     mvwprintw(m_window, y, x, "%c", c);
     wattroff(m_window, COLOR_PAIR(m_normalColor));
-    wrefresh(m_window);    
 }
 
 void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
+    
+    if(x == -1 || y == -1)
+        return;
     
     if(fg == 0)
         fg = m_fgColor;
     if(bg == 0)
         bg = m_bgColor;
-    
-
-
     
     
     int paircolor = ColorManager::Instance()->checkColorPair(fg, bg);
@@ -249,6 +269,9 @@ void ncursesWindow::setBorderColor(int fg, int bg){
 
 
 void ncursesWindow::putPixel(_SharedPtr<Pixel> point){
+    
+    if(point->x == -1 || point->y == -1)
+        return;
     
     int l_fg, l_bg;
     int l_attr;

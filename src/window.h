@@ -86,8 +86,9 @@ public:
     void move(int newX, int newY);
     void resize(int height, int length, int ypos, int xpos);
     
-    void setBGColor(int color){m_bgColor = color;}
-    int getBGColor(){return m_bgColor;}
+    void drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg=0, int bg=0, int attr=0);
+    
+    
     
     void setNormalColor(int fg, int bg);
     int getNormalColor(){return m_normalColor;}
@@ -95,14 +96,42 @@ public:
     void setFGColor(int color){m_fgColor = color;}
     int getFGColor(){return m_fgColor;}
     
+    void setBGColor(int color){m_bgColor = color;}
+    int getBGColor(){return m_bgColor;}
+    
+    
+    
     void setSelectedColor(int fg, int bg=0);
     int getSelectedColor(){return m_selectedColor;}
+    
+    void setSelectedColorfg(int fg){ m_selectedColorfg = fg;};
+    int getSelectedColorfg(){return m_selectedColorfg;}
+    
+    void setSelectedColorbg(int bg){ m_selectedColorbg = bg;};
+    int getSelectedColorbg(){return m_selectedColorbg;}
+    
+    
     
     void setCursorColor(int fg, int bg=0);
     int getCursorColor(){return m_cursorColor;}
     
+    void setCursorColorfg(int fg){ m_cursorColorfg = fg;};
+    int getCursorColorfg(){return m_cursorColorfg;}
+    
+    void setCursorColorbg(int bg){ m_cursorColorbg = bg;};
+    int getCursorColorbg(){return m_cursorColorbg;}
+    
+    
+    
     void setBorderColor(int fg, int bg=0);
     int getBorderColor(){return m_borderColor;}
+    
+    void setBorderColorfg(int fg, int bg=0){ m_borderColorfg = fg; m_borderColorbg = bg;};
+    int getBorderColorfg(){return m_borderColorfg;}
+    
+    void setBorderColorbg(int bg){ m_borderColorbg = bg;};
+    int getBorderColorbg(){return m_borderColorbg;}
+    
     
     
     short checkColorPair(short wanted_fore, int wanted_back);
@@ -120,12 +149,25 @@ private:
     
     bool m_showBorder;
     
+    void drawLineCallBack(int x, int y, std::string output, int fg=0, int bg=0, int attr=0);
+    
+
+    int m_selectedColor;
+    int m_selectedColorfg;
+    int m_selectedColorbg;
+    
+    int m_cursorColor;
+    int m_cursorColorfg;
+    int m_cursorColorbg;
+    
+    int m_normalColor;
     int m_bgColor;
     int m_fgColor;
-    int m_selectedColor;
-    int m_cursorColor;
-    int m_normalColor;
+    
     int m_borderColor;
+    int m_borderColorfg;
+    int m_borderColorbg;
+
 
     _SharedPtr<winBorder> m_border;
     int m_color;

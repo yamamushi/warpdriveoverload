@@ -35,6 +35,9 @@ add_executable(client main.cpp
             MenuWidget.cpp
             WidgetManager.cpp
             ColorManager.cpp
+            Clock.cpp
+            windowthread.cpp
+            Hermes.cpp
             )
 
 set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses")

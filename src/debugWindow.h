@@ -25,6 +25,11 @@ public:
     void init();
     void run();
     void handleKeys(int input);
+    void draw(){};
+    
+protected:
+    
+    void resize(){};
     
 private:
     

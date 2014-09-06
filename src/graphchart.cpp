@@ -41,7 +41,6 @@ void GraphChart::setSize(int xSize, int ySize){
 
 void GraphChart::fill(){
     
-    //wattrset(m_parent->get(), m_parent->getNormalColor());
     if(m_showBars)
     for(int x = 0; x < m_width; x++){
         for(int y = 0; y < m_height; y++){
@@ -91,8 +90,6 @@ void GraphChart::placeRawPoint(_SharedPtr<GraphChartPoint> point){
             }
         }
     }
-    
-//    wrefresh(getParent()->get());
 }
 
 
@@ -147,7 +144,6 @@ void GraphChart::placeAllPoints(){
 
 void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
     
-    //wattrset(m_parent->get(), m_parent->getNormalColor());
     
     std::vector<_SharedPtr<GraphChartPoint> >::iterator it = std::find(m_chartPoints.begin(), m_chartPoints.end(), point);
     if (it != m_chartPoints.end()){
@@ -182,7 +178,6 @@ void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
             }
         }
     }
-    //wrefresh(getParent()->get());
 }
 
 void GraphChart::addRawChartPoint(_SharedPtr<GraphChartPoint> point){
@@ -193,10 +188,12 @@ void GraphChart::addRawChartPoint(_SharedPtr<GraphChartPoint> point){
 }
 
 void GraphChart::removeRawChartPoint(_SharedPtr<GraphChartPoint> point){
+    
     std::vector<_SharedPtr<GraphChartPoint> >::iterator it = std::find(m_rawchartPoints.begin(), m_rawchartPoints.end(), point);
     if (it != m_rawchartPoints.end()){
         m_rawchartPoints.erase(std::remove(m_rawchartPoints.begin(), m_rawchartPoints.end(), point), m_rawchartPoints.end());
     }
+    
 }
 
 void GraphChart::addChartPoint(_SharedPtr<GraphChartPoint> point){
@@ -244,10 +241,11 @@ void GraphChart::clearAllChartPoints(){
 
 void GraphChart::clearAllRawChartPoints(){
    
+    /*
     for(int x=0; x < m_rawchartPoints.size(); x++){
         removePoint(m_rawchartPoints.at(x));
-    }
-    wrefresh(getParent()->get());
+    }*/
+    //wrefresh(getParent()->get());
     m_rawchartPoints.clear();
     
 }
@@ -256,7 +254,6 @@ void GraphChart::clearAllRawChartPoints(){
 void GraphChart::refresh(){
     
     fill();
-    wrefresh(getParent()->get());
     
 }
 

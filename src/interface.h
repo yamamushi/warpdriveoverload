@@ -25,7 +25,6 @@
 #include "window.h"
 #include "WidgetManager.h"
 
-#include <ncurses.h>
 #include <vector>
 
 class Interface;
@@ -77,6 +76,7 @@ public:
     virtual void init(){};
     virtual void handleKeys(int input){};
     bool initialized(){return m_initialized;}
+    virtual void draw(){};
     
     _SharedPtr<Interface> getChild(){return m_child;}
     _SharedPtr<Interface>  getNext(){return m_next;}
@@ -100,6 +100,8 @@ protected:
     _SharedPtr<ncursesWindow> m_mainWindow;
     
     void addToHandler(){InterfaceHandler::instance()->addInterface(shared_from_this());}
+    
+    virtual void resize(){};
     
     bool m_initialized;
     int m_sizeX;

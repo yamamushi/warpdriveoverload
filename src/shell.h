@@ -31,10 +31,12 @@
 #include <vector>
 
 #include "ColorManager.h"
+#include "Clock.h"
 
 struct GraphChartPoint;
 
 class Interface;
+
 
 class Shell : public std::enable_shared_from_this<Shell>{
     
@@ -46,6 +48,12 @@ public:
     bool running(){return m_running;}
     void boot();
     bool run();
+    
+    int getfps();
+    void setmaxfps(int fps);
+    
+    int getHeight(){return m_rows;}
+    int getWidth(){return m_cols;}
     
     void loadInterfaces(_SharedPtr<Shell> parent);
 
@@ -86,18 +94,6 @@ protected:
     void organizeInterfaces();
     
     bool checkForResize();
-    
-    _SharedPtr<Nostradamus> m_parent;
-    
-    bool m_running;
-    
-    int m_rows;
-    int m_cols;
-    
-    _SharedPtr<ncursesWindow> m_mainWindow;
-    _SharedPtr<Interface> m_topInterface;
-    
-    std::vector<_SharedPtr<ncursesWindow> > m_windows;
 
     void doNothing(){};
     void printDebug();
@@ -106,6 +102,19 @@ protected:
     
 private:
     
+    _SharedPtr<Nostradamus> m_parent;
+    
+    int m_maxfps;
+    
+    _SharedPtr<ncursesWindow> m_mainWindow;
+    _SharedPtr<Interface> m_topInterface;
+    
+    std::vector<_SharedPtr<ncursesWindow> > m_windows;
+    
+    bool m_running;
+    
+    int m_rows;
+    int m_cols;
     
 };
 
