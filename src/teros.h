@@ -51,7 +51,7 @@ public:
     // Begin Widget Functions
     void render(){}
     void refresh(){}
-    void resize(int newx, int newy){}
+    void resize(int newx, int newy){m_width = newx; m_height = newy;}
     void handleKeys(int input){}
     
     std::vector<_SharedPtr<GraphChartPoint> > getDisplay(){return m_display;}

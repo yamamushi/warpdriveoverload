@@ -232,6 +232,12 @@ void GraphChart::drawLine(int x1, int y1, int x2, int y2, std::string symbol, in
 }
 
 
+void GraphChart::clearWindow(){
+    
+    
+    
+}
+
 
 void GraphChart::clearAllChartPoints(){
 

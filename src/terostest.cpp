@@ -54,12 +54,15 @@ void TerosTestInterface::init(){
     m_widgetManager->addWidget(m_terosScreen);
     
     
+    
+    m_graphController->resize(m_mainWindow->getX()-42,m_mainWindow->getY());
+    m_terosScreen->resize(m_mainWindow->getX()-42,m_mainWindow->getY());
     // Now we'll create a window for rendering our objects to.
     // Create a new Teros Window with position 2,2
-    m_terosWindow = _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth()-1, m_terosScreen->getheight()/2, 1, 0));
+    m_terosWindow = _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth(), m_terosScreen->getheight()/2, 1, 0));
     
     // Create a new Teros Window with a position below our first
-    m_terosWindow2 = _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth()-1, m_terosScreen->getheight()/2, 1, m_terosScreen->getheight()/2));
+    m_terosWindow2 = _SharedPtr<TerosWindow>(new TerosWindow( m_terosScreen, m_terosScreen->getwidth(), m_terosScreen->getheight()/2, 1, m_terosScreen->getheight()/2));
     
     // Attach these windows as a layer to our screen
     m_terosScreen->addlayer(m_terosWindow);
@@ -89,8 +92,8 @@ void TerosTestInterface::init(){
 
 
     // Adjust the view size for our Camera Render (this means we can fit multiple views in one window
-    m_terosCam1->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
-    m_terosCam2->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
+    m_terosCam1->setviewsize(m_terosWindow->putheight(), m_terosWindow->putwidth());
+    m_terosCam2->setviewsize(m_terosWindow2->putheight(), m_terosWindow2->putwidth());
 
     
     // Draw our objects, this doesn't mean render them, this means lay our 3d image into a 2d space and buffer it.
@@ -103,8 +106,8 @@ void TerosTestInterface::init(){
 
 
     // Tell our Window to load the view that our camera provides
-    m_terosWindow->loadfromvector(m_terosCam1->putview(), m_mainWindow->getX()-41);
-    m_terosWindow2->loadfromvector(m_terosCam2->putview(), m_mainWindow->getX()-41);
+    m_terosWindow->loadfromvector(m_terosCam1->putview(), m_terosWindow->putwidth());
+    m_terosWindow2->loadfromvector(m_terosCam2->putview(), m_terosWindow2->putwidth());
 
     // Display the screen
     // This will cycle through all of the available windows and render them
@@ -137,15 +140,15 @@ void TerosTestInterface::run(){
     m_terosCam1->drawobjects();
     m_terosCam2->drawobjects();
 
-    m_terosWindow->loadfromvector(m_terosCam1->putview(), m_mainWindow->getX()-41);
-    m_terosWindow2->loadfromvector(m_terosCam2->putview(), m_mainWindow->getX()-41);
+    m_terosWindow->loadfromvector(m_terosCam1->putview(), m_terosCam1->putviewcolumns());
+    m_terosWindow2->loadfromvector(m_terosCam2->putview(), m_terosCam2->putviewcolumns());
 
     m_terosScreen->displayscr();
     
     m_graphController->render();
     
     draw();
-    refresh();
+    //refresh();
 
 }
 
@@ -244,11 +247,20 @@ void TerosTestInterface::draw(){
 
 
 void TerosTestInterface::resize(){
+    
 
-    m_terosCam1->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
-    m_terosCam2->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
-    m_terosScreen->resize(m_mainWindow->getX()-44, m_mainWindow->getY());
-    m_terosWindow2->setypos(m_terosScreen->getheight()/2);
+    m_graphController->resize(m_mainWindow->getX()-42,m_mainWindow->getY());
+    
+    m_terosScreen->resize(m_mainWindow->getX()-42, m_mainWindow->getY());
+
+    m_terosWindow->resize(m_terosScreen->getwidth(), m_terosScreen->getheight()/2);
+    m_terosWindow2->resize(m_terosScreen->getwidth(), m_terosScreen->getheight()/2);
+    
+    m_terosWindow2->moveTo(1, m_terosScreen->getheight()/2);
+    
+    m_terosCam1->setviewsize(m_terosWindow->putheight(),m_terosWindow->putwidth());
+    m_terosCam2->setviewsize(m_terosWindow2->putheight(),m_terosWindow2->putwidth());
+
 }
 
 

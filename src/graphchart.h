@@ -31,7 +31,7 @@ struct GraphChartPoint {
     
     int m_attr;
     
-    GraphChartPoint(int x = -1, int y = -1, std::string symbol = "", int fg = -1, int bg=-1, int attr=0, bool hidden = false)
+    GraphChartPoint(int x = -1, int y = -1, std::string symbol = "", int fg = -1, int bg=-1, int attr=A_NORMAL, bool hidden = false)
     : m_X(x), m_Y(y), m_fg(fg), m_bg(bg), m_symbol(symbol), m_hidden(hidden), m_attr(attr){}
     
 };
@@ -85,6 +85,7 @@ public:
     
     void generateChart();
     void fill();
+    void clearWindow();
 
     
     void drawAt(int x=-1, int y=-1, std::string symbol=" ", int fg=0, int bg=0, int attr=0);

@@ -476,6 +476,7 @@ void TerosCam::cpybasis (char axis, double store [3])
 
 void TerosCam::setviewsize (int rows, int column)
 {
+    clearview();
 	if (column > 0 && rows > 0)
 	{
 		m_viewcolumns = column;
