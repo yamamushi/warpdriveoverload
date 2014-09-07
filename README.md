@@ -11,15 +11,15 @@ Dependencies:
     Boost
     GCC 4.7+ or Clang (something C++11 Compatible)
     Sqlite
-    Ncurses
+    Ncursesw (If you are on OSX this is: brew install ncurses && brew link ncurses --force )
     Google Protobufs
+    pkgconfig
 
 Development:
 
 Please make sure you are on the proper branch, "Develop". You can switch branches with:
     
     git checkout develop
-        
 
 
 Building:
