@@ -294,19 +294,40 @@ void TerosTestInterface::handleKeys(int input){
             }
             
             break;
+            
+            
+        case 'W':            
+            m_terosCam->moveUp(m_camspeed, 0.05);
+            run();
+            break;
 
         case 'w':
-            move(m_camspeed, 0.05);
+            m_terosCam->moveForward(m_camspeed, 0.05);
             run();
             break;
             
+        case 'S':
+            m_terosCam->moveUp(m_camspeed, -0.05);
+            run();
+            break;
         case 's':
-            move(m_camspeed, -0.05);
+            m_terosCam->moveForward(m_camspeed, -0.05);
+            run();
+            break;
+            
+        case 'A':
+            m_terosCam->moveRight(m_camspeed, -0.05);
             run();
             break;
             
         case 'a':
             m_terosCam->rotatecam('z', 0.05);
+            run();
+            break;
+            
+            
+        case 'D':
+            m_terosCam->moveRight(m_camspeed, 0.05);
             run();
             break;
         case 'd':
@@ -354,19 +375,16 @@ void TerosTestInterface::handleKeys(int input){
         case KEY_UP:
             m_zoom += 0.5;
             m_terosCam->setzoomfactor(m_zoom);
-            //m_terosCam->drawobjects();
             run();
             break;
             
         case KEY_DOWN:
             m_zoom -= 0.5;
             m_terosCam->setzoomfactor(m_zoom);
-            //m_terosCam->drawobjects();
             run();
             break;
         case ' ':
             m_rotate = !m_rotate;
-            //m_terosCam->drawobjects();
             run();
             break;
             

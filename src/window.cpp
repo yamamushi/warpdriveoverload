@@ -78,9 +78,9 @@ void ncursesWindow::close(){
 
 void ncursesWindow::clearScreen(){
     
-    //standout();
-    //wclear(get());
-    //werase(m_window);
+    standout();
+    wclear(get());
+    werase(m_window);
     wrefresh(m_window);
 
 }
@@ -115,6 +115,7 @@ void ncursesWindow::drawBorder(){
 
         wattroff(m_window, COLOR_PAIR(m_borderColor));
     }
+    
     wrefresh(m_window);
 
     
@@ -127,6 +128,8 @@ int ncursesWindow::colored_chtype(char ch, int attr, int colorPair){
 
 void ncursesWindow::render(){
     
+    refresh();
+    
     for(size_t x = 0; x < m_widgetList.size(); x++){
         m_widgetList.at(x)->render();
     }
@@ -137,11 +140,12 @@ void ncursesWindow::render(){
 
 void ncursesWindow::refresh(){
     
-    clearScreen();
 
     for(size_t x = 0; x < m_widgetList.size(); x++){
         m_widgetList.at(x)->refresh();
     }
+    
+    
     
 }
 

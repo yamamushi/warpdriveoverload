@@ -162,7 +162,9 @@ bool Shell::run(){
         }
         else{
             handleKeys(keyInput);
+            execute();
         }
+        m_topInterface->getWindow()->refresh();
         m_topInterface->getWindow()->render();
 
         FpsCounter::Instance()->update();

@@ -253,7 +253,7 @@ void GraphChart::clearAllRawChartPoints(){
     } */
     //wrefresh(getParent()->get());
     m_rawchartPoints.clear();
-    wrefresh(getParent()->get());
+    //wrefresh(getParent()->get());
 
 }
 

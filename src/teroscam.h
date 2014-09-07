@@ -81,6 +81,9 @@ public:
     
     // Passing this a negative distance will result in moving backwards
     void moveForward( double speed, double distance);
+    void moveRight( double speed, double distance);
+    void moveUp( double speed, double distance);
+
     
     double putcamx ();
     double putcamy ();

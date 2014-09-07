@@ -325,7 +325,6 @@ void TerosCam::clearview ()
         view [i].fg = 0;
         view [i].bg = 0;
         view [i].attr = A_NORMAL;
-        
 		viewdepth [i] = -1.0;
 	}
 }
@@ -451,7 +450,7 @@ void TerosCam::setViewMatrix(){
     viewMatrix.set_row(0,  vmml::vector<4, double>(cambasisx[0], cambasisx[1], cambasisx[2], 0.0));
     viewMatrix.set_row(1,  vmml::vector<4, double>(cambasisy[0], cambasisy[1], cambasisy[2], 0.0));
     viewMatrix.set_row(2,  vmml::vector<4, double>(cambasisz[0], cambasisz[1], cambasisz[2], 0.0));
-    viewMatrix.set_row(3,  vmml::vector<4, double>(m_camx, m_camy, m_camz, 1.0));
+    viewMatrix.set_row(3,  vmml::vector<4, double>(m_camx,       m_camy,       m_camz,       1.0));
 
 }
 
@@ -841,7 +840,6 @@ TerosObject * TerosCam::putobj (int index)
 }
 
 
-
 void TerosCam::moveForward( double speed, double distance){
     
     m_speed = speed;
@@ -850,11 +848,14 @@ void TerosCam::moveForward( double speed, double distance){
     //    X     Y     Z
     viewMatrix = viewMatrix * (distance*m_speed);
     
+    vmml::vector<4, double> look(cambasisx[0], cambasisy[0], cambasisz[0], m_camz);
+    
     vmml::vector<4, double> translation;
     translation = viewMatrix;
-
-    m_position = m_position + translation;
-
+    
+    look = look * (distance*speed);
+    m_position = m_position + look;
+    
     m_camx = m_position.x();
     m_camy = m_position.y();
     m_camz = m_position.z();
@@ -862,3 +863,56 @@ void TerosCam::moveForward( double speed, double distance){
     setcampos(m_camx, m_camy, m_camz);
     
 }
+
+
+void TerosCam::moveRight( double speed, double distance){
+
+    m_speed = speed;
+    
+    //  Right - Up - Look
+    //    X     Y     Z
+    viewMatrix = viewMatrix * (distance*m_speed);
+    
+    vmml::vector<4, double> right(cambasisx[1], cambasisy[1], cambasisz[1], m_camz);
+    
+    vmml::vector<4, double> translation;
+    translation = viewMatrix;
+    
+    right = right * (distance*speed);
+    m_position = m_position + right;
+    
+    m_camx = m_position.x();
+    m_camy = m_position.y();
+    m_camz = m_position.z();
+    
+    setcampos(m_camx, m_camy, m_camz);
+}
+
+
+
+void TerosCam::moveUp( double speed, double distance){
+    
+    m_speed = speed;
+    
+    //  Right - Up - Look
+    //    X     Y     Z
+    viewMatrix = viewMatrix * (distance*m_speed);
+    
+    vmml::vector<4, double> up(cambasisx[2], cambasisy[2], cambasisz[2], m_camz);
+    
+    vmml::vector<4, double> translation;
+    translation = viewMatrix;
+    
+    up = up * (-distance*speed);
+    m_position = m_position + up;
+    
+    m_camx = m_position.x();
+    m_camy = m_position.y();
+    m_camz = m_position.z();
+    
+    setcampos(m_camx, m_camy, m_camz);
+}
+
+
+
+
