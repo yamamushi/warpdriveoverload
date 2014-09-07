@@ -155,6 +155,7 @@ bool Shell::run(){
 	{
         refresh();
         doupdate();
+        //wclear(m_topInterface->getWindow()->get());
 
         if((keyInput = getch()) == ERR){
             execute();
@@ -210,7 +211,6 @@ void Shell::execute(){
         m_topInterface->getWindow()->clearScreen();
         m_topInterface->init();
     }
-    
     m_topInterface->run();
 }
 

@@ -1,5 +1,5 @@
-include_directories(${wpoclient_SOURCE_DIR}/src/ 
-			${wpoclient_SOURCE_DIR}/deps/vmmlib/include/
+include_directories(${WARPDRIVEOVERLOADED_SOURCE_DIR}/src/
+			${WARPDRIVEOVERLOADED_SOURCE_DIR}/deps/vmmlib/include/
 			)
 
 include_directories(${ProtobufIncludePath})

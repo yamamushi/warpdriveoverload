@@ -131,7 +131,7 @@ void TerosTestInterface::move(double speedws, double distance){
 void TerosTestInterface::run(){
     
     //m_mainWindow->refresh();
-    redrawwin(m_mainWindow->get());
+    //redrawwin(m_mainWindow->get());
 
 
     m_terosCam1->drawobjects();
@@ -257,30 +257,38 @@ void TerosTestInterface::handleKeys(int input){
             
         case 'x':
             m_direction = 0;
+            run();
             break;
         case 'X':
             m_direction = 1;
+            run();
             break;
         case 'y':
             m_direction = 2;
+            run();
             break;
         case 'Y':
             m_direction = 3;
+            run();
             break;
         case 'z':
             m_direction = 4;
+            run();
             break;
         case 'Z':
             m_direction = 5;
+            run();
             break;
             
         case 't':
             if(!m_objectSelected){
                 m_terosCam = m_terosCam2;
                 m_objectSelected = true;
+                run();
             }else{
                 m_terosCam = m_terosCam1;
                 m_objectSelected = false;
+                run();
             }
             
             break;
@@ -356,6 +364,7 @@ void TerosTestInterface::handleKeys(int input){
             
         default:
             m_widgetManager->handleKeys(input);
+            run();
             break;
     }
     

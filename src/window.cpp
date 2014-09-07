@@ -78,10 +78,11 @@ void ncursesWindow::close(){
 
 void ncursesWindow::clearScreen(){
     
-    standout();
-    wclear(get());
-    werase(m_window);
-    
+    //standout();
+    //wclear(get());
+    //werase(m_window);
+    wrefresh(m_window);
+
 }
 
 void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br){
