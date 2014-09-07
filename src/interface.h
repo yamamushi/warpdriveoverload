@@ -29,7 +29,7 @@
 
 class Interface;
 class ncursesInterface;
-class ncursesWindow;
+class GenericWindow;
 class Widget;
 class Shell;
 class WidgetManager;
@@ -70,7 +70,7 @@ public:
     void queueCommand(_STD_FUNCTION(void()) target);
     //void unqueueCommand(_STD_FUNCTION(void()) target);
     
-    _SharedPtr<ncursesWindow> getWindow(){return m_mainWindow;}
+    _SharedPtr<GenericWindow> getWindow(){return m_mainWindow;}
     
     virtual void run();
     virtual void init(){};
@@ -96,8 +96,8 @@ protected:
     
     std::vector<_SharedPtr<Widget> > m_widgetList;
     
-    std::vector<_SharedPtr<ncursesWindow> > m_windowList;
-    _SharedPtr<ncursesWindow> m_mainWindow;
+    std::vector<_SharedPtr<GenericWindow> > m_windowList;
+    _SharedPtr<GenericWindow> m_mainWindow;
     
     void addToHandler(){InterfaceHandler::instance()->addInterface(shared_from_this());}
     

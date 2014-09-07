@@ -12,6 +12,8 @@ CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/
 
 
 add_executable(client main.cpp
+            GraphicsDriverManager.cpp
+            NcursesManager.cpp
 			ship.cpp
 			player.cpp
 			room.cpp
@@ -20,7 +22,6 @@ add_executable(client main.cpp
             game_engine.cpp
             term_control.cpp
             window.cpp
-            menu.cpp
             graphchart.cpp
             interface.cpp
             debugWindow.cpp
@@ -43,6 +44,9 @@ add_executable(client main.cpp
             Clock.cpp
             windowthread.cpp
             Hermes.cpp
+            ncurseswindow.cpp
+            sdlwindow.cpp
+            aalibwindow.cpp
             )
             
 target_link_libraries(client messages)

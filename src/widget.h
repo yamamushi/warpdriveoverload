@@ -12,16 +12,16 @@
 
 #include "window.h"
 
-class ncursesWindow;
+class GenericWindow;
 
 class Widget {
     
 public:
     
-    Widget(_SharedPtr<ncursesWindow> parent = nullptr, int xpos=0, int ypos=0) : m_parent(parent), m_xpos(xpos), m_ypos(ypos){};
+    Widget(_SharedPtr<GenericWindow> parent = nullptr, int xpos=0, int ypos=0) : m_parent(parent), m_xpos(xpos), m_ypos(ypos){};
     
-    void setParent(_SharedPtr<ncursesWindow> parent){m_parent = parent;}
-    _SharedPtr<ncursesWindow> getParent(){return m_parent;}
+    void setParent(_SharedPtr<GenericWindow> parent){m_parent = parent;}
+    _SharedPtr<GenericWindow> getParent(){return m_parent;}
     
     virtual void render(){}
     virtual void refresh(){}
@@ -33,7 +33,7 @@ public:
     
 protected:
     
-    _SharedPtr<ncursesWindow> m_parent;
+    _SharedPtr<GenericWindow> m_parent;
     
     int m_xpos;
     int m_ypos;

@@ -126,7 +126,7 @@ class TerosScreen : public Widget
 {
     
 public:
-    TerosScreen (_SharedPtr<ncursesWindow> owner, int xpos, int ypos, _SharedPtr<GraphChart> renderObject);
+    TerosScreen (_SharedPtr<GenericWindow> owner, int xpos, int ypos, _SharedPtr<GraphChart> renderObject);
     
     
     // New Functions

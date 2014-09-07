@@ -9,11 +9,15 @@
 #include "terostest.h"
 #include "terospolygon.h"
 #include "logger.h"
+#include "ncurseswindow.h"
 
 #include "SphereModel.h"
 
 
 void TerosTestInterface::init(){
+    
+    m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_owner->getHeight(), m_owner->getWidth(), 0, 0)); // Initialize our root window
+
 
     // Our variable initialization
     m_rotspeed = 0.1;

@@ -22,17 +22,28 @@
 
 #include "shipdata.pb.h"
 
+
 #include "logger.h"
 
 #include <algorithm>
 
+
+#include "NcursesManager.h"
+
 void Shell::boot(){
     
-    std::cout << "Welcome to Warp Core Overloaded" << std::endl;
-    sleep(1);
-    std::cout << "Please standby for Nostradamus OS boot" << std::endl;
-    sleep(1);
-    term_clear();
+    m_graphicsManager = new NcursesManager;
+    
+    
+    if(!m_graphicsManager->start()){
+        std::cout << "Error Starting Graphics Manager" << std::endl;
+        exit(1);
+    }
+    else{
+        m_rows = m_graphicsManager->getHeight();
+        m_cols = m_graphicsManager->getWidth();
+    }
+ 
     init();
     
 }
@@ -40,7 +51,8 @@ void Shell::boot(){
 
 void Shell::refreshShell(){
     
-    getmaxyx(stdscr,m_rows,m_cols);
+    m_rows = m_graphicsManager->getHeight();
+    m_cols = m_graphicsManager->getWidth();
     
     for(size_t x = 0; x < m_windows.size(); x++){
         m_windows.at(x)->resize(m_rows, m_cols, 0, 0);
@@ -53,26 +65,7 @@ void Shell::refreshShell(){
 }
 
 bool Shell::init(){
-    
-    initscr();
-    
-    if(has_colors() == FALSE)
-	{
-        endwin();
-        std::cout << "Your terminal does not support color\n" << std::endl;
-		exit(1);
-	}
 
-    getmaxyx(stdscr,m_rows,m_cols);
-
-    
-    //raw(); // disable line buffering
-    cbreak();			// Line buffering disabled, Pass on
-    keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
-    noecho();			/* Don't echo() while we do getch */
-    start_color();			/* Start color 			*/
-    curs_set(0);
-    refresh();
     
     
     /*
@@ -155,7 +148,6 @@ bool Shell::run(){
 	{
         refresh();
         doupdate();
-        //wclear(m_topInterface->getWindow()->get());
 
         if((keyInput = getch()) == ERR){
             execute();
@@ -175,26 +167,13 @@ bool Shell::run(){
     return true;
 }
 
-void Shell::setmaxfps(int fps){
-    
-    if(fps < 1)
-        fps = 1;
-    
-    if(fps > 1000)
-        fps = 1000;
-    
-    m_maxfps = fps;
-    
-    timeout(1000/m_maxfps);
-
-};
 
 
 
 void Shell::initMainWindow(){
 
     m_topInterface = m_interfaceList.at(0);
-    keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
+
     m_topInterface->init();
     
 }
@@ -258,12 +237,16 @@ bool Shell::checkForResize(){
 
 int Shell::getfps(){
     
-    int fps = FpsCounter::Instance()->get();
-    
-    return fps;
+    return m_graphicsManager->getfps();
     
 }
 
+
+void Shell::setmaxfps(int fps){
+    
+    m_graphicsManager->setmaxfps(fps);
+    
+}
 
 
 void Shell::loadInterfaces(_SharedPtr<Shell> parent){
@@ -350,13 +333,13 @@ void Shell::organizeInterfaces(){
 
 void Shell::createWindow(int ysize, int xsize){
     
-    _SharedPtr<ncursesWindow> new_window = _SharedPtr<ncursesWindow>(new ncursesWindow(m_rows, m_cols, 0, 0)); // Initialize our root window
+    _SharedPtr<GenericWindow> new_window = _SharedPtr<GenericWindow>(new GenericWindow(m_rows, m_cols, 0, 0)); // Initialize our root window
     m_windows.push_back(new_window); // Add to the list of Windows for the window manager.
     
 }
 
 
-void Shell::addToWindowList(_SharedPtr<ncursesWindow> target){
+void Shell::addToWindowList(_SharedPtr<GenericWindow> target){
     
     m_windows.push_back(target); // Add to the list of Windows for the window manager.
     
@@ -374,9 +357,9 @@ void Shell::removeFromInterfaceList(_SharedPtr<Interface> target){
 
 
 
-void Shell::removeFromWindowList(_SharedPtr<ncursesWindow> target){
+void Shell::removeFromWindowList(_SharedPtr<GenericWindow> target){
     
-    std::vector<_SharedPtr<ncursesWindow>>::iterator it = std::find(m_windows.begin(), m_windows.end(), target);
+    std::vector<_SharedPtr<GenericWindow>>::iterator it = std::find(m_windows.begin(), m_windows.end(), target);
     if (it != m_windows.end()){
         m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), target), m_windows.end());
     }
@@ -395,7 +378,7 @@ void Shell::shutdown(){
 }
 
 
-void Shell::close_win(_SharedPtr<ncursesWindow> target_window){
+void Shell::close_win(_SharedPtr<GenericWindow> target_window){
     
     target_window->close();
     

@@ -12,13 +12,13 @@
 #include "widget.h"
 #include "window.h"
 
-class ncursesWindow;
+class GenericWindow;
 
 class ConnectionWidget: public Widget {
     
 public:
     
-    ConnectionWidget(_SharedPtr<ncursesWindow> parent, int xpos, int ypos) : Widget(parent){};
+    ConnectionWidget(_SharedPtr<GenericWindow> parent, int xpos, int ypos) : Widget(parent){};
     
     void render();
     void refresh();

@@ -1,3 +1,4 @@
+#pragma once
 //
 //  shell.h
 //  warpdriveoverloaded
@@ -16,8 +17,8 @@
 #include <unistd.h>
 #endif
 
+#include "GraphicsDriverManager.h"
 
-#include "term_control.h"
 #include "game_engine.h"
 #include "tr1_wrapper.h"
 #include "window.h"
@@ -32,10 +33,11 @@
 #include "ColorManager.h"
 #include "Clock.h"
 
+class GraphicsDriverManager;
+
 struct GraphChartPoint;
 
 class Interface;
-
 
 class Shell : public std::enable_shared_from_this<Shell>{
     
@@ -77,8 +79,8 @@ protected:
     bool init();
     void populateInterfaces();
     
-    void addToWindowList(_SharedPtr<ncursesWindow> target);
-    void removeFromWindowList(_SharedPtr<ncursesWindow> target);
+    void addToWindowList(_SharedPtr<GenericWindow> target);
+    void removeFromWindowList(_SharedPtr<GenericWindow> target);
     
     _SharedPtr<Shell> getSharedPtr(){return shared_from_this();}
 
@@ -88,15 +90,14 @@ protected:
     void handleKeys(int input);
     
     void initMainWindow();
-    _SharedPtr<ncursesWindow> getLastWindow(){return m_windows.back();}
+    _SharedPtr<GenericWindow> getLastWindow(){return m_windows.back();}
     
     void createWindow(int ysize, int xsize);
-    void close_win(_SharedPtr<ncursesWindow> target_window);
+    void close_win(_SharedPtr<GenericWindow> target_window);
     
     void organizeInterfaces();
     
     bool checkForResize();
-
 
     std::vector<_SharedPtr<Interface> > m_interfaceList;
     
@@ -104,17 +105,22 @@ private:
     
     _SharedPtr<Nostradamus> m_parent;
     
+    GraphicsDriverManager *m_graphicsManager;
+    
     int m_maxfps;
     
-    _SharedPtr<ncursesWindow> m_mainWindow;
+    _SharedPtr<GenericWindow> m_mainWindow;
     _SharedPtr<Interface> m_topInterface;
     
-    std::vector<_SharedPtr<ncursesWindow> > m_windows;
+    std::vector<_SharedPtr<GenericWindow> > m_windows;
     
     bool m_running;
     
     int m_rows;
     int m_cols;
+    
+    // Start Up Object
+    
     
 };
 

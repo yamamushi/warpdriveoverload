@@ -7,10 +7,11 @@
 //
 
 #include "graphchart.h"
+
 #include <stdlib.h>
 #include <algorithm>
 
-GraphChart::GraphChart(_SharedPtr<ncursesWindow> parent, int xpos, int ypos) : Widget(parent, xpos, ypos){
+GraphChart::GraphChart(_SharedPtr<GenericWindow> parent, int xpos, int ypos) : Widget(parent, xpos, ypos){
     
     m_showBars = true;
     m_showBorder = true;
@@ -18,8 +19,8 @@ GraphChart::GraphChart(_SharedPtr<ncursesWindow> parent, int xpos, int ypos) : W
     m_xSize = 3;
     m_ySize = 4;
     
-    getmaxyx(getParent()->get(), m_height, m_width);
-    
+    m_width = m_parent->getX();
+    m_height = m_parent->getY();
     generateChart();
     
 }
@@ -247,13 +248,7 @@ void GraphChart::clearAllChartPoints(){
 
 void GraphChart::clearAllRawChartPoints(){
    
-    /*
-    for(int x=0; x < m_rawchartPoints.size(); x++){
-        removePoint(m_rawchartPoints.at(x));
-    } */
-    //wrefresh(getParent()->get());
     m_rawchartPoints.clear();
-    //wrefresh(getParent()->get());
 
 }
 
@@ -272,8 +267,6 @@ void GraphChart::resize(int width, int height){
     
     if(height >= 0 && height <= m_parent->getY())
         m_height = height;
-    
-    
 }
 
 

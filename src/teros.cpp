@@ -327,7 +327,7 @@ string TerosWindow::putactivetext (int index)
 
 
 
-TerosScreen::TerosScreen (_SharedPtr<ncursesWindow> owner, int xpos, int ypos, _SharedPtr<GraphChart> renderObject) : Widget(owner)
+TerosScreen::TerosScreen (_SharedPtr<GenericWindow> owner, int xpos, int ypos, _SharedPtr<GraphChart> renderObject) : Widget(owner)
 {
 	m_xpos = xpos;
     m_ypos = ypos;

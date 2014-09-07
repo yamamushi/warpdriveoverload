@@ -13,13 +13,13 @@
 #include "widget.h"
 #include "window.h"
 
-class ncursesWindow;
+class GenericWindow;
 
 class TimeWidget: public Widget {
     
 public:
     
-    TimeWidget(_SharedPtr<ncursesWindow> parent, int xpos, int ypos) : Widget(parent){};
+    TimeWidget(_SharedPtr<GenericWindow> parent, int xpos, int ypos) : Widget(parent){};
     
     void render();
     void refresh();

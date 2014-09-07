@@ -9,15 +9,17 @@
 #ifndef __warpdriveoverloaded__MenuWidget__
 #define __warpdriveoverloaded__MenuWidget__
 
+#include "tr1_wrapper.h"
+#include "tr1_threading.h"
 #include "widget.h"
 
-class ncursesWindow;
+class GenericWindow;
 
 class MenuWidget : public Widget {
     
 public:
     
-    MenuWidget(_SharedPtr<ncursesWindow> parent, int xpos, int ypos) : Widget(parent, xpos, ypos){};
+    MenuWidget(_SharedPtr<GenericWindow> parent, int xpos, int ypos) : Widget(parent, xpos, ypos){};
     
     void render(){};
     void refresh(){};

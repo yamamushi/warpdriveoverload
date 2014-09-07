@@ -15,15 +15,17 @@
 #include "connectionwidget.h"
 #include "TimeWidget.h"
 #include "shell.h"
+#include "ncurseswindow.h"
 
 #include <vector>
-#include <ncurses.h>
 
 #include <iostream>
 
 
 void NavigationInterface::init(){
     
+    m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_owner->getHeight(), m_owner->getWidth(), 0, 0)); // Initialize our root window
+
     // By the time we get here, we should have already have had a window created and ready for us.
     m_mainWindow->clearScreen();
 
@@ -48,8 +50,8 @@ void NavigationInterface::init(){
     //graphController->move(3, 3);
     //graphController->resizeWindow(10, 20);
     
-    _SharedPtr<GraphChartPoint> point(new GraphChartPoint( 3, 3, "O", COLOR_RED, COLOR_BLACK));
-    graphController->addChartPoint(point);
+    //_SharedPtr<GraphChartPoint> point(new GraphChartPoint( 3, 3, "O", COLOR_RED, COLOR_BLACK));
+    //graphController->addChartPoint(point);
     
 /*
     // Bottom Left
@@ -67,19 +69,19 @@ void NavigationInterface::init(){
     m_mainWindow->hideBorder();
     
     */
-    
+    /*
     std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > navigationMenuList;
     std::pair<std::string, _STD_FUNCTION(void())> Menu("Menu", _STD_BIND(&NavigationInterface::doNothing, this));
     navigationMenuList.push_back(Menu);
-
+*/
   
     m_mainWindow->hideBorder();
-
+/*
     
     std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList;
     std::pair<std::string, _STD_FUNCTION(void())> itemExit("Exit", _STD_BIND(&Shell::quit, m_owner));
     subMenuList.push_back(itemExit);
-
+*/
 
     graphController->hideBars();
     graphController->refresh();
@@ -167,7 +169,7 @@ void NavigationInterface::getInput(){
                 testString += input;
         
             //m_mainWindow->drawAt((m_mainWindow->getX()/2), (m_mainWindow->getY()/2), "             ");
-            m_mainWindow->clearLine( (m_mainWindow->getY()/2), (m_mainWindow->getX()/2));
+            m_mainWindow->clearLineFrom( (m_mainWindow->getY()/2), (m_mainWindow->getX()/2));
             
             m_mainWindow->drawAt((m_mainWindow->getX()/2), (m_mainWindow->getY()/2), testString);
         

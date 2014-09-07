@@ -1,4 +1,4 @@
-#
+#pragma once
 //
 //  window.h
 //  warpdriveoverloaded
@@ -6,21 +6,21 @@
 //  Created by Jonathan Rumion on 8/28/14.
 //  Copyright (c) 2014 TAP. All rights reserved.
 //
+//
+//  A generic display template for rendering.
+//
+//
 
 #ifndef __warpdriveoverloaded__window__
 #define __warpdriveoverloaded__window__
 
-#include <ncurses.h>
 #include <vector>
-#include "menu.h"
+#include <string>
+
 #include "tr1_wrapper.h"
 #include "widget.h"
-#include "ColorManager.h"
 
-#include <string>
-#include <ncurses.h>
 
-class ncursesMenu;
 class Widget;
 
 struct winBorder {
@@ -35,68 +35,77 @@ struct Pixel {
     int attr;
     int fg;
     int bg;
-    std::string s;
+    char c;
     
-    Pixel(int px=0, int py=0, int attributes=0, int fgcolor=0, int bgcolor=0, std::string symbol=" ") : x(px), y(py), attr(attributes), fg(fgcolor), bg(bgcolor), s(symbol){};
+    Pixel(int px=0, int py=0, int attributes=0, int fgcolor=0, int bgcolor=0, char symbol=' ') : x(px), y(py), attr(attributes), fg(fgcolor), bg(bgcolor), c(symbol){};
     
 };
 
 
-class ncursesWindow : public std::enable_shared_from_this<ncursesWindow>{
+class GenericWindow : public std::enable_shared_from_this<GenericWindow>{
     
 public:
-    ncursesWindow(int height, int length, int ypos, int xpos);
+   
+    GenericWindow(int height, int length, int ypos, int xpos);
     
-    WINDOW * get(){return m_window;}
-    void close();
     
-//    void addMenu(_SharedPtr<ncursesMenu> target){m_menuList.push_back(target);}
-    void addWidget(_SharedPtr<Widget> target);
-    void removeWidget(_SharedPtr<Widget> target);
-
+    // Generic Window information
     int getX(){return m_length;};
     int getY(){return m_height;};
     int getXpos(){return m_xpos;};
     int getYpos(){return m_ypos;};
     
-    void clearArea(int x1, int y1, int x2, int y2);
-    void clearRowBetween(int x1, int x2, int row);
-    void clearColumnBetween(int y1, int y2, int column);
+    
+    // Widget Management
+    void addWidget(_SharedPtr<Widget> target);
+    void removeWidget(_SharedPtr<Widget> target);
 
-    void clearLine(int line, int from=0){clearRow(line, from);}
-    void clearRow(int row, int from=0);
-    void clearColumn(int column, int from=0);
+
+    // Screen Drawing
+    virtual void render(){};
+    virtual void refresh(){};
+    virtual void clearScreen(){};
+    virtual void close(){};
+
+    virtual void clearArea(int x1, int y1, int x2, int y2){};
+    virtual void clearRowBetween(int x1, int x2, int row){};
+    virtual void clearColumnBetween(int y1, int y2, int column){};
+
+    void clearLineFrom(int line, int from=0){clearRow(line, from);}
+    virtual void clearRow(int row, int from=0){};
+    virtual void clearColumn(int column, int from=0){};
     
-    void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
-    _SharedPtr<winBorder> getBorder(){return m_border;}
-    void drawBorder();
+    virtual void drawAt(int x, int y, std::string output){};
+    virtual void drawAt(int x, int y, std::string output, int fg, int bg=0, int attr=0){};
+    virtual void drawAt(int x, int y, char c){};
+    virtual void drawAt(int x, int y, char c, int fg, int bg=0, int attr=0){};
     
+    virtual void putPixel(_SharedPtr<Pixel> point){};
+    virtual void move(int newX, int newY){m_xpos = newX; m_ypos = newY;}
+    // Resize is Virtual because some drivers may handle this differently .
+    virtual void resize(int height, int length, int ypos=0, int xpos=0){};
+    virtual void drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg=0, int bg=0, int attr=0){};
+    
+    
+    
+    // Border Management
     void showBorder(){m_showBorder = true;}
     void hideBorder(){m_showBorder = false;}
     void toggleBorder(){m_showBorder = !m_showBorder;}
-    
-    int colored_chtype(char ch, int attr, int colorPair);
-    
-    void render();
-    void refresh();
-    
-    void handleKeys(int input);
-    void clearScreen();
-    
-    void drawAt(int x, int y, std::string output);
-    void drawAt(int x, int y, std::string output, int fg, int bg=0, int attr=0);
-    void drawAt(int x, int y, char c);
-    void drawAt(int x, int y, char c, int fg, int bg=0, int attr=0);
-    
-    void putPixel(_SharedPtr<Pixel> point);
-    
-    void move(int newX, int newY);
-    void resize(int height, int length, int ypos, int xpos);
-    
-    void drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg=0, int bg=0, int attr=0);
+    void setborder(char ls, char rs, char ts, char bs, char tl, char tr, char bl, char br);
+    virtual void drawBorder(){};
+    _SharedPtr<winBorder> getBorder(){return m_border;}
+
+
+    // Other Needed Functions
+    virtual void handleKeys(int input){};
     
     
-    void setNormalColor(int fg, int bg);
+    // Color Management
+    
+    
+    
+    virtual void setNormalColor(int fg, int bg){};
     int getNormalColor(){return m_normalColor;}
     
     void setFGColor(int color){m_fgColor = color;}
@@ -106,8 +115,7 @@ public:
     int getBGColor(){return m_bgColor;}
     
     
-    
-    void setSelectedColor(int fg, int bg=0);
+    virtual void setSelectedColor(int fg, int bg=0){};
     int getSelectedColor(){return m_selectedColor;}
     
     void setSelectedColorfg(int fg){ m_selectedColorfg = fg;};
@@ -117,8 +125,7 @@ public:
     int getSelectedColorbg(){return m_selectedColorbg;}
     
     
-    
-    void setCursorColor(int fg, int bg=0);
+    virtual void setCursorColor(int fg, int bg=0){};
     int getCursorColor(){return m_cursorColor;}
     
     void setCursorColorfg(int fg){ m_cursorColorfg = fg;};
@@ -128,8 +135,7 @@ public:
     int getCursorColorbg(){return m_cursorColorbg;}
     
     
-    
-    void setBorderColor(int fg, int bg=0);
+    virtual void setBorderColor(int fg, int bg=0){};
     int getBorderColor(){return m_borderColor;}
     
     void setBorderColorfg(int fg){ m_borderColorfg = fg;};
@@ -138,26 +144,21 @@ public:
     void setBorderColorbg(int bg){ m_borderColorbg = bg;};
     int getBorderColorbg(){return m_borderColorbg;}
     
-    
-    
-    short checkColorPair(short wanted_fore, int wanted_back);
-    
-private:
-    
-    int m_height, m_length, m_ypos, m_xpos;
-    int m_colorPaircount;
+protected:
 
+    // Data only our child classes should ever touch
+    int m_height, m_length, m_ypos, m_xpos;
     
-    WINDOW *m_window;
-    
-    std::vector<_SharedPtr<ncursesWindow>> m_windowList;
+    std::vector<_SharedPtr<GenericWindow>> m_windowList;
     std::vector<_SharedPtr<Widget>> m_widgetList;
     
+    
+    // Border Objects
+    _SharedPtr<winBorder> m_border;
     bool m_showBorder;
-    
-    void drawLineCallBack(int x, int y, std::string output, int fg=0, int bg=0, int attr=0);
-    
 
+    
+    // Colors
     int m_selectedColor;
     int m_selectedColorfg;
     int m_selectedColorbg;
@@ -174,9 +175,6 @@ private:
     int m_borderColorfg;
     int m_borderColorbg;
 
-
-    _SharedPtr<winBorder> m_border;
-    int m_color;
 };
 
 

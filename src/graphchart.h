@@ -31,7 +31,7 @@ struct GraphChartPoint {
     
     int m_attr;
     
-    GraphChartPoint(int x = -1, int y = -1, std::string symbol = "", int fg = -1, int bg=-1, int attr=A_NORMAL, bool hidden = false)
+    GraphChartPoint(int x = -1, int y = -1, std::string symbol = "", int fg = -1, int bg=-1, int attr=0, bool hidden = false)
     : m_X(x), m_Y(y), m_fg(fg), m_bg(bg), m_symbol(symbol), m_hidden(hidden), m_attr(attr){}
     
 };
@@ -40,7 +40,7 @@ class GraphChart : public Widget {
     
 public:
     
-    GraphChart(_SharedPtr<ncursesWindow> parent, int xpos=0, int ypos=0);
+    GraphChart(_SharedPtr<GenericWindow> parent, int xpos=0, int ypos=0);
     
     void render();
     void refresh();
@@ -76,7 +76,7 @@ public:
     std::vector<_SharedPtr<GraphChartPoint> > getAllRawChartPoints(){return m_rawchartPoints;}
     void clearAllRawChartPoints();
     
-    void clearAll(){wclear(m_parent->get());}
+    void clearAll(){m_parent->clearScreen();}
 
     void resizeWindow(int height, int width){m_height = height; m_width = width; generateChart();}
     void handleKeys(int input);

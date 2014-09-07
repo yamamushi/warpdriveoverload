@@ -33,7 +33,7 @@ protected:
     
 private:
     
-    _SharedPtr<ncursesWindow> m_window;
+    _SharedPtr<GenericWindow> m_window;
     
 };
 

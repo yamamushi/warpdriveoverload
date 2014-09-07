@@ -12,6 +12,7 @@
 #include "game_engine.h"
 #include "tr1_wrapper.h"
 #include "shell.h"
+#include "term_control.h"
 #include <locale.h>
 
 int main(int argc, char **argv){

@@ -41,7 +41,7 @@ private:
     
     _SharedPtr<Widget> m_activeWidget;
     
-    _SharedPtr<ncursesWindow> m_mainWindow;
+    _SharedPtr<GenericWindow> m_mainWindow;
     Interface *m_owner;
     
 };
