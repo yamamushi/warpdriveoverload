@@ -190,8 +190,8 @@ void SphereModel::reset(){
 
 bool SphereModel::rayIntersectsTriangle(Vector3D point, Vector3D direction, Vector3D pt1, Vector3D pt2, Vector3D pt3) {
     
-	//float e1[3],e2[3],h[3],s[3],q[3];
-	float a,f,u,v, t;
+	//double e1[3],e2[3],h[3],s[3],q[3];
+	double a,f,u,v, t;
 	Vector3D e1 = pt2 - pt1;
 	Vector3D e2 = pt3 - pt1;
 

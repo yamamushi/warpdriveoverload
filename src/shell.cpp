@@ -203,7 +203,6 @@ void Shell::execute(){
     
     if(checkForResize()){
         m_topInterface->getWindow()->clearScreen();
-        //redrawwin(stdscr);
         m_topInterface->resizeConsole(m_cols, m_rows);
         m_topInterface->getWindow()->refresh();
     }

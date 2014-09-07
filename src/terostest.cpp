@@ -24,10 +24,12 @@ void TerosTestInterface::init(){
     m_objectSelected = false;
     
     // Set our camera position
-    m_camx = -2.0;
+    m_camx = -3.0;
     m_camy = 1.0;
     m_camz = 0.0;
     
+    
+    m_ticks = 0;
     
     
     // Clear anything that was on the parent window
@@ -133,6 +135,12 @@ void TerosTestInterface::move(double speedws, double distance){
 
 void TerosTestInterface::run(){
 
+    update();
+    
+    //if(m_secondsElapsed < 3){
+        m_terosCam->rotateCamAroundAxis(vmml::vector<3, double>(0,0,1), 0.5);
+    //}
+    
     resizeComponents();
 
     m_terosCam1->drawobjects();
@@ -216,10 +224,17 @@ void TerosTestInterface::draw(){
     m_mainWindow->drawAt((m_width-40), 15, "PositionY: " + std::to_string(m_terosCam->putcamy()));
     m_mainWindow->drawAt((m_width-40), 16, "PositionZ: " + std::to_string(m_terosCam->putcamz()));
     
-    m_mainWindow->drawAt((m_width-40), 18, "Yaw   : " + std::to_string(m_terosCam->getAngleX().x()) + ", " + std::to_string(m_terosCam->getAngleX().y()) + ", " + std::to_string(m_terosCam->getAngleX().z()));
-    m_mainWindow->drawAt((m_width-40), 19, "Roll  : " + std::to_string(m_terosCam->getAngleY().x()) + ", " + std::to_string(m_terosCam->getAngleY().y()) + ", " + std::to_string(m_terosCam->getAngleY().z()));
-    m_mainWindow->drawAt((m_width-40), 20, "Pitch : " + std::to_string(m_terosCam->getAngleZ().x()) + ", " + std::to_string(m_terosCam->getAngleZ().y()) + ", " + std::to_string(m_terosCam->getAngleZ().z()));
+    m_mainWindow->drawAt((m_width-40), 18, "Distance from Center: " + std::to_string(Distance(0, 0, m_terosCam->putcamx(), m_terosCam->putcamy())));
+
     
+    m_mainWindow->drawAt((m_width-40), 20, "Yaw   : " + std::to_string(m_terosCam->getAngleX().x()) + ", " + std::to_string(m_terosCam->getAngleX().y()) + ", " + std::to_string(m_terosCam->getAngleX().z()));
+    m_mainWindow->drawAt((m_width-40), 21, "Roll  : " + std::to_string(m_terosCam->getAngleY().x()) + ", " + std::to_string(m_terosCam->getAngleY().y()) + ", " + std::to_string(m_terosCam->getAngleY().z()));
+    m_mainWindow->drawAt((m_width-40), 22, "Pitch : " + std::to_string(m_terosCam->getAngleZ().x()) + ", " + std::to_string(m_terosCam->getAngleZ().y()) + ", " + std::to_string(m_terosCam->getAngleZ().z()));
+    
+
+    
+    m_mainWindow->drawAt((m_width-40), (m_height-13), std::to_string(m_secondsElapsed) + ": Time Ticker");
+
     m_mainWindow->drawAt((m_width-40), (m_height-11), "t - Change Selected Camera       ");
     m_mainWindow->drawAt((m_width-40), (m_height-10), "x/y/z: Sphere Rotation           ");
     m_mainWindow->drawAt((m_width-40), (m_height-9), "w/a/s/d: Move Camera             ");
@@ -396,3 +411,56 @@ void TerosTestInterface::handleKeys(int input){
     
     
 }
+
+
+
+
+
+void TerosTestInterface::update(){
+    
+
+        // increase the counter by one
+        m_ticks++;
+        
+        // one second elapsed? (= 1000 milliseconds)
+        if (m_timeKeeper.value() > 1000)
+        {
+            // save the current counter value to m_fps
+            m_secondsElapsed++;
+            
+            // reset the counter and the interval
+            m_ticks    = 0;
+            m_timeKeeper = Interval();
+        }
+    
+    
+    if(m_secondsElapsed > 3){
+        
+        // Do stuff
+        
+        
+        
+        
+        m_secondsElapsed = 0;
+    
+    }
+    
+}
+
+
+
+
+
+
+double TerosTestInterface::Distance(double dX0, double dY0, double dX1, double dY1)
+{
+    return sqrt((dX1 - dX0)*(dX1 - dX0) + (dY1 - dY0)*(dY1 - dY0));
+}
+
+
+
+
+
+
+
+

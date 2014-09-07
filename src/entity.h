@@ -17,10 +17,10 @@ private:
     int m_yPos;
     int m_zPos;
     
-    float m_height;
-    float m_width;
-    float m_mass;
-    float m_length;
+    double m_height;
+    double m_width;
+    double m_mass;
+    double m_length;
     
     int m_xHeading;
     int m_yHeading;

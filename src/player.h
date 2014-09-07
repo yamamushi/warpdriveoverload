@@ -18,7 +18,7 @@ public:
 
 	Player( std::string name );
 	void learn( int& pcskill, std::string name );
-	void damageEvent( float Finit, float Fstam );
+	void damageEvent( double Finit, double Fstam );
 	bool move();
 
     std::string getName(){return m_playerName;}
@@ -36,7 +36,7 @@ private:
 	bool m_isAlive;
 	int m_health;
 	int m_maxHP;
-	float m_stamina;
+	double m_stamina;
 	int m_encumbrance;
 	int m_skillPiloting;
 	int m_skillGunnery;

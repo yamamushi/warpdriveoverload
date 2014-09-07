@@ -1,4 +1,4 @@
-#pragma oncebres
+#pragma once
 
 //
 //  bresenham2d.h

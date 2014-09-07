@@ -15,7 +15,7 @@ class Part : protected Ship {
 		int m_metaLevel;
 		int m_partID;
 		int m_slotSize;
-		float m_sigRadMod;
+		double m_sigRadMod;
 		
 };
 #endif

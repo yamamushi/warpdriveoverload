@@ -24,6 +24,7 @@
 #include <vmmlib/vector.hpp>
 #include <vmmlib/matrix.hpp>
 
+#include "Clock.h"
 #include "Hermes.h"
 
 #include <vector>
@@ -76,6 +77,13 @@ private:
     double m_camspeed;
     
     
+    void update();
+    
+    Interval m_timeKeeper;
+    int m_ticks;
+    int m_secondsElapsed;
+    
+    double Distance(double dX0, double dY0, double dX1, double dY1);
 
 };
 

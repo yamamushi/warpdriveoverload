@@ -9,7 +9,7 @@ class Part : protected Ship {
 		std::string m_partName;
 		int p_slotSize;
 		int p_typeID;
-		float p_sigRadMod;
+		double p_sigRadMod;
 		int p_partHullHP;
 		int p_pGridDraw;
 		int p_mass;

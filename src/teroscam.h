@@ -84,6 +84,9 @@ public:
     void moveRight( double speed, double distance);
     void moveUp( double speed, double distance);
 
+    void rotateCamAroundAxis(vmml::vector<3, double> axis, double degrees);
+    vmml::vector<3, double> rotatePointAroundAxis(vmml::vector<3, double> axis, vmml::vector<3, double> point, double degrees);
+    
     
     double putcamx ();
     double putcamy ();

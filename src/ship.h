@@ -22,7 +22,7 @@ private:
     
     
     int m_scanStrength;
-    float m_sigRadius;
+    double m_sigRadius;
     int m_vol;
     int m_mass;
     int m_maxPartSlots;
@@ -46,7 +46,7 @@ private:
     
     int m_shieldHP;
     int m_maxShieldHP;
-    float m_armorMod;
+    double m_armorMod;
     int m_armorHP;
     int m_maxArmorHP;
     int m_hullHP;

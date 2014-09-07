@@ -118,7 +118,7 @@ void plotLineAA(int x0, int y0, int x1, int y1)
     int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
     int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
     int err = dx-dy, e2, x2;                       /* error value e_xy */
-    int ed = dx+dy == 0 ? 1 : sqrt((float)dx*dx+(float)dy*dy);
+    int ed = dx+dy == 0 ? 1 : sqrt((double)dx*dx+(double)dy*dy);
     
     for ( ; ; ){                                         /* pixel loop */
         //setPixelAA(x0,y0, 255*abs(err-dx+dy)/ed);
@@ -188,13 +188,13 @@ void plotQuadBezierSegAA(int x0, int y0, int x1, int y1, int x2, int y2)
 
 
 
-void plotLineWidth(int x0, int y0, int x1, int y1, float wd)
+void plotLineWidth(int x0, int y0, int x1, int y1, double wd)
 {
     
     int dx = abs(x1-x0), sx = x0 < x1 ? 1 : -1;
     int dy = abs(y1-y0), sy = y0 < y1 ? 1 : -1;
     int err = dx-dy, e2, x2, y2;                          /* error value e_xy */
-    float ed = dx+dy == 0 ? 1 : sqrt((float)dx*dx+(float)dy*dy);
+    double ed = dx+dy == 0 ? 1 : sqrt((double)dx*dx+(double)dy*dy);
     
     for (wd = (wd+1)/2; ; ) {                                   /* pixel loop */
         //setPixelColor(x0,y0,fmax(0,255*(abs(err-dx+dy)/ed-wd+1)));
@@ -303,7 +303,7 @@ void plotQuadBezier(int x0, int y0, int x1, int y1, int x2, int y2)
 }
 
 void plotQuadRationalBezierSeg(int x0, int y0, int x1, int y1,
-                               int x2, int y2, float w)
+                               int x2, int y2, double w)
 {                   /* plot a limited rational Bezier segment, squared weight */
     int sx = x2-x1, sy = y2-y1;                   /* relative values for checks */
     double dx = x0-x2, dy = y0-y2, xx = x0-x1, yy = y0-y1;
@@ -350,7 +350,7 @@ void plotQuadRationalBezierSeg(int x0, int y0, int x1, int y1,
 }
 
 void plotQuadRationalBezier(int x0, int y0, int x1, int y1,
-                            int x2, int y2, float w)
+                            int x2, int y2, double w)
 {                                 /* plot any quadratic rational Bezier curve */
     int x = x0-2*x1+x2, y = y0-2*y1+y2;
     double xx = x0-x1, yy = y0-y1, ww, t, q;
@@ -400,10 +400,10 @@ void plotQuadRationalBezier(int x0, int y0, int x1, int y1,
     plotQuadRationalBezierSeg(x0,y0, x1,y1, x2,y2, w*w);          /* remaining */
 }
 
-void plotRotatedEllipse(int x, int y, int a, int b, float angle)
+void plotRotatedEllipse(int x, int y, int a, int b, double angle)
 {                                   /* plot ellipse rotated by angle (radian) */
-    float xd = (long)a*a, yd = (long)b*b;
-    float s = sin(angle), zd = (xd-yd)*s;                  /* ellipse rotation */
+    double xd = (long)a*a, yd = (long)b*b;
+    double s = sin(angle), zd = (xd-yd)*s;                  /* ellipse rotation */
     xd = sqrt(xd-zd*s), yd = sqrt(yd+zd*s);           /* surrounding rectangle */
     a = xd+0.5; b = yd+0.5; zd = zd*a*b/(xd*yd);           /* scale to integer */
     plotRotatedEllipseRect(x-a,y-b, x+a,y+b, (long)(4*zd*cos(angle)));
@@ -412,7 +412,7 @@ void plotRotatedEllipse(int x, int y, int a, int b, float angle)
 void plotRotatedEllipseRect(int x0, int y0, int x1, int y1, long zd)
 {                  /* rectangle enclosing the ellipse, integer rotation angle */
     int xd = x1-x0, yd = y1-y0;
-    float w = xd*(long)yd;
+    double w = xd*(long)yd;
     if (zd == 0) return plotEllipseRect(x0,y0, x1,y1);          /* looks nicer */
     if (w != 0.0) w = (w-zd)/(w+w);                    /* squared weight of P1 */
     assert(w <= 1.0 && w >= 0.0);                /* limit angle to |zd|<=xd*yd */
@@ -423,13 +423,13 @@ void plotRotatedEllipseRect(int x0, int y0, int x1, int y1, long zd)
     plotQuadRationalBezierSeg(x1,y1-yd, x1,y0, x0+xd,y0, w);
 }
 
-void plotCubicBezierSeg(int x0, int y0, float x1, float y1,
-                        float x2, float y2, int x3, int y3)
+void plotCubicBezierSeg(int x0, int y0, double x1, double y1,
+                        double x2, double y2, int x3, int y3)
 {                                        /* plot limited cubic Bezier segment */
     int f, fx, fy, leg = 1;
     int sx = x0 < x3 ? 1 : -1, sy = y0 < y3 ? 1 : -1;        /* step direction */
-    float xc = -fabs(x0+x1-x2-x3), xa = xc-4*sx*(x1-x2), xb = sx*(x0-x1-x2+x3);
-    float yc = -fabs(y0+y1-y2-y3), ya = yc-4*sy*(y1-y2), yb = sy*(y0-y1-y2+y3);
+    double xc = -fabs(x0+x1-x2-x3), xa = xc-4*sx*(x1-x2), xb = sx*(x0-x1-x2+x3);
+    double yc = -fabs(y0+y1-y2-y3), ya = yc-4*sy*(y1-y2), yb = sy*(y0-y1-y2+y3);
     double ab, ac, bc, cb, xx, xy, yy, dx, dy, ex, *pxy, EP = 0.01;
     /* check for curve restrains */
     /* slope P0-P1 == P2-P3    and  (P0-P3 == P1-P2      or   no slope change) */
@@ -492,7 +492,7 @@ void plotCubicBezier(int x0, int y0, int x1, int y1,
     long xb = x0-x1-x2+x3, xd = xb+4*(x1+x2);
     long yc = y0+y1-y2-y3, ya = yc-4*(y1-y2);
     long yb = y0-y1-y2+y3, yd = yb+4*(y1+y2);
-    float fx0 = x0, fx1, fx2, fx3, fy0 = y0, fy1, fy2, fy3;
+    double fx0 = x0, fx1, fx2, fx3, fy0 = y0, fy1, fy2, fy3;
     double t1 = xb*xb-xa*xc, t2, t[5];
     /* sub-divide curve at gradient sign changes */
     if (xa == 0) {                                               /* horizontal */
@@ -571,8 +571,8 @@ void plotCircleAA(int xm, int ym, int r)
 void plotEllipseRectAA(int x0, int y0, int x1, int y1)
 {        /* draw a black anti-aliased rectangular ellipse on white background */
     long a = abs(x1-x0), b = abs(y1-y0), b1 = b&1;                 /* diameter */
-    float dx = 4*(a-1.0)*b*b, dy = 4*(b1+1)*a*a;            /* error increment */
-    float ed, i, err = b1*a*a-dx+dy;                        /* error of 1.step */
+    double dx = 4*(a-1.0)*b*b, dy = 4*(b1+1)*a*a;            /* error increment */
+    double ed, i, err = b1*a*a-dx+dy;                        /* error of 1.step */
     bool f;
     
     if (a == 0 || b == 0) return plotLine(x0,y0, x1,y1);
@@ -619,7 +619,7 @@ void plotEllipseRectAA(int x0, int y0, int x1, int y1)
 
 
 void plotQuadRationalBezierSegAA(int x0, int y0, int x1, int y1,
-                                 int x2, int y2, float w)
+                                 int x2, int y2, double w)
 {   /* draw an anti-aliased rational quadratic Bezier segment, squared weight */
     int sx = x2-x1, sy = y2-y1;                  /* relative values for checks */
     double dx = x0-x2, dy = y0-y2, xx = x0-x1, yy = y0-y1;
@@ -677,13 +677,13 @@ void plotQuadRationalBezierSegAA(int x0, int y0, int x1, int y1,
     plotLineAA(x0,y0, x2,y2);                  /* plot remaining needle to end */
 }
 
-void plotCubicBezierSegAA(int x0, int y0, float x1, float y1,
-                          float x2, float y2, int x3, int y3)
+void plotCubicBezierSegAA(int x0, int y0, double x1, double y1,
+                          double x2, double y2, int x3, int y3)
 {                           /* plot limited anti-aliased cubic Bezier segment */
     int f, fx, fy, leg = 1;
     int sx = x0 < x3 ? 1 : -1, sy = y0 < y3 ? 1 : -1;        /* step direction */
-    float xc = -fabs(x0+x1-x2-x3), xa = xc-4*sx*(x1-x2), xb = sx*(x0-x1-x2+x3);
-    float yc = -fabs(y0+y1-y2-y3), ya = yc-4*sy*(y1-y2), yb = sy*(y0-y1-y2+y3);
+    double xc = -fabs(x0+x1-x2-x3), xa = xc-4*sx*(x1-x2), xb = sx*(x0-x1-x2+x3);
+    double yc = -fabs(y0+y1-y2-y3), ya = yc-4*sy*(y1-y2), yb = sy*(y0-y1-y2+y3);
     double ab, ac, bc, ba, xx, xy, yy, dx, dy, ex, px, py, ed, ip, EP = 0.01;
     
     /* check for curve restrains */
@@ -774,7 +774,7 @@ void plotCubicBezierSegAA(int x0, int y0, float x1, float y1,
 void plotQuadSpline(int n, int x[], int y[])
 {                         /* plot quadratic spline, destroys input arrays x,y */
 #define M_MAX 6
-    float mi = 1, m[M_MAX];                    /* diagonal constants of matrix */
+    double mi = 1, m[M_MAX];                    /* diagonal constants of matrix */
     int i, x0, y0, x1, y1, x2 = x[n], y2 = y[n];
     
     assert(n > 1);                        /* need at least 3 points P[0]..P[n] */
@@ -804,7 +804,7 @@ void plotQuadSpline(int n, int x[], int y[])
 void plotCubicSpline(int n, int x[], int y[])
 {                             /* plot cubic spline, destroys input arrays x,y */
 #define M_MAX 6
-    float mi = 0.25, m[M_MAX];                 /* diagonal constants of matrix */
+    double mi = 0.25, m[M_MAX];                 /* diagonal constants of matrix */
     int x3 = x[n-1], y3 = y[n-1], x4 = x[n], y4 = y[n];
     int i, x0, y0, x1, y1, x2, y2;
     
