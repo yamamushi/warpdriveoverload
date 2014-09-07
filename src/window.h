@@ -59,6 +59,10 @@ public:
     int getXpos(){return m_xpos;};
     int getYpos(){return m_ypos;};
     
+    void clearArea(int x1, int y1, int x2, int y2);
+    void clearRowBetween(int x1, int x2, int row);
+    void clearColumnBetween(int y1, int y2, int column);
+
     void clearLine(int line, int from=0){clearRow(line, from);}
     void clearRow(int row, int from=0);
     void clearColumn(int column, int from=0);
@@ -90,7 +94,6 @@ public:
     void resize(int height, int length, int ypos, int xpos);
     
     void drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg=0, int bg=0, int attr=0);
-    
     
     
     void setNormalColor(int fg, int bg);

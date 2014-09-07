@@ -264,7 +264,20 @@ void GraphChart::refresh(){
     
 }
 
-void GraphChart::resize(int xSize, int ySize){
+
+void GraphChart::resize(int width, int height){
+ 
+    if(width >= 0 && width <= m_parent->getX())
+        m_width = width;
+    
+    if(height >= 0 && height <= m_parent->getY())
+        m_height = height;
+    
+    
+}
+
+
+void GraphChart::resizeChart(int xSize, int ySize){
     
     if(xSize > 1)
         m_xSize = xSize;

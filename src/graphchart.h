@@ -45,7 +45,9 @@ public:
     void render();
     void refresh();
     
-    void resize(int xSize, int ySize);
+    void resize(int width, int height);
+    void resizeChart(int xSize, int ySize);
+
     int getXSize(){return m_xSize;}
     int getYSize(){return m_ySize;}
     void setSize(int xSize, int ySize);

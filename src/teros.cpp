@@ -85,7 +85,7 @@ void TerosWindow::loadfromvector (vector<TerosView> input, int column)
     //    init_pair(12, COLOR_BLUE, COLOR_BLACK); // A default Background Color
 	if (input.size()%column)
 	{
-		return;
+		//return;
 	}
     
     m_display.clear();
@@ -110,15 +110,8 @@ void TerosWindow::loadfromvector (vector<TerosView> input, int column)
                     m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, " ", input[(i*l_width) + j].fg, input[(i*l_width) + j].bg, input[(i*l_width) + j].attr)));
                 }
                 else{
-                    if(input [(i*l_width) + j].c == '@'){
+
                         m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, output, input [(i*l_width) + j].fg, input [(i*l_width) + j].bg, input [(i*l_width) + j].attr)));
-                    }
-                    else if(input [(i*l_width) + j].c == 'F'){
-                        m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, output, input [(i*l_width) + j].fg, input [(i*l_width) + j].bg, input [(i*l_width) + j].attr)));
-                    }
-                    else{
-                        m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, output, input [(i*l_width) + j].fg, input [(i*l_width) + j].bg, input [(i*l_width) + j].attr)));
-                    }
                 }
             }
             

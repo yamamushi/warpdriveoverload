@@ -322,6 +322,10 @@ void TerosCam::clearview ()
 	for (int i = 0; i < view.size (); i++)
 	{
 		view [i].c = ' ';
+        view [i].fg = 0;
+        view [i].bg = 0;
+        view [i].attr = A_NORMAL;
+        
 		viewdepth [i] = -1.0;
 	}
 }
@@ -476,13 +480,14 @@ void TerosCam::cpybasis (char axis, double store [3])
 
 void TerosCam::setviewsize (int rows, int column)
 {
-    clearview();
+    
 	if (column > 0 && rows > 0)
 	{
 		m_viewcolumns = column;
 		view.resize (column*rows);
 		viewdepth.resize (view.size ());
 	}
+    clearview();
 }
 
 void TerosCam::modview (char elem, int x, int y)

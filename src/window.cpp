@@ -330,6 +330,78 @@ void ncursesWindow::addWidget(_SharedPtr<Widget> target){
 }
 
 
+void ncursesWindow::clearArea(int x1, int y1, int x2, int y2){
+    
+    int beginx, beginy;
+    int endx, endy;
+    
+    if(x1>x2){
+        endx = x1;
+        beginx = x2;
+    }
+    else{
+        endx = x2;
+        beginx = x1;
+    }
+    
+    if(y1 > y2){
+        endy = y1;
+        beginy = y2;
+    }
+    else{
+        endy = y2;
+        beginy = y1;
+    }
+    
+    
+    for(int row = beginy; row < endy; row++){
+        
+        clearRowBetween(beginx, endx, row);
+    }
+    
+    
+}
+
+
+void ncursesWindow::clearRowBetween(int x1, int x2, int row){
+    
+    
+    if(x1 < 0){
+        x1 = 0;
+    }
+    
+    if(x2 > m_length){
+        x2 = m_length;
+    }
+    
+    for(int y = x1; y < x2; y++){
+        
+        drawAt(y, row, " ");
+        
+    }
+    
+}
+
+
+void ncursesWindow::clearColumnBetween(int y1, int y2, int column){
+    
+    if(y1 < 0){
+        y1 = 0;
+    }
+    
+    if(y2 > m_height){
+        y1 = m_height;
+    }
+    
+    for(int x = y1; x < y2; x++){
+        
+        drawAt(column, x, " ");
+        
+    }
+    
+}
+
+
 void ncursesWindow::clearRow(int row, int from){
     
     if(row < 0 || row > m_height)

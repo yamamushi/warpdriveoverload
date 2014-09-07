@@ -135,7 +135,7 @@ void TerosTestInterface::run(){
     
     //m_mainWindow->refresh();
     //redrawwin(m_mainWindow->get());
-
+    resize();
 
     m_terosCam1->drawobjects();
     m_terosCam2->drawobjects();
@@ -155,6 +155,8 @@ void TerosTestInterface::run(){
 
 
 void TerosTestInterface::draw(){
+    
+    m_mainWindow->clearArea((m_mainWindow->getX()-42), 0, (m_mainWindow->getX()), m_mainWindow->getY());
     
     m_mainWindow->drawAt(3, 1,"Camera 1");
     m_mainWindow->drawAt(3, (m_mainWindow->getY()/2),"Camera 2");
@@ -255,9 +257,9 @@ void TerosTestInterface::resize(){
 
     m_terosWindow->resize(m_terosScreen->getwidth(), m_terosScreen->getheight()/2);
     m_terosWindow2->resize(m_terosScreen->getwidth(), m_terosScreen->getheight()/2);
-    
     m_terosWindow2->moveTo(1, m_terosScreen->getheight()/2);
-    
+
+        
     m_terosCam1->setviewsize(m_terosWindow->putheight(),m_terosWindow->putwidth());
     m_terosCam2->setviewsize(m_terosWindow2->putheight(),m_terosWindow2->putwidth());
 
@@ -340,6 +342,12 @@ void TerosTestInterface::handleKeys(int input){
             break;
         case 'l':
             m_terosCam->rotatecam('x', -0.05);
+            run();
+            break;
+            
+            
+        case 'b':
+            m_graphController->toggleBars();
             run();
             break;
         
