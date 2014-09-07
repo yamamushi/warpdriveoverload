@@ -28,6 +28,8 @@ void TerosTestInterface::init(){
     m_camy = 1.0;
     m_camz = 0.0;
     
+    
+    
     // Clear anything that was on the parent window
     m_mainWindow->clearScreen();
     
@@ -127,6 +129,10 @@ void TerosTestInterface::move(double speedws, double distance){
 
 
 void TerosTestInterface::run(){
+    
+    //m_mainWindow->refresh();
+    redrawwin(m_mainWindow->get());
+
 
     m_terosCam1->drawobjects();
     m_terosCam2->drawobjects();
@@ -139,6 +145,7 @@ void TerosTestInterface::run(){
     m_graphController->render();
     
     draw();
+    refresh();
 
 }
 
@@ -240,7 +247,8 @@ void TerosTestInterface::resize(){
 
     m_terosCam1->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
     m_terosCam2->setviewsize(m_mainWindow->getY()/2,m_mainWindow->getX()-41);
-    
+    m_terosScreen->resize(m_mainWindow->getX()-44, m_mainWindow->getY());
+    m_terosWindow2->setypos(m_terosScreen->getheight()/2);
 }
 
 

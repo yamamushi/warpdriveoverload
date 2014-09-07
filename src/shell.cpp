@@ -75,12 +75,12 @@ bool Shell::init(){
     refresh();
     
     
-    
-    std::cout << "Command Queue Starting" << std::endl;
+    /*
+    //std::cout << "Command Queue Starting" << std::endl;
     Hermes::Instance()->addToCommandQueue(_STD_BIND(&Shell::doNothing, this));
     sleep(1);
     
-    std::cout << "Network Message Interface Starting" << std::endl;
+    //std::cout << "Network Message Interface Starting" << std::endl;
 
     GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -120,7 +120,7 @@ bool Shell::init(){
     
     netMessage.encode_header();
     Hermes::Instance()->addToNetworkQueue(netMessage);
-
+*/
     
     //Hermes::Instance()->startNetworkQueue();
     
@@ -200,6 +200,7 @@ void Shell::execute(){
     
     if(checkForResize()){
         m_topInterface->getWindow()->clearScreen();
+        //redrawwin(stdscr);
         m_topInterface->getWindow()->resize(m_rows, m_cols, 0, 0);
         m_topInterface->resize();
         m_topInterface->getWindow()->refresh();

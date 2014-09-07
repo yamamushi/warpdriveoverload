@@ -7,7 +7,6 @@
 //
 
 #include "Hermes.h"
-#include <iostream>
 #include <string>
 
 #include "shipdata.pb.h"

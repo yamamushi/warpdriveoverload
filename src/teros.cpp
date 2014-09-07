@@ -107,7 +107,7 @@ void TerosWindow::loadfromvector (vector<TerosView> input, int column)
             
             if(m_xpos+j < m_screen->getwidth() && m_ypos+i < m_screen->getheight() ){
                 if(input [(i*l_width) + j].c == ' ' || j > l_width - 3){
-                    m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, " ")));
+                    m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, " ", input[(i*l_width) + j].fg, input[(i*l_width) + j].bg, input[(i*l_width) + j].attr)));
                 }
                 else{
                     if(input [(i*l_width) + j].c == '@'){

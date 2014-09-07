@@ -18,7 +18,8 @@
 
 #include <vector>
 #include <ncurses.h>
-//#include <locale.h>
+
+#include <iostream>
 
 
 void NavigationInterface::init(){

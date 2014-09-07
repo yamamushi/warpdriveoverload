@@ -244,10 +244,11 @@ void GraphChart::clearAllRawChartPoints(){
     /*
     for(int x=0; x < m_rawchartPoints.size(); x++){
         removePoint(m_rawchartPoints.at(x));
-    }*/
+    } */
     //wrefresh(getParent()->get());
     m_rawchartPoints.clear();
-    
+    wrefresh(getParent()->get());
+
 }
 
 

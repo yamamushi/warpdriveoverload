@@ -13,7 +13,6 @@
 #ifndef TEROS_H
 #define TEROS_H
 
-#include <iostream>
 #include <cmath>
 #include <string>
 #include <vector>
@@ -89,10 +88,13 @@ public:
     int putheight ();
     int putxpos ();
     int putypos ();
+    void moveTo(int x, int y){m_xpos = x; m_ypos = y;}
+    void setxpos(int x){ m_xpos = x;}
+    void setypos(int y){ m_ypos = y;}
     int getxpos(){return m_xpos;}
     int getypos(){return m_ypos;}
-    int cursorcount ();
-    int activetextcount ();
+    int cursorcount();
+    int activetextcount();
     
     string putactivetext (int);
     
@@ -130,6 +132,8 @@ public:
     // New Functions
     int getwidth(){return m_width;}
     int getheight(){return m_height;}
+    void moveTo(int x, int y){m_xpos = x; m_ypos = y;}
+    void resize(int width, int height){m_width = width; m_height = height;}
     
     void drawAt(int x, int y, std::string output, int fg=0, int bg=0, int attr=0);
     void drawAt(int x, int y, char c, int fg=0, int bg=0, int attr=0);

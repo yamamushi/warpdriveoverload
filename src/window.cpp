@@ -9,7 +9,6 @@
 #include "window.h"
 #include "tr1_threading.h"
 #include "tr1_wrapper.h"
-#include <iostream>
 #include <algorithm>
 #include <stdlib.h>
 
@@ -79,8 +78,8 @@ void ncursesWindow::close(){
 
 void ncursesWindow::clearScreen(){
     
-    //standout();
-    //wclear(get());
+    standout();
+    wclear(get());
     werase(m_window);
     
 }
@@ -103,7 +102,9 @@ void ncursesWindow::setborder(char ls, char rs, char ts, char bs, char tl, char 
 void ncursesWindow::drawBorder(){
     
     if(m_showBorder){
-
+        
+//        logger logfast("border.log", 0);
+//        logfast.logToFile("Border Color is: " + std::to_string(m_borderColor), 0);
         setBorderColor(getBorderColorfg(), getBorderColorbg());
 
         wattrset(m_window, COLOR_PAIR(m_borderColor));
@@ -113,6 +114,8 @@ void ncursesWindow::drawBorder(){
 
         wattroff(m_window, COLOR_PAIR(m_borderColor));
     }
+    wrefresh(m_window);
+
     
 }
 
@@ -128,7 +131,6 @@ void ncursesWindow::render(){
     }
     
     drawBorder();
-    wrefresh(m_window);
     
 }
 
@@ -182,6 +184,11 @@ void ncursesWindow::drawLineCallBack(int x, int y, std::string output, int fg, i
 
 void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int attr){
     
+    if(output == " "){
+        drawAt(x, y, ' ', fg, bg, attr);
+        return;
+    }
+    
     if(x == -1 || y == -1)
         return;
     
@@ -192,6 +199,7 @@ void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int
     
     int paircolor = ColorManager::Instance()->checkColorPair(fg, bg);
     
+    
     wattrset(m_window, COLOR_PAIR(paircolor));
     mvwprintw(m_window, y, x, "%s", output.c_str());
     if(attr > 0){
@@ -199,6 +207,8 @@ void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int
     }
     wattroff(m_window, COLOR_PAIR(paircolor));
 }
+
+
 
 void ncursesWindow::drawAt(int x, int y, char c){
 

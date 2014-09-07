@@ -78,7 +78,6 @@ if (PKG_CONFIG_FOUND)
   pkg_check_modules(Protobuf protobuf)
 endif()
 
-
 find_package(Protobuf REQUIRED)
 
 set(Boost_USE_STATIC_LIBS OFF)

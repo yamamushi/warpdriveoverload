@@ -12,7 +12,6 @@
 
 #include "terosobject.h"
 #include "terospolygon.h"
-#include <iostream>
 
 #include "logger.h"
 
