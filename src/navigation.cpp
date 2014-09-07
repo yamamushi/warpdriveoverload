@@ -107,7 +107,7 @@ void NavigationInterface::drawAt(int x, int y){
 void NavigationInterface::run(){
     
     // Print our name out to the Interface
-    m_mainWindow->drawAt( (m_sizeY - (int)getName().size())/2, 1, getName(), COLOR_WHITE, COLOR_BLACK, A_BOLD | A_BLINK);
+    m_mainWindow->drawAt( (m_height - (int)getName().size())/2, 1, getName(), COLOR_WHITE, COLOR_BLACK, A_BOLD | A_BLINK);
     
     std::string rowMessage = std::to_string(graphController->getRows()) + " : Rows";
     std::string colMessage = std::to_string(graphController->getCols()) + " : Cols";

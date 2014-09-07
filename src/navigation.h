@@ -31,7 +31,7 @@ public:
     
 protected:
     
-    void resize(){};
+    void resizeComponents(){};
     
 private:
     

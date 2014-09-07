@@ -101,11 +101,11 @@ protected:
     
     void addToHandler(){InterfaceHandler::instance()->addInterface(shared_from_this());}
     
-    virtual void resize(){};
+    virtual void resizeComponents(){};
     
     bool m_initialized;
-    int m_sizeX;
-    int m_sizeY;
+    int m_width;
+    int m_height;
     
     void addNext(_SharedPtr<Interface>  nextInterface){m_next = nextInterface;}
     void addPrev(_SharedPtr<Interface>  prevInterface){m_prev = prevInterface;}
@@ -121,6 +121,11 @@ protected:
     std::string m_name;
     
     _SharedPtr<WidgetManager> m_widgetManager;
+    
+private:
+    
+    void resizeConsole(int width, int height);
+
 
 };
 
