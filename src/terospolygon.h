@@ -16,15 +16,20 @@
 #include <vmmlib/vector.hpp>
 #include <vmmlib/matrix.hpp>
 
+#include <vector>
+#include <string>
+
+#include "tr1_wrapper.h"        
+
 typedef vmml::vector<3, int> TriangleIndice;
 typedef vmml::vector<3, double> Point3d;
 typedef vmml::vector<3, double> Vector3D;
-
 
 class TerosPolygon
 {
 
 public:
+    
     TerosPolygon();
     
     void modp (int, double, double, double);
@@ -46,7 +51,19 @@ public:
     double putpy (int);
     double putpz (int);
     
+    void setAttr(char symbol=' ', int fg=0, int bg=0, int attr=0){fill=symbol; m_fg=fg; m_bg=bg; m_attr=attr;}
+    int getfg(){return m_fg;}
+    int getbg(){return m_bg;}
+    int getattr(){return m_attr;}
+
+    
+    //_SharedPtr<PolygonAttribute> getAttr(){return m_attr;}
+    
+    void setIndex(int index){m_index = index;}
+    int getIndex(){return m_index;}
+    
 private:
+    
     double xcoord [3];
     double ycoord [3];
     double zcoord [3];
@@ -54,7 +71,13 @@ private:
     char fill;
     char transparency;
     
+    int m_index;
+    
     bool texturemode;
+    
+    int m_fg;
+    int m_bg;
+    int m_attr;
     
 };
 

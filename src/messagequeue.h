@@ -59,7 +59,7 @@ public:
     int size()
     {
         INSTANTIATE_MLOCK(mutex_);
-        int size = queue_.size();
+        int size = (int)queue_.size();
         mlock.unlock();
         return size;
     }

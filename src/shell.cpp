@@ -17,6 +17,13 @@
 #include "asciicodes.h"
 #include "terostest.h"
 
+#include "Hermes.h"
+#include "NetworkMessage.h"
+
+#include "shipdata.pb.h"
+
+#include "logger.h"
+
 #include <algorithm>
 
 void Shell::boot(){
@@ -55,6 +62,9 @@ bool Shell::init(){
         std::cout << "Your terminal does not support color\n" << std::endl;
 		exit(1);
 	}
+
+    getmaxyx(stdscr,m_rows,m_cols);
+
     
     //raw(); // disable line buffering
     cbreak();			// Line buffering disabled, Pass on
@@ -64,7 +74,55 @@ bool Shell::init(){
     curs_set(0);
     refresh();
     
-    getmaxyx(stdscr,m_rows,m_cols);
+    
+    /*
+    //std::cout << "Command Queue Starting" << std::endl;
+    Hermes::Instance()->addToCommandQueue(_STD_BIND(&Shell::doNothing, this));
+    sleep(1);
+    
+    //std::cout << "Network Message Interface Starting" << std::endl;
+
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+    WarpDriveOverloaded::User *testUser = new WarpDriveOverloaded::User;
+    
+    testUser->set_name("Bob Saget");
+    testUser->set_id(1);
+    testUser->set_email("bob.saget@gmail.com");
+    
+    WarpDriveOverloaded::User_Character testCharacter = testUser->character();
+    testUser->character().name();
+    testCharacter.set_name("test");
+    
+    std::string output;
+    testUser->SerializeToString(&output);
+    //testUser->Serializeto
+
+    
+   // archive << newMessage;
+    
+    logger m_logmaker("proto.log", 0);
+   // m_logmaker.logToFile(newUser.name(),0);
+    
+    
+
+    NetworkMessage netMessage;
+    netMessage.body_length(std::strlen(output.c_str()));
+    std::string testarray;
+    testUser->SerializeToArray(netMessage.body(), netMessage.body_length());
+    //std::memcpy(netMessage.body(), &output, netMessage.body_length());
+    
+    
+    WarpDriveOverloaded::User newUser;
+    newUser.ParseFromString(netMessage.body());
+    m_logmaker.logToFile(newUser.name(),0);
+    
+    
+    netMessage.encode_header();
+    Hermes::Instance()->addToNetworkQueue(netMessage);
+*/
+    
+    //Hermes::Instance()->startNetworkQueue();
     
     return true;
     
@@ -85,6 +143,11 @@ bool Shell::run(){
     // This is about to get fun
     nodelay(stdscr, true);
     int keyInput;
+    
+    // Wait (int) seconds while loop is running
+    // 1000 = 1 Second
+    //timeout(1000);
+    setmaxfps(10);
 
     m_running = true;
 
@@ -92,19 +155,39 @@ bool Shell::run(){
 	{
         refresh();
         doupdate();
-        
+        //wclear(m_topInterface->getWindow()->get());
+
         if((keyInput = getch()) == ERR){
             execute();
         }
         else{
             handleKeys(keyInput);
+            execute();
         }
+        m_topInterface->getWindow()->refresh();
+        m_topInterface->getWindow()->render();
+
+        FpsCounter::Instance()->update();
     }
     
     shutdown();
     
     return true;
 }
+
+void Shell::setmaxfps(int fps){
+    
+    if(fps < 1)
+        fps = 1;
+    
+    if(fps > 1000)
+        fps = 1000;
+    
+    m_maxfps = fps;
+    
+    timeout(1000/m_maxfps);
+
+};
 
 
 
@@ -120,7 +203,7 @@ void Shell::execute(){
     
     if(checkForResize()){
         m_topInterface->getWindow()->clearScreen();
-        m_topInterface->getWindow()->resize(m_rows, m_cols, 0, 0);
+        m_topInterface->resizeConsole(m_cols, m_rows);
         m_topInterface->getWindow()->refresh();
     }
 
@@ -128,15 +211,7 @@ void Shell::execute(){
         m_topInterface->getWindow()->clearScreen();
         m_topInterface->init();
     }
-    
-    
-    // We give priority to the window render over the interface running, as we want to make sure our widgets
-    // And Menus have a chance to run before we do any manual drawing to the screen through the interface
-    
-    m_topInterface->getWindow()->render();
     m_topInterface->run();
-    //m_topInterface->getWindow()->render();
-    
 }
 
 
@@ -144,11 +219,16 @@ void Shell::handleKeys(int input){
     
     switch(input)
     {
-        case KEY_TAB: // This is defined in asciicodes.h
+        // This is defined in asciicodes.h
+        case KEY_TAB:
             m_topInterface->getWindow()->clearScreen();
             m_topInterface->getWindow()->refresh();
-            m_topInterface->getWindow()->closeAllMenus();
-            m_topInterface = m_topInterface->getNext();
+            
+            if(m_topInterface->getNext() == m_interfaceList.at(0))
+                m_topInterface = m_interfaceList.at(1);
+            else
+                m_topInterface = m_topInterface->getNext();
+
             m_topInterface->getWindow()->clearScreen();
             break;
             
@@ -176,17 +256,27 @@ bool Shell::checkForResize(){
 }
 
 
+int Shell::getfps(){
+    
+    int fps = FpsCounter::Instance()->get();
+    
+    return fps;
+    
+}
+
+
+
 void Shell::loadInterfaces(_SharedPtr<Shell> parent){
     
     // Launch our debug Interface which will attach to the root Interface on this shell
     _SharedPtr<DebugInterface> debugInterface(new DebugInterface(parent));
     addToInterfaceList(debugInterface);
     
-    _SharedPtr<NavigationInterface> navigationInterface(new NavigationInterface(parent));
-    addToInterfaceList(navigationInterface);
-
     _SharedPtr<TerosTestInterface> terosTest(new TerosTestInterface(parent));
     addToInterfaceList(terosTest);
+    
+    _SharedPtr<NavigationInterface> navigationInterface(new NavigationInterface(parent));
+    addToInterfaceList(navigationInterface);
     
     initMainWindow();
 
@@ -299,7 +389,6 @@ void Shell::shutdown(){
     
     for(size_t x = 0; x < m_windows.size(); x++){
         m_windows.at(x)->close();
-        
     }
     endwin();
     

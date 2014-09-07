@@ -41,7 +41,7 @@ void TreasureChest::openlid (double angle)
     
 	lidbuffer = lid.permcpy (); //Filling the lidbuffer with new transformed/opened lid data.
     
-	for (int i = chest.sidenum () - lidbuffer.size (); i < chest.sidenum (); i++) //Updating the 'chest' R3Object to reference the refreshed lid data.
+	for (int i = chest.sidenum () - (int)lidbuffer.size (); i < chest.sidenum (); i++) //Updating the 'chest' R3Object to reference the refreshed lid data.
 	{
 		chest.modside (i, &lidbuffer [i + lidbuffer.size () - chest.sidenum ()]);
 	}

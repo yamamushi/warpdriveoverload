@@ -18,7 +18,8 @@
 
 #include <vector>
 #include <ncurses.h>
-//#include <locale.h>
+
+#include <iostream>
 
 
 void NavigationInterface::init(){
@@ -29,29 +30,28 @@ void NavigationInterface::init(){
     // Set our Interface NAme
     setName("Navigation");
     
-    
     // Add widgets
     m_graphX = 1;
     m_graphY = 1;
     lotteryLimit = 100;
     graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 0, 0));
-    m_mainWindow->addWidget(graphController);
+    m_widgetManager->addWidget(graphController);
     
-    _SharedPtr<TimeWidget> w_timeWidget = _SharedPtr<TimeWidget> (new TimeWidget(m_mainWindow, (graphController->getCols()/2)-getName().length()+18, 1));
-    m_mainWindow->addWidget(w_timeWidget);
+    _SharedPtr<TimeWidget> w_timeWidget = _SharedPtr<TimeWidget> (new TimeWidget(m_mainWindow, (graphController->getCols()/2)-(int)getName().length()+18, 1));
+    m_widgetManager->addWidget(w_timeWidget);
 
     // Here we populate our random points
 //    _STD_FUNCTION(void(int,int)) pass = _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2);
 //    _STD_FUNCTION(void(int,int)) fail = _STD_BIND(&NavigationInterface::failedAt, this, std::placeholders::_1, std::placeholders::_2);
 //    _STD_FUNCTION(void(int,int)) fail2 = _STD_BIND(void,nullptr, std::placeholders::_1, std::placeholders::_2);
-    int height = m_mainWindow->getY();
-    int width = m_mainWindow->getX();
+
     //graphController->move(3, 3);
     //graphController->resizeWindow(10, 20);
     
-    _SharedPtr<GraphChartPoint> point(new GraphChartPoint( 3, 3,COLOR_PAIR(5),"O"));
+    _SharedPtr<GraphChartPoint> point(new GraphChartPoint( 3, 3, "O", COLOR_RED, COLOR_BLACK));
     graphController->addChartPoint(point);
-
+    
+/*
     // Bottom Left
     //bresenham2d(5, rows-5, cols-5, 3, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
     // Top Right
@@ -66,39 +66,26 @@ void NavigationInterface::init(){
     bresenham2d(5, height-5, width-6, height-5, _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2));
     m_mainWindow->hideBorder();
     
-    
+    */
     
     std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > navigationMenuList;
     std::pair<std::string, _STD_FUNCTION(void())> Menu("Menu", _STD_BIND(&NavigationInterface::doNothing, this));
     navigationMenuList.push_back(Menu);
-    std::pair<std::string, _STD_FUNCTION(void())> item2("Second", _STD_BIND(&NavigationInterface::doNothing, this));
-    navigationMenuList.push_back(item2);
-    std::pair<std::string, _STD_FUNCTION(void())> item3("Third", _STD_BIND(&NavigationInterface::doNothing, this));
-    navigationMenuList.push_back(item3);
-    std::pair<std::string, _STD_FUNCTION(void())> item5("Exit", _STD_BIND(&Shell::quit, m_owner));
-    navigationMenuList.push_back(item5);
-    
-    
-    menuNavigation = _SharedPtr<ncursesMenu>(new ncursesMenu(navigationMenuList, "Navigation", m_mainWindow));
 
-    menuNavigation->showTitle(false);
-    menuNavigation->highlightTitle(false);
-    menuNavigation->setHorizontal(true);
-    menuNavigation->move(height-3,5);
-    m_mainWindow->addMenu(menuNavigation);
-    
+  
+    m_mainWindow->hideBorder();
+
     
     std::vector<std::pair<std::string, _STD_FUNCTION(void()) > > subMenuList;
-    std::pair<std::string, _STD_FUNCTION(void())> subItem1("Sub1", _STD_BIND(&NavigationInterface::doNothing, this));
-    std::pair<std::string, _STD_FUNCTION(void())> subItem2("Sub2", _STD_BIND(&NavigationInterface::doNothing, this));
-    subMenuList.push_back(subItem1);
-    subMenuList.push_back(subItem2);
-    
-    _SharedPtr<ncursesMenu> subList(new ncursesMenu(subMenuList, "Sub", m_mainWindow));
-    menuNavigation->addSubMenu(subList, 2);
+    std::pair<std::string, _STD_FUNCTION(void())> itemExit("Exit", _STD_BIND(&Shell::quit, m_owner));
+    subMenuList.push_back(itemExit);
+
 
     graphController->hideBars();
     graphController->refresh();
+    
+    testString = "";
+    
     m_initialized = true;
     
 }
@@ -109,9 +96,9 @@ void NavigationInterface::drawAt(int x, int y){
     if(y == -1 || x == -1)
         return;
     
-    init_pair(5, COLOR_GREEN, COLOR_BLACK); // A default Background Color
+    //init_pair(5, COLOR_GREEN, COLOR_BLACK); // A default Background Color
 
-    _SharedPtr<GraphChartPoint> point(new GraphChartPoint(x,y,COLOR_PAIR(5),"*"));
+    _SharedPtr<GraphChartPoint> point(new GraphChartPoint(x, y, "*"));
     graphController->addRawChartPoint(point);
     
 }
@@ -120,13 +107,18 @@ void NavigationInterface::drawAt(int x, int y){
 void NavigationInterface::run(){
     
     // Print our name out to the Interface
-    m_mainWindow->drawAt( (m_sizeY - getName().size())/2, 1, getName());
+    m_mainWindow->drawAt( (m_height - (int)getName().size())/2, 1, getName(), COLOR_WHITE, COLOR_BLACK, A_BOLD | A_BLINK);
     
     std::string rowMessage = std::to_string(graphController->getRows()) + " : Rows";
     std::string colMessage = std::to_string(graphController->getCols()) + " : Cols";
-    m_mainWindow->drawAt((m_mainWindow->getX()/2)-getName().length(), 1, rowMessage);
-    m_mainWindow->drawAt((m_mainWindow->getX()/2)-getName().length(), 2, colMessage);
+    m_mainWindow->drawAt((m_mainWindow->getX()/2)-(int)getName().length(), 1, rowMessage);
+    m_mainWindow->drawAt((m_mainWindow->getX()/2)-(int)getName().length(), 2, colMessage);
     
+    m_mainWindow->drawAt((m_mainWindow->getX()-10), 1, "           ");
+    std::string fpscount(std::to_string(m_owner->getfps()) + " fps");
+    m_mainWindow->drawAt((m_mainWindow->getX()-2)-(int)fpscount.length(), 1, fpscount);
+
+    m_mainWindow->drawAt((m_mainWindow->getX()/2), (m_mainWindow->getY()/2), testString);
 
     m_mainWindow->render();
     
@@ -135,24 +127,7 @@ void NavigationInterface::run(){
 
 void NavigationInterface::handleKeys(int input){
     
-    //mvwprintw(m_mainWindow->get(), 10, 2,"%d", input);
-
     switch(input){
-            
-            /*
-        case KEY_DOWN:
-            graphController->resizeWindow(graphController->getHeight()+1, graphController->getWidth());
-            m_graphY = graphController->getYSize();
-            m_graphX = graphController->getXSize();
-            graphController->refresh();
-            break;
-            
-        case KEY_RIGHT:
-            graphController->resizeWindow(graphController->getHeight(), graphController->getWidth()+1);
-            m_graphY = graphController->getYSize();
-            m_graphX = graphController->getXSize();
-            graphController->refresh();
-            break; */
         case 'b':
             graphController->toggleBars();
             m_mainWindow->clearScreen();
@@ -169,17 +144,39 @@ void NavigationInterface::handleKeys(int input){
         case 'u':
             lotteryLimit = lotteryLimit - 100000;
             break;
-        case '\n':
-            //;//graphController->getAllChartPoints().at(0)->m_hidden = !m_chartPoints.at(0)->m_hidden;
-            menuNavigation->execute();
-            break;
         default:
-            m_mainWindow->handleKeys(input);
+            m_widgetManager->handleKeys(input);
             break;
     }
     
-    
+}
 
+
+void NavigationInterface::getInput(){
+   
+    while(int input = getch() ){
+        
+        if(input == '\n' || input == 27)
+            break;
+        
+        if(input > 0){
+            
+            if(input == KEY_BACKSPACE || input == KEY_DC || input == 127)
+                testString.pop_back();
+            else
+                testString += input;
+        
+            //m_mainWindow->drawAt((m_mainWindow->getX()/2), (m_mainWindow->getY()/2), "             ");
+            m_mainWindow->clearLine( (m_mainWindow->getY()/2), (m_mainWindow->getX()/2));
+            
+            m_mainWindow->drawAt((m_mainWindow->getX()/2), (m_mainWindow->getY()/2), testString);
+        
+        }
+        m_mainWindow->render();
+        
+        input = 0;
+    }
+    
 }
 
 

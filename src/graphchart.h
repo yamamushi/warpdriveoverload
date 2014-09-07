@@ -9,8 +9,6 @@
 #ifndef __warpdriveoverloaded__graphchart__
 #define __warpdriveoverloaded__graphchart__
 
-#include <ncurses.h>
-
 #include "shell.h"
 #include "window.h"
 #include "tr1_wrapper.h"
@@ -25,15 +23,16 @@
 struct GraphChartPoint {
     
     int m_X, m_Y;
-    int m_color;
+    int m_fg;
+    int m_bg;
     
     std::string m_symbol;
     bool m_hidden;
     
-    bool m_specialSymbol;
+    int m_attr;
     
-    GraphChartPoint(int x = -1, int y = -1, int color = -1, std::string symbol = "", bool hidden = false, bool special = false)
-    : m_X(x), m_Y(y), m_color(color), m_symbol(symbol), m_hidden(hidden), m_specialSymbol(special){}
+    GraphChartPoint(int x = -1, int y = -1, std::string symbol = "", int fg = -1, int bg=-1, int attr=A_NORMAL, bool hidden = false)
+    : m_X(x), m_Y(y), m_fg(fg), m_bg(bg), m_symbol(symbol), m_hidden(hidden), m_attr(attr){}
     
 };
 
@@ -46,7 +45,9 @@ public:
     void render();
     void refresh();
     
-    void resize(int xSize, int ySize);
+    void resize(int width, int height);
+    void resizeChart(int xSize, int ySize);
+
     int getXSize(){return m_xSize;}
     int getYSize(){return m_ySize;}
     void setSize(int xSize, int ySize);
@@ -86,13 +87,14 @@ public:
     
     void generateChart();
     void fill();
+    void clearWindow();
 
     
-    void drawAt(int x=-1, int y=-1, std::string symbol=" ", int color=0);
+    void drawAt(int x=-1, int y=-1, std::string symbol=" ", int fg=0, int bg=0, int attr=0);
     // A callback that does nothing
     void failedAt(int x=-1, int y=-1){};
     
-    void drawLine(int x1, int y1, int x2, int y2, std::string symbol, int color);
+    void drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg=0, int bg=0, int attr=0);
 
     
 private:

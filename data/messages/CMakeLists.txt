@@ -1,0 +1,16 @@
+file(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.proto")
+
+PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HEADER ${ProtoFiles})
+
+set(PROTOBUF_INCLUDE_DIRS ${PROTOBUF_INCLUDE_DIRS} PARENT_SCOPE)
+set(PROTOBUF_LIBRARIES ${PROTOBUF_LIBRARIES} PARENT_SCOPE)
+set(PROTO_SRC ${PROTO_SRC} PARENT_SCOPE)
+set(PROTO_HEADER ${PROTO_HEADER} PARENT_SCOPE)
+
+set(ProtobufIncludePath ${CMAKE_CURRENT_BINARY_DIR}
+    CACHE INTERNAL "Path to generated protobuf files.")
+
+#target_link_libraries(client ${PROTO_SRC})
+
+add_library(messages STATIC ${PROTO_SRC} ${PROTO_HEADER})
+#target_link_libraries(messages ${PROTOBUF_LIBRARIES})

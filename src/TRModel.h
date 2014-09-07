@@ -17,11 +17,26 @@
 
 #include <vector>
 #include <cmath>
+#include <string>
+
+struct ColorIndice {
+    
+    int index;
+    char s;
+    int fg;
+    int bg;
+    int attr;
+    
+    ColorIndice(int i=-1, char symbol=' ', int fore=0, int back=0, int attribute=0) : index(i), s(symbol), fg(fore), bg(back), attr(attribute) {};
+
+    
+};
 
 struct MeshModel {
     
-    std::vector<TriangleIndice> m_indices;
-    std::vector<Vector3D> m_points;
+    std::vector<_SharedPtr<TriangleIndice> > m_indices;
+    std::vector<_SharedPtr<Vector3D> > m_points;
+    std::vector<_SharedPtr<ColorIndice> > m_colors;
     
 };
 

@@ -1,3 +1,4 @@
+#pragma once
 //
 //  interface.h
 //  warpdriveoverloaded
@@ -22,8 +23,8 @@
 #include "tr1_wrapper.h"
 #include "shell.h"
 #include "window.h"
+#include "WidgetManager.h"
 
-#include <ncurses.h>
 #include <vector>
 
 class Interface;
@@ -31,6 +32,7 @@ class ncursesInterface;
 class ncursesWindow;
 class Widget;
 class Shell;
+class WidgetManager;
 
 class InterfaceHandler {
     
@@ -74,6 +76,7 @@ public:
     virtual void init(){};
     virtual void handleKeys(int input){};
     bool initialized(){return m_initialized;}
+    virtual void draw(){};
     
     _SharedPtr<Interface> getChild(){return m_child;}
     _SharedPtr<Interface>  getNext(){return m_next;}
@@ -98,9 +101,11 @@ protected:
     
     void addToHandler(){InterfaceHandler::instance()->addInterface(shared_from_this());}
     
+    virtual void resizeComponents(){};
+    
     bool m_initialized;
-    int m_sizeX;
-    int m_sizeY;
+    int m_width;
+    int m_height;
     
     void addNext(_SharedPtr<Interface>  nextInterface){m_next = nextInterface;}
     void addPrev(_SharedPtr<Interface>  prevInterface){m_prev = prevInterface;}
@@ -114,6 +119,13 @@ protected:
     int m_ID;
     
     std::string m_name;
+    
+    _SharedPtr<WidgetManager> m_widgetManager;
+    
+private:
+    
+    void resizeConsole(int width, int height);
+
 
 };
 

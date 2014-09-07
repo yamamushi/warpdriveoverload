@@ -27,12 +27,15 @@
 
 #include <string>
 #include <ncurses.h>
-#include <iostream>
 #include <vector>
+
+#include "ColorManager.h"
+#include "Clock.h"
 
 struct GraphChartPoint;
 
 class Interface;
+
 
 class Shell : public std::enable_shared_from_this<Shell>{
     
@@ -45,6 +48,12 @@ public:
     void boot();
     bool run();
     
+    int getfps();
+    void setmaxfps(int fps);
+    
+    int getHeight(){return m_rows;}
+    int getWidth(){return m_cols;}
+    
     void loadInterfaces(_SharedPtr<Shell> parent);
 
     void refreshShell();
@@ -56,6 +65,9 @@ public:
 
     void quit();
 
+    void doNothing(){};
+    void printDebug();
+    
 
 protected:
     
@@ -84,23 +96,25 @@ protected:
     void organizeInterfaces();
     
     bool checkForResize();
+
+
+    std::vector<_SharedPtr<Interface> > m_interfaceList;
+    
+private:
     
     _SharedPtr<Nostradamus> m_parent;
     
-    bool m_running;
-    
-    int m_rows;
-    int m_cols;
+    int m_maxfps;
     
     _SharedPtr<ncursesWindow> m_mainWindow;
     _SharedPtr<Interface> m_topInterface;
     
     std::vector<_SharedPtr<ncursesWindow> > m_windows;
-
-    void doNothing(){};
-    void printDebug();
     
-    std::vector<_SharedPtr<Interface> > m_interfaceList;
+    bool m_running;
+    
+    int m_rows;
+    int m_cols;
     
 };
 

@@ -13,7 +13,6 @@
 #include "teroscam.h"
 #include "terosobject.h"
 #include "terospolygon.h"
-#include <iostream>
 
 #include "logger.h"
 
@@ -71,13 +70,13 @@ void TerosCam::drawpolygon (TerosPolygon cTerosPolygon, TerosObject obj)
 			return;
 		}
         
-		drawline (p1, p2, cTerosPolygon.putfill ());
-		drawline (p2, p3, cTerosPolygon.putfill ());
-		drawline (p3, p1, cTerosPolygon.putfill ());
+		drawline (p1, p2, cTerosPolygon.putfill());
+		drawline (p2, p3, cTerosPolygon.putfill());
+		drawline (p3, p1, cTerosPolygon.putfill());
 	}
 }
 
-void TerosCam::drawline (double p1 [3], double p2 [3], char fill)
+void TerosCam::drawline (double p1 [3], double p2 [3], char fill, int fg, int bg, int attr)
 {
 	double snorm = 0;
     
@@ -275,7 +274,11 @@ void TerosCam::drawline (double p1 [3], double p2 [3], char fill)
         
 		if (((norm/normdispxy)*(p1 [0] - p2 [0])) + p2 [0] > 0 && (((norm/normdispxy)*(p1 [0] - p2 [0])) + p2 [0] < viewdepth [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))] || viewdepth [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))] == -1))
 		{
-			view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))] = fill;
+			view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))].c = fill;
+            view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))].fg = fg;
+            view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))].bg = bg;
+            view [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))].attr = attr;
+            
 			viewdepth [getelementindex (roundnum(dispx*norm + p2 [1]), roundnum(dispy*norm + p2 [2]))] = norm/normdispxy*(p1 [0] - p2 [0]) + p2 [0];
 		}
 	}
@@ -318,7 +321,10 @@ void TerosCam::clearview ()
 {
 	for (int i = 0; i < view.size (); i++)
 	{
-		view [i] = ' ';
+		view [i].c = ' ';
+        view [i].fg = 0;
+        view [i].bg = 0;
+        view [i].attr = A_NORMAL;
 		viewdepth [i] = -1.0;
 	}
 }
@@ -444,7 +450,7 @@ void TerosCam::setViewMatrix(){
     viewMatrix.set_row(0,  vmml::vector<4, double>(cambasisx[0], cambasisx[1], cambasisx[2], 0.0));
     viewMatrix.set_row(1,  vmml::vector<4, double>(cambasisy[0], cambasisy[1], cambasisy[2], 0.0));
     viewMatrix.set_row(2,  vmml::vector<4, double>(cambasisz[0], cambasisz[1], cambasisz[2], 0.0));
-    viewMatrix.set_row(3,  vmml::vector<4, double>(m_camx, m_camy, m_camz, 1.0));
+    viewMatrix.set_row(3,  vmml::vector<4, double>(m_camx,       m_camy,       m_camz,       1.0));
 
 }
 
@@ -473,19 +479,21 @@ void TerosCam::cpybasis (char axis, double store [3])
 
 void TerosCam::setviewsize (int rows, int column)
 {
+    
 	if (column > 0 && rows > 0)
 	{
 		m_viewcolumns = column;
 		view.resize (column*rows);
 		viewdepth.resize (view.size ());
 	}
+    clearview();
 }
 
 void TerosCam::modview (char elem, int x, int y)
 {
 	if (getelementindex (x, y) != -1)
 	{
-		view [getelementindex (x, y)] = elem;
+		view [getelementindex (x, y)].c = elem;
 	}
 }
 
@@ -607,7 +615,12 @@ void TerosCam::texturepolygon (TerosPolygon cTerosPolygon, TerosObject obj)
         
 		if (((-1*d - c*y - b*x)/a < viewdepth [getelementindex (x, y)] || viewdepth [getelementindex (x, y)] == -1) && (-1*d - c*y - b*x)/a > 0 && angletotal > 2*PI - 0.01 && angletotal < 2*PI + 0.01)
 		{
-			view [getelementindex (x, y)] = cTerosPolygon.putfill ();
+			view [getelementindex (x, y)].c = cTerosPolygon.putfill ();
+            view [getelementindex (x, y)].fg = cTerosPolygon.getfg ();
+            view [getelementindex (x, y)].bg = cTerosPolygon.getbg ();
+            view [getelementindex (x, y)].attr = cTerosPolygon.getattr ();
+
+
 			viewdepth [getelementindex (x, y)] = (-1*d - c*y - b*x)/a;
 		}
         
@@ -725,7 +738,7 @@ char TerosCam::getelement (int x, int y)
 {
 	if (getelementindex (x, y) != -1)
 	{
-		return view [getelementindex (x, y)];
+		return view [getelementindex (x, y)].c;
 	}
     
 	return ' ';
@@ -735,7 +748,7 @@ char TerosCam::getelementraw (int index)
 {
 	if (index < view.size ())
 	{
-		return view [index];
+		return view [index].c;
 	}
     
 	return ' ';
@@ -753,12 +766,12 @@ int TerosCam::getelementindex (int x, int y)
 
 int TerosCam::objectnum ()
 {
-	return objects.size ();
+	return (int)objects.size ();
 }
 
 int TerosCam::putviewsize ()
 {
-	return view.size ();
+	return (int)view.size ();
 }
 
 int TerosCam::putviewcolumns ()
@@ -806,7 +819,7 @@ double TerosCam::putzoomfactor ()
 	return m_zoomfactor;
 }
 
-vector <char> TerosCam::putview ()
+vector <TerosView> TerosCam::putview ()
 {
 	return view;
 }
@@ -827,7 +840,6 @@ TerosObject * TerosCam::putobj (int index)
 }
 
 
-
 void TerosCam::moveForward( double speed, double distance){
     
     m_speed = speed;
@@ -836,11 +848,14 @@ void TerosCam::moveForward( double speed, double distance){
     //    X     Y     Z
     viewMatrix = viewMatrix * (distance*m_speed);
     
+    vmml::vector<4, double> look(cambasisx[0], cambasisy[0], cambasisz[0], 0.0);
+    
     vmml::vector<4, double> translation;
     translation = viewMatrix;
-
-    m_position = m_position + translation;
-
+    
+    look = look * (distance*speed);
+    m_position = m_position + look;
+    
     m_camx = m_position.x();
     m_camy = m_position.y();
     m_camz = m_position.z();
@@ -848,3 +863,142 @@ void TerosCam::moveForward( double speed, double distance){
     setcampos(m_camx, m_camy, m_camz);
     
 }
+
+
+void TerosCam::moveRight( double speed, double distance){
+
+    m_speed = speed;
+    
+    //  Right - Up - Look
+    //    X     Y     Z
+    viewMatrix = viewMatrix * (distance*m_speed);
+    
+    vmml::vector<4, double> right(cambasisx[1], cambasisy[1], cambasisz[1], 0.0);
+    
+    vmml::vector<4, double> translation;
+    translation = viewMatrix;
+    
+    right = right * (distance*speed);
+    m_position = m_position + right;
+    
+    m_camx = m_position.x();
+    m_camy = m_position.y();
+    m_camz = m_position.z();
+    
+    setcampos(m_camx, m_camy, m_camz);
+}
+
+
+
+void TerosCam::moveUp( double speed, double distance){
+    
+    m_speed = speed;
+    
+    //  Right - Up - Look
+    //    X     Y     Z
+    viewMatrix = viewMatrix * (distance*m_speed);
+    
+    vmml::vector<4, double> up(cambasisx[2], cambasisy[2], cambasisz[2], 0.0);
+    
+    vmml::vector<4, double> translation;
+    translation = viewMatrix;
+    
+    up = up * (-distance*speed);
+    m_position = m_position + up;
+    
+    m_camx = m_position.x();
+    m_camy = m_position.y();
+    m_camz = m_position.z();
+    
+    setcampos(m_camx, m_camy, m_camz);
+}
+
+
+void TerosCam::rotateCamAroundAxis(vmml::vector<3, double> axis, double radians){
+
+    
+    vmml::vector<3, double> l_newposition = rotatePointAroundAxis(axis, m_position, radians);
+    
+    
+    m_camx = l_newposition.x();
+    m_camy = l_newposition.y();
+    m_camz = l_newposition.z();
+    
+    setcampos(m_camx, m_camy, m_camz);
+    
+}
+
+
+vmml::vector<3, double> TerosCam::rotatePointAroundAxis(vmml::vector<3, double> axis, vmml::vector<3, double> point, double degrees){
+    
+    double angle;
+    double u, v, w;
+    
+    double rotationMatrix[4][4];
+    double inputMatrix[4][1] = {0.0, 0.0, 0.0, 0.0};
+    double outputMatrix[4][1] = {0.0, 0.0, 0.0, 0.0};
+    
+    
+    inputMatrix[0][0] = point.x();
+    inputMatrix[1][0] = point.y();
+    inputMatrix[2][0] = point.z();
+    inputMatrix[3][0] = 1.0;
+    
+    u = axis.x();
+    v = axis.y();
+    w = axis.z();
+    
+    double L = (u*u + v * v + w * w);
+    angle = degrees * M_PI / 180.0; //converting to radian value
+    double u2 = u * u;
+    double v2 = v * v;
+    double w2 = w * w;
+    
+    rotationMatrix[0][0] = (u2 + (v2 + w2) * cos(angle)) / L;
+    rotationMatrix[0][1] = (u * v * (1 - cos(angle)) - w * sqrt(L) * sin(angle)) / L;
+    rotationMatrix[0][2] = (u * w * (1 - cos(angle)) + v * sqrt(L) * sin(angle)) / L;
+    rotationMatrix[0][3] = 0.0;
+    
+    rotationMatrix[1][0] = (u * v * (1 - cos(angle)) + w * sqrt(L) * sin(angle)) / L;
+    rotationMatrix[1][1] = (v2 + (u2 + w2) * cos(angle)) / L;
+    rotationMatrix[1][2] = (v * w * (1 - cos(angle)) - u * sqrt(L) * sin(angle)) / L;
+    rotationMatrix[1][3] = 0.0;
+    
+    rotationMatrix[2][0] = (u * w * (1 - cos(angle)) - v * sqrt(L) * sin(angle)) / L;
+    rotationMatrix[2][1] = (v * w * (1 - cos(angle)) + u * sqrt(L) * sin(angle)) / L;
+    rotationMatrix[2][2] = (w2 + (u2 + v2) * cos(angle)) / L;
+    rotationMatrix[2][3] = 0.0;
+    
+    rotationMatrix[3][0] = 0.0;
+    rotationMatrix[3][1] = 0.0;
+    rotationMatrix[3][2] = 0.0;
+    rotationMatrix[3][3] = 1.0;
+    
+    for(int i = 0; i < 4; i++ ){
+        for(int j = 0; j < 1; j++){
+            outputMatrix[i][j] = 0;
+            for(int k = 0; k < 4; k++){
+                outputMatrix[i][j] += rotationMatrix[i][k] * inputMatrix[k][j];
+            }
+        }
+    }
+    
+    
+    return vmml::vector<3, double>(outputMatrix[0][0], outputMatrix[1][0], outputMatrix[2][0]);
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

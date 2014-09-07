@@ -1,0 +1,19 @@
+package WarpDriveOverloaded;
+
+message User {
+  required string name = 1;
+  required int32 id = 2;
+  optional string email = 3;
+
+  message Character {
+    required string name = 1;
+    required int32 id = 2;
+  }
+
+  optional Character character = 4;
+
+}
+
+message UserList {
+  repeated User user = 1;
+}

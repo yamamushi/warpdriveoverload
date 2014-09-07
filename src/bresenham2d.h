@@ -1,4 +1,4 @@
-#pragma oncebres
+#pragma once
 
 //
 //  bresenham2d.h
@@ -14,9 +14,10 @@
 #define warpdriveoverloaded_bresenham2d_h
 
 #include "tr1_threading.h"
-
+#include <string>
 
 void bresenham2d(int x0, int y0, int x1, int y1, _STD_FUNCTION(void(int, int)) passCommand);
+//void bresenham2d(int x0, int y0, int x1, int y1, std::string symbol, int fg, int bg, int attr, _STD_FUNCTION(void(int, int, std::string, int, int, int)) passCommand);
 
 
 #endif

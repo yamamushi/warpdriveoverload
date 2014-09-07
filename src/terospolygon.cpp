@@ -31,6 +31,12 @@ TerosPolygon::TerosPolygon()
 	zcoord [0] = 0;
 	zcoord [1] = 0;
 	zcoord [2] = 0;
+    
+    m_index = -1;
+    m_fg = 0;
+    m_bg = 0;
+    m_attr = 0;
+    
 }
 
 void TerosPolygon::modp (int index, double x, double y, double z)

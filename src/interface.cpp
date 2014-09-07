@@ -51,10 +51,19 @@ Interface::Interface(_SharedPtr<Shell> owner) : m_owner(owner){
     
     m_initialized = false;
     m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(owner->m_rows, owner->m_cols, 0, 0)); // Initialize our root window
-    getmaxyx(m_mainWindow->get(), m_sizeY, m_sizeX);
+    getmaxyx(m_mainWindow->get(), m_height, m_width);
+    m_widgetManager = _SharedPtr<WidgetManager>(new WidgetManager(this));
 
 }
 
+void Interface::resizeConsole(int width, int height){
+    
+    m_width = width;
+    m_height = height;
+    
+    resizeComponents();
+    
+}
 
 
 void Interface::queueCommand(_STD_FUNCTION(void()) target){

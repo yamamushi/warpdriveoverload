@@ -24,8 +24,9 @@
 #include <vmmlib/vector.hpp>
 #include <vmmlib/matrix.hpp>
 
+#include "Clock.h"
+#include "Hermes.h"
 
-#include <ncurses.h>
 #include <vector>
 
 class TerosTestInterface : public Interface {
@@ -37,6 +38,10 @@ public:
     void init();
     void run();
     void handleKeys(int input);
+
+protected:
+    
+    void resizeComponents();
     
 private:
     
@@ -59,6 +64,7 @@ private:
     _SharedPtr<TRModel> m_trModel;
 
     void move(double speed, double distance);
+    void draw();
     
     int m_direction;
     
@@ -71,6 +77,13 @@ private:
     double m_camspeed;
     
     
+    void update();
+    
+    Interval m_timeKeeper;
+    int m_ticks;
+    int m_secondsElapsed;
+    
+    double Distance(double dX0, double dY0, double dX1, double dY1);
 
 };
 

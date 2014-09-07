@@ -13,7 +13,7 @@
 #include "teros.h"
 #include "terospolygon.h"
 
-#include <ncurses.h>
+
 
 TerosWindow::TerosWindow(_SharedPtr<TerosScreen> owner, int width, int height, int posx, int posy)
 {
@@ -67,7 +67,7 @@ void TerosWindow::loadfromfile(std::string target)
         else{
             std::string output(&ch);
             //m_screen->drawAt(x+m_xpos, y, output);
-            m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(x+m_xpos, y, COLOR_PAIR(1), output)));
+            m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(x+m_xpos, y, output)));
             x++;
         }
     }
@@ -76,10 +76,64 @@ void TerosWindow::loadfromfile(std::string target)
 	input.close ();
 }
 
-void TerosWindow::loadfromvector (vector<char> input, int column)
+
+
+
+void TerosWindow::loadfromvector (vector<TerosView> input, int column)
 {
     
     //    init_pair(12, COLOR_BLUE, COLOR_BLACK); // A default Background Color
+	if (input.size()%column)
+	{
+		//return;
+	}
+    
+    m_display.clear();
+	m_content.resize (input.size ());
+	m_cursors.resize (0);
+	m_activetext.resize (0);
+    
+    int l_width = column;
+    int l_height = (int)input.size()/column;
+    
+    
+	for (int i = 0; i < l_height; i++)
+	{
+		for (int j = 0; j < l_width; j++)
+        {
+            char test;
+            test = input [(i*l_width) + j].c;
+            std::string output(&test);
+            
+            if(m_xpos+j < m_screen->getwidth() && m_ypos+i < m_screen->getheight() ){
+                if(input [(i*l_width) + j].c == ' ' ){
+                    m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, " ", input[(i*l_width) + j].fg, input[(i*l_width) + j].bg, input[(i*l_width) + j].attr)));
+                }
+                else{
+
+                        m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, output, input [(i*l_width) + j].fg, input [(i*l_width) + j].bg, input [(i*l_width) + j].attr)));
+                }
+            }
+            
+		}
+	}
+    
+	m_cursorid = '\0';
+	m_atxtid = '\0';
+	m_transparency = '\0';
+}
+
+
+
+
+
+
+
+
+
+void TerosWindow::loadfromvector (vector<char> input, int column)
+{
+    
 	if (input.size()%column)
 	{
 		return;
@@ -91,38 +145,30 @@ void TerosWindow::loadfromvector (vector<char> input, int column)
 	m_activetext.resize (0);
     
     int l_width = column;
-    int l_height = input.size()/column;
+    int l_height = (int)input.size()/column;
     
     
 	for (int i = 0; i < l_height; i++)
 	{
 		for (int j = 0; j < l_width; j++)
 		{
-			//m_content [(m_height - i - 1)*m_width + j] = input [(i*m_width) + j];
-            init_pair(20, COLOR_BLUE, COLOR_BLACK); // A default Background Color
-            
-            //m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(i, j, COLOR_PAIR(2), "*")));
-            
-            //if(input.at((i*j)+j) != ' ')
             char test;
             test = input [(i*l_width) + j];
             std::string output(&test);
             
             if(m_xpos+j < m_screen->getwidth() && m_ypos+i < m_screen->getheight() ){
-                if(input [(i*l_width) + j] == ' ' || j > l_width - 3){
-                    m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, 20, " ")));
+                if(input [(i*l_width) + j] == ' '){
+                    m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, " ")));
                 }
                 else{
                     if(input [(i*l_width) + j] == '@'){
-                        init_pair(25, COLOR_GREEN, COLOR_BLACK);
-                        m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, 25, output)));
+                        m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, output)));
                     }
                     else if(input [(i*l_width) + j] == 'F'){
-                        init_pair(30, COLOR_RED, COLOR_BLACK);
-                        m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, 30, output)));
+                        m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, output)));
                     }
                     else{
-                        m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, 20, output)));
+                        m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, output)));
                     }
                 }
             }
@@ -260,12 +306,12 @@ int TerosWindow::putypos ()
 
 int TerosWindow::cursorcount ()
 {
-	return m_cursors.size ();
+	return (int)m_cursors.size ();
 }
 
 int TerosWindow::activetextcount ()
 {
-	return m_activetext.size ();
+	return (int)m_activetext.size ();
 }
 
 string TerosWindow::putactivetext (int index)
@@ -292,18 +338,18 @@ TerosScreen::TerosScreen (_SharedPtr<ncursesWindow> owner, int xpos, int ypos, _
     
 }
 
-void TerosScreen::drawAt(int x, int y, std::string output){
+void TerosScreen::drawAt(int x, int y, std::string output, int fg, int bg, int attr){
     
-    m_graphChart->addRawChartPoint(_SharedPtr<GraphChartPoint>(new GraphChartPoint(x, y, COLOR_PAIR(1), output)));
+    m_graphChart->addRawChartPoint(_SharedPtr<GraphChartPoint>(new GraphChartPoint(x, y, output, fg, bg, attr)));
     
 }
 
 
-void TerosScreen::drawAt(int x, int y, char c){
+void TerosScreen::drawAt(int x, int y, char c, int fg, int bg, int attr){
     
     std::string output(&c);
     
-    m_graphChart->addRawChartPoint(_SharedPtr<GraphChartPoint>(new GraphChartPoint(x, y, COLOR_PAIR(1), output)));
+    m_graphChart->addRawChartPoint(_SharedPtr<GraphChartPoint>(new GraphChartPoint(x, y, output, fg, bg, attr)));
     
 }
 
@@ -366,7 +412,7 @@ void TerosScreen::modlayer (int index,  _SharedPtr<TerosWindow> replacement)
 
 int TerosScreen::layercount ()
 {
-	return layers.size ();
+	return (int)layers.size ();
 }
 
 _SharedPtr<TerosWindow> TerosScreen::putlayer(int index)
@@ -494,7 +540,7 @@ string doubletostring (double num)
     
 	rstring2.resize (rstring.size ());
     
-	for (int i = rstring.size () - 1; i >= 0; i--)
+	for (int i = (int)rstring.size () - 1; i >= 0; i--)
 	{
 		rstring2 [lcounter] = rstring [i];
         
