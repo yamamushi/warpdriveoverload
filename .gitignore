@@ -21,8 +21,8 @@
 *.app
 build/
 # bin/
-server
-client
+warpclient
+warpserver
 
 # Sqlite stuff
 *.db
