@@ -9,51 +9,43 @@ set(
 CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin/
 )
 
+set(WARPDRIVEOVERLOADED_CLIENT_SOURCE
+    ${CMAKE_CURRENT_SOURCE_DIR}/client/main.cpp
+  )
+
+set(WARPDRIVEOVERLOADED_CLIENT_HEADERS)
 
 
-add_executable(client main.cpp
-            GraphicsDriverManager.cpp
-            NcursesManager.cpp
-			ship.cpp
-			player.cpp
-			room.cpp
-            sqlite.cpp
-            shell.cpp
-            game_engine.cpp
-            term_control.cpp
-            window.cpp
-            graphchart.cpp
-            interface.cpp
-            debugWindow.cpp
-            navigation.cpp
-            TimeWidget.cpp
-            teros.cpp
-            terospolygon.cpp
-            terosobject.cpp
-            teroscam.cpp
-            terostest.cpp
-            TreasureChest.cpp
-            drawing.cpp
-            TRModel.cpp
-            SphereModel.cpp
-            logger.cpp
-            bresenham2d.cpp
-            MenuWidget.cpp
-            WidgetManager.cpp
-            ColorManager.cpp
-            Clock.cpp
-            windowthread.cpp
-            Hermes.cpp
-            ncurseswindow.cpp
-            sdlwindow.cpp
-            aalibwindow.cpp
-            )
-            
+add_subdirectory(messages)
+
+add_subdirectory(client)
+add_subdirectory(db)
+add_subdirectory(engine)
+add_subdirectory(game)
+add_subdirectory(graphics)
+add_subdirectory(interfaces)
+add_subdirectory(managers)
+add_subdirectory(network)
+add_subdirectory(teros)
+add_subdirectory(terosmodels)
+add_subdirectory(tr1)
+add_subdirectory(util)
+add_subdirectory(widgets)
+add_subdirectory(wintypes)
+
+
+set_source_files_properties(${PROTO_SRC} ${PROTO_HEADER} PROPERTIES GENERATED TRUE)
+
+add_executable(client ${WARPDRIVEOVERLOADED_CLIENT_SOURCE} ${WARPDRIVEOVERLOADED_CLIENT_HEADERS})
+
 target_link_libraries(client messages)
 
-#set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf")
+
+
+
 SET_TARGET_PROPERTIES(client PROPERTIES  LINK_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncursesw -lprotobuf")
 
 if(UNIX AND NOT APPLE)
-	set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf -lrt")
+        set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf -lrt")
 endif()
+

@@ -47,7 +47,7 @@ elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   CHECK_CXX_COMPILER_FLAG(-std=c++11 HAVE_STD11)
   if(HAVE_STD11)
     if(APPLE)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wno-unused-private-field -Wno-mismatched-tags -U__STRICT_ANSI__")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -Wall -Wextra -Wno-missing-braces -Wno-unused-parameter -Wno-sign-compare -Wno-unused-private-field -Wno-mismatched-tags -U__STRICT_ANSI__")
     else()
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
     endif()
@@ -137,9 +137,6 @@ SET(PROJECT_NAME WARPDRIVEOVERLOADED)
 SET(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 
 add_subdirectory(deps)
-
-add_subdirectory(data)
-set_source_files_properties(${PROTO_SRC} ${PROTO_HEADER} PROPERTIES GENERATED TRUE)
 
 add_subdirectory(src)
 
