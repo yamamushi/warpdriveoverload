@@ -9,14 +9,13 @@
 #include "terostest.h"
 #include "teros/terospolygon.h"
 #include "util/logger.h"
-#include "wintypes/ncurseswindow.h"
+#include "managers/ColorManager.h"
 
 #include "terosmodels/SphereModel.h"
 
 
 void TerosTestInterface::init(){
     
-    m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_owner->getHeight(), m_owner->getWidth(), 0, 0)); // Initialize our root window
 
 
     // Our variable initialization
@@ -142,7 +141,7 @@ void TerosTestInterface::run(){
     update();
     
     //if(m_secondsElapsed < 3){
-        m_terosCam->rotateCamAroundAxis(vmml::vector<3, double>(0,0,1), 0.5);
+        m_terosCam->rotateCamAroundAxis(vmml::vector<3, double>(0,0,1), 1);
     //}
     
     resizeComponents();

@@ -56,6 +56,12 @@ private:
     
     std::string testString;
     
+    void setTargetCenter(int x, int y);
+    void randomizeCenter();
+    int m_targetcenterX;
+    int m_targetcenterY;
+    int m_randomCenterX;
+    int m_randomCenterY;
     
 };
 

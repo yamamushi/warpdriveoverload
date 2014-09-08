@@ -35,7 +35,6 @@ void Shell::boot(){
     
     m_graphicsManager = new NcursesManager;
     
-    
     if(!m_graphicsManager->start()){
         std::cout << "Error Starting Graphics Manager" << std::endl;
         exit(1);
@@ -44,10 +43,16 @@ void Shell::boot(){
         m_rows = m_graphicsManager->getHeight();
         m_cols = m_graphicsManager->getWidth();
     }
- 
-    init();
     
 }
+
+
+_SharedPtr<GenericWindow> Shell::createWindow(){
+    
+    return m_graphicsManager->getNewWindow();
+    
+}
+
 
 
 void Shell::refreshShell(){
@@ -67,8 +72,6 @@ void Shell::refreshShell(){
 
 bool Shell::init(){
 
-    
-    
     /*
     //std::cout << "Command Queue Starting" << std::endl;
     Hermes::Instance()->addToCommandQueue(_STD_BIND(&Shell::doNothing, this));
@@ -114,9 +117,9 @@ bool Shell::init(){
     
     netMessage.encode_header();
     Hermes::Instance()->addToNetworkQueue(netMessage);
-*/
-    
     //Hermes::Instance()->startNetworkQueue();
+
+*/
     
     return true;
     
@@ -134,9 +137,6 @@ bool Shell::run(){
         return false;
     }
     
-    // This is about to get fun
-    nodelay(stdscr, true);
-    int keyInput;
     
     // Wait (int) seconds while loop is running
     // 1000 = 1 Second
@@ -145,12 +145,11 @@ bool Shell::run(){
 
     m_running = true;
 
+    int keyInput;
     while(m_running)
 	{
-        refresh();
-        doupdate();
-
-        if((keyInput = getch()) == ERR){
+        
+        if((keyInput = m_graphicsManager->getInput()) == -1){
             execute();
         }
         else{
@@ -174,7 +173,6 @@ bool Shell::run(){
 void Shell::initMainWindow(){
 
     m_topInterface = m_interfaceList.at(0);
-
     m_topInterface->init();
     
 }
@@ -197,6 +195,7 @@ void Shell::execute(){
 
 void Shell::handleKeys(int input){
     
+    if(!m_graphicsManager->getRawStatus())
     switch(input)
     {
         // This is defined in asciicodes.h
@@ -216,6 +215,23 @@ void Shell::handleKeys(int input){
             m_topInterface->handleKeys(input);
             break;
     }
+    else{
+        m_topInterface->handleKeys(input);
+    }
+}
+
+
+void Shell::enableRaw(){
+    
+    m_graphicsManager->startRawInputFeed();
+    
+}
+
+
+void Shell::disableRaw(){
+    
+    m_graphicsManager->stopRawInputFeed();
+    
 }
 
 
@@ -224,8 +240,11 @@ bool Shell::checkForResize(){
     
     int newRows, newCols;
     
-    getmaxyx(stdscr, newRows, newCols);
+    //getmaxyx(stdscr, newRows, newCols);
 
+    newRows = m_graphicsManager->getHeight();
+    newCols = m_graphicsManager->getWidth();
+    
     if(newRows != m_rows || newCols != m_cols){
         m_rows = newRows;
         m_cols = newCols;
@@ -276,7 +295,7 @@ void Shell::populateInterfaces(){
 
 void Shell::printDebug(){
     
-    mvwprintw(stdscr, m_rows/2, m_cols/2, "%s", "Testing Debug Output");
+    //Need a working logger for this
     
 }
 
@@ -374,8 +393,9 @@ void Shell::shutdown(){
     for(size_t x = 0; x < m_windows.size(); x++){
         m_windows.at(x)->close();
     }
-    endwin();
-    
+
+    m_graphicsManager->shutdown();
+
 }
 
 

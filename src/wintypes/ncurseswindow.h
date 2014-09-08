@@ -32,7 +32,9 @@ public:
     void render();
     void refresh();
     void close();
+    void open();
     void clearScreen();
+    bool getOpened();
 
     void addWidget(_SharedPtr<Widget> target);
     void removeWidget(_SharedPtr<Widget> target);
@@ -69,7 +71,7 @@ public:
 private:
     
     WINDOW *m_window;
-    
+        
     int m_colorPaircount;
     void drawLineCallBack(int x, int y, std::string output, int fg=0, int bg=0, int attr=0);
     

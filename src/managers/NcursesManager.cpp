@@ -31,15 +31,20 @@ bool NcursesManager::start(){
     getmaxyx(stdscr,m_rows,m_cols);
     
     
-    //raw(); // disable line buffering
+    raw(); // disable line buffering
     cbreak();			// Line buffering disabled, Pass on
-    keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
     noecho();			/* Don't echo() while we do getch */
     start_color();			/* Start color 			*/
     curs_set(0);
     refresh();
     
+    m_inputInitialized = false;
+    
+    
+    // This is about to get fun
+    // Enable non-blocking input
     keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
+    nodelay(stdscr, true);
 
     return true;
     
@@ -78,3 +83,42 @@ void NcursesManager::setmaxfps(int fps){
         timeout(1000/m_maxfps);
 
 }
+
+
+
+_SharedPtr<GenericWindow> NcursesManager::getNewWindow(){
+    
+    
+    return _SharedPtr<ncursesWindow>(new ncursesWindow(getHeight(), getWidth(), 0, 0));
+    
+}
+
+
+
+int NcursesManager::getInput(){
+    
+    return getch();
+    
+}
+
+
+
+
+void NcursesManager::shutdown(){
+    
+    endwin();
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

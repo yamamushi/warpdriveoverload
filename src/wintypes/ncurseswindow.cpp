@@ -17,8 +17,8 @@
 ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : GenericWindow(height, length, ypos, xpos)
 {
     
-    m_window = newwin(height, length, ypos, xpos);
-    
+    //m_window = newwin(height, length, ypos, xpos);
+    open();
     
     setBGColor(COLOR_BLACK);
     setFGColor(COLOR_GREEN);
@@ -41,10 +41,15 @@ ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : Gener
     
     wrefresh(m_window);
     
+    m_open = true;
+    
 }
 
 
 void ncursesWindow::resize(int height, int length, int ypos, int xpos){
+
+    if(!m_open)
+        return;
     
     m_height = height;
     m_length = length;
@@ -58,6 +63,7 @@ void ncursesWindow::resize(int height, int length, int ypos, int xpos){
 
 void ncursesWindow::close(){
     
+    
     if(m_window){
         /* box(local_win, ' ', ' '); : This won't produce the desired
          * result of erasing the window. It will leave it's four corners
@@ -68,15 +74,34 @@ void ncursesWindow::close(){
         delwin(m_window);
         
     }
-    else{
-        //std::cerr << "Attempted to close null window!" << std::endl;
-    }
+
+    m_open = false;
+    
 }
 
 
 
 
+void ncursesWindow::open(){
+    
+    if(!m_window){
+        
+        m_window = newwin(m_height, m_length, m_ypos, m_xpos);
+
+    }
+    m_open = true;
+}
+
+bool ncursesWindow::getOpened(){
+    
+    return m_open;
+}
+
+
 void ncursesWindow::clearScreen(){
+    
+    if(!m_open)
+        return;
     
     standout();
     wclear(m_window);
@@ -88,6 +113,9 @@ void ncursesWindow::clearScreen(){
 
 
 void ncursesWindow::drawBorder(){
+    
+    if(!m_open)
+        return;
     
     if(m_showBorder){
         
@@ -135,6 +163,9 @@ void ncursesWindow::handleKeys(int input){
 
 void ncursesWindow::drawAt(int x, int y, std::string output){
     
+    if(!m_open)
+        return;
+    
     wattrset(m_window, COLOR_PAIR(m_normalColor));
     mvwprintw(m_window, y, x, "%s", output.c_str());
     wattroff(m_window, COLOR_PAIR(m_normalColor));
@@ -155,6 +186,9 @@ void ncursesWindow::drawLineCallBack(int x, int y, std::string output, int fg, i
 
 
 void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int attr){
+    
+    if(!m_open)
+        return;
     
     if(output == " "){
         drawAt(x, y, ' ', fg, bg, attr);
@@ -190,12 +224,18 @@ void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int
 
 void ncursesWindow::drawAt(int x, int y, char c){
     
+    if(!m_open)
+        return;
+    
     wattrset(m_window, COLOR_PAIR(m_normalColor));
     mvwprintw(m_window, y, x, "%c", c);
     wattroff(m_window, COLOR_PAIR(m_normalColor));
 }
 
 void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
+    
+    if(!m_open)
+        return;
     
     if(x == -1 || y == -1)
         return;
@@ -225,6 +265,9 @@ void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
 
 void ncursesWindow::setNormalColor(int fg, int bg){
     
+    if(!m_open)
+        return;
+    
     if(fg == 0)
         fg = m_fgColor;
     if(bg == 0)
@@ -239,6 +282,7 @@ void ncursesWindow::setNormalColor(int fg, int bg){
 
 
 void ncursesWindow::setSelectedColor(int fg, int bg){
+    
     
     if(fg == 0)
         fg = m_fgColor;
@@ -276,6 +320,9 @@ void ncursesWindow::setBorderColor(int fg, int bg){
 
 
 void ncursesWindow::putPixel(_SharedPtr<Pixel> point){
+    
+    if(!m_open)
+        return;
     
     if(point->x == -1 || point->y == -1)
         return;

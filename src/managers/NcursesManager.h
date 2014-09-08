@@ -10,6 +10,8 @@
 #define __warpdriveoverloaded__NcursesManager__
 
 #include "GraphicsDriverManager.h"
+
+#include "wintypes/ncurseswindow.h"
 #include <ncurses.h>
 
 class NcursesManager : public GraphicsDriverManager {
@@ -22,6 +24,16 @@ public:
     int getHeight();
     int getfps();
     void setmaxfps(int fps);
+    
+    _SharedPtr<GenericWindow> getNewWindow();
+
+    int getInput();
+    
+    void startRawInputFeed();
+    void stopRawInputFeed();
+    
+    void shutdown();
+    
     
 protected:
     

@@ -28,7 +28,6 @@
 #include "interfaces/interface.h"
 
 #include <string>
-#include <ncurses.h>
 #include <vector>
 
 #include "managers/ColorManager.h"
@@ -71,6 +70,8 @@ public:
     void doNothing(){};
     void printDebug();
     
+    _SharedPtr<GenericWindow> createWindow();
+    
 
 protected:
     
@@ -89,6 +90,8 @@ protected:
     void execute();
     
     void handleKeys(int input);
+    void enableRaw();
+    void disableRaw();
     
     void initMainWindow();
     _SharedPtr<GenericWindow> getLastWindow(){return m_windows.back();}

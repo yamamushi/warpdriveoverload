@@ -19,7 +19,7 @@
 #include "teros/teroscam.h"
 #include "teros/terosobject.h"
 #include "teros/terospolygon.h"
-#include "teros/TRModel.h"
+#include "terosmodels/TRModel.h"
 #include <vmmlib/vector.hpp>
 #include <vmmlib/matrix.hpp>
 
