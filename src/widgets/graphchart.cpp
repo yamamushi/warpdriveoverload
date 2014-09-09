@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <algorithm>
 
-GraphChart::GraphChart(_SharedPtr<GenericWindow> parent, int xpos, int ypos) : Widget(parent, xpos, ypos){
+GraphChartWidget::GraphChartWidget(_SharedPtr<GenericWindow> parent, int xpos, int ypos) : Widget(parent, xpos, ypos){
     
     m_showBars = true;
     m_showBorder = true;
@@ -25,7 +25,7 @@ GraphChart::GraphChart(_SharedPtr<GenericWindow> parent, int xpos, int ypos) : W
     
 }
 
-void GraphChart::setSize(int xSize, int ySize){
+void GraphChartWidget::setSize(int xSize, int ySize){
     
     
     if(xSize < 2)
@@ -40,7 +40,7 @@ void GraphChart::setSize(int xSize, int ySize){
     
 }
 
-void GraphChart::fill(){
+void GraphChartWidget::fill(){
     
     if(m_showBars)
     for(int x = 0; x < m_width; x++){
@@ -66,7 +66,7 @@ void GraphChart::fill(){
 }
 
 
-void GraphChart::render(){
+void GraphChartWidget::render(){
     
     generateChart();
     placeAllPoints();
@@ -74,7 +74,7 @@ void GraphChart::render(){
 }
 
 
-void GraphChart::generateChart(){
+void GraphChartWidget::generateChart(){
     
     m_rows = m_height / m_ySize;
     m_cols = m_width / m_xSize;
@@ -82,7 +82,7 @@ void GraphChart::generateChart(){
 }
 
 
-void GraphChart::placeRawPoint(_SharedPtr<GraphChartPoint> point){
+void GraphChartWidget::placeRawPoint(_SharedPtr<GraphChartPoint> point){
     
     if(!point->m_hidden){
         if( point->m_Y > 0 && point->m_Y < m_height){
@@ -95,7 +95,7 @@ void GraphChart::placeRawPoint(_SharedPtr<GraphChartPoint> point){
 
 
 
-void GraphChart::placeAllPoints(){
+void GraphChartWidget::placeAllPoints(){
     
     for(size_t chartX = 0; chartX < m_chartPoints.size(); chartX++){
         
@@ -143,7 +143,7 @@ void GraphChart::placeAllPoints(){
     }
 }
 
-void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
+void GraphChartWidget::removePoint(_SharedPtr<GraphChartPoint> point){
     
     
     std::vector<_SharedPtr<GraphChartPoint> >::iterator it = std::find(m_chartPoints.begin(), m_chartPoints.end(), point);
@@ -181,14 +181,14 @@ void GraphChart::removePoint(_SharedPtr<GraphChartPoint> point){
     }
 }
 
-void GraphChart::addRawChartPoint(_SharedPtr<GraphChartPoint> point){
+void GraphChartWidget::addRawChartPoint(_SharedPtr<GraphChartPoint> point){
     
     removeRawChartPoint(point);
     m_rawchartPoints.push_back(point);
     
 }
 
-void GraphChart::removeRawChartPoint(_SharedPtr<GraphChartPoint> point){
+void GraphChartWidget::removeRawChartPoint(_SharedPtr<GraphChartPoint> point){
     
     std::vector<_SharedPtr<GraphChartPoint> >::iterator it = std::find(m_rawchartPoints.begin(), m_rawchartPoints.end(), point);
     if (it != m_rawchartPoints.end()){
@@ -197,14 +197,14 @@ void GraphChart::removeRawChartPoint(_SharedPtr<GraphChartPoint> point){
     
 }
 
-void GraphChart::addChartPoint(_SharedPtr<GraphChartPoint> point){
+void GraphChartWidget::addChartPoint(_SharedPtr<GraphChartPoint> point){
     
     removeChartPoint(point);
     m_chartPoints.push_back(point);
     
 }
 
-void GraphChart::removeChartPoint(_SharedPtr<GraphChartPoint> point){
+void GraphChartWidget::removeChartPoint(_SharedPtr<GraphChartPoint> point){
     std::vector<_SharedPtr<GraphChartPoint> >::iterator it = std::find(m_chartPoints.begin(), m_chartPoints.end(), point);
     if (it != m_chartPoints.end()){
         m_chartPoints.erase(std::remove(m_chartPoints.begin(), m_chartPoints.end(), point), m_chartPoints.end());
@@ -213,7 +213,7 @@ void GraphChart::removeChartPoint(_SharedPtr<GraphChartPoint> point){
 
 
 
-void GraphChart::drawAt(int x, int y, std::string symbol, int fg, int bg, int attr){
+void GraphChartWidget::drawAt(int x, int y, std::string symbol, int fg, int bg, int attr){
     
     if(y == -1 || x == -1)
         return;
@@ -226,41 +226,41 @@ void GraphChart::drawAt(int x, int y, std::string symbol, int fg, int bg, int at
 
 
 
-void GraphChart::drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg, int bg, int attr){
+void GraphChartWidget::drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg, int bg, int attr){
     
-    bresenham2d(x1, y1, x2, y2, _STD_BIND(&GraphChart::drawAt, this, std::placeholders::_1, std::placeholders::_2, symbol, fg, bg, attr));
-    
-}
-
-
-void GraphChart::clearWindow(){
-    
-    
+    bresenham2d(x1, y1, x2, y2, _STD_BIND(&GraphChartWidget::drawAt, this, std::placeholders::_1, std::placeholders::_2, symbol, fg, bg, attr));
     
 }
 
 
-void GraphChart::clearAllChartPoints(){
+void GraphChartWidget::clearWindow(){
+    
+    
+    
+}
+
+
+void GraphChartWidget::clearAllChartPoints(){
 
     m_chartPoints.clear();
 
 }
 
-void GraphChart::clearAllRawChartPoints(){
+void GraphChartWidget::clearAllRawChartPoints(){
    
     m_rawchartPoints.clear();
 
 }
 
 
-void GraphChart::refresh(){
+void GraphChartWidget::refresh(){
     
     fill();
     
 }
 
 
-void GraphChart::resize(int width, int height){
+void GraphChartWidget::resize(int width, int height){
  
     if(width >= 0 && width <= m_parent->getX())
         m_width = width;
@@ -270,7 +270,7 @@ void GraphChart::resize(int width, int height){
 }
 
 
-void GraphChart::resizeChart(int xSize, int ySize){
+void GraphChartWidget::resizeChart(int xSize, int ySize){
     
     if(xSize > 1)
         m_xSize = xSize;
@@ -283,7 +283,7 @@ void GraphChart::resizeChart(int xSize, int ySize){
 }
 
 
-void GraphChart::handleKeys(int input){
+void GraphChartWidget::handleKeys(int input){
     
     
 }

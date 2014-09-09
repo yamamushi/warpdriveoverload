@@ -36,8 +36,8 @@ public:
     virtual int getInput(){return -1;}
     
     virtual bool getRawStatus(){return m_rawStarted;};
-    void startRawInputFeed(){m_rawStarted = true;};
-    void stopRawInputFeed(){m_rawStarted = false;};
+    virtual void startRawInputFeed(){m_rawStarted = true;};
+    virtual void stopRawInputFeed(){m_rawStarted = false;};
 
     
     virtual void shutdown(){};

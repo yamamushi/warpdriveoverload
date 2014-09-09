@@ -23,11 +23,11 @@
 class Widget;
 
 
-class ncursesWindow : public GenericWindow {
+class NcursesWindow : public GenericWindow {
     
 public:
     
-    ncursesWindow(int height, int length, int ypos, int xpos);
+    NcursesWindow(int height, int length, int ypos, int xpos);
     
     void render();
     void refresh();
@@ -35,9 +35,6 @@ public:
     void open();
     void clearScreen();
     bool getOpened();
-
-    void addWidget(_SharedPtr<Widget> target);
-    void removeWidget(_SharedPtr<Widget> target);
     
     void clearArea(int x1, int y1, int x2, int y2);
     void clearRowBetween(int x1, int x2, int row);

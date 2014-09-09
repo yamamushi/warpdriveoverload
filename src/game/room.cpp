@@ -19,7 +19,7 @@ std::string Room::getDescription(){
     output += "You see here: " + ansi_bold + ansi_fore_red;
     
     for(int x = 0; x < m_entities.size(); x++){
-        output += m_entities.at(x)->getName();
+        output += m_entities.at((unsigned long) x)->getName();
         if(x == m_entities.size() - 1){
             output += ansi_term_reset + ". ";
         }

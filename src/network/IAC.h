@@ -9,34 +9,34 @@
 #ifndef warpdriveoverloaded_IAC_h
 #define warpdriveoverloaded_IAC_h
 
-const SE 240
-const NOP 241
-const DM 242
-const BRK 243
-const IP 244
-const AO 245
-const AYT 246
-const EC 247
-const EL 248
-const GA 249
-const SB 250
-const WILL 251
-const WONT 252
-const DO 253
-const DONT 254
-const IAC 255
+const int SE = 240;
+const int NOP = 241;
+const int DM = 242;
+const int BRK = 243;
+const int IP = 244;
+const int AO = 245;
+const int AYT = 246;
+const int EC = 247;
+const int EL = 248;
+const int GA = 249;
+const int SB = 250;
+const int WILL = 251;
+const int WONT = 252;
+const int DO = 253;
+const int DONT = 254;
+const int IAC = 255;
 
 
-const ECHO 1
-const SUPPRESSGOAHEAD 3
-const STATUS 5
-const TIMINGMARK 6
-const TERMTYPE 24
-const WINDOWSIZE 31
-const TERMSPEED 32
-const REMOTEFLOW 33
-const LINEMODE 34
-const ENVVAR 36
+const int ECHO = 1;
+const int SUPPRESSGOAHEAD = 3;
+const int STATUS = 5;
+const int TIMINGMARK = 6;
+const int TERMTYPE = 24;
+const int WINDOWSIZE = 31;
+const int TERMSPEED = 32;
+const int REMOTEFLOW = 33;
+const int LINEMODE = 34;
+const int ENVVAR = 36;
 
 
 #endif

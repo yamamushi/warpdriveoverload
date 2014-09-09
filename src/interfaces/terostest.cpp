@@ -42,7 +42,7 @@ void TerosTestInterface::init(){
     // Set up our Widgets First
 
     // Create a graph controller widget which will take the smallest grid size by default.
-    m_graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 0, 0));
+    m_graphController = _SharedPtr<GraphChartWidget>(new GraphChartWidget(m_mainWindow, 0, 0));
 
     // We would add this widget to our parent window widget list
     // But we are rendering our graph controller by hand in our run() loop.

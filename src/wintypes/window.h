@@ -32,7 +32,7 @@ struct winBorder {
 struct Pixel {
     
     int x, y;
-    int attr;
+    unsigned int attr;
     int fg;
     int bg;
     char c;

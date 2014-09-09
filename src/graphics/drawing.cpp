@@ -118,7 +118,7 @@ void plotLineAA(int x0, int y0, int x1, int y1)
     int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
     int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
     int err = dx-dy, e2, x2;                       /* error value e_xy */
-    int ed = dx+dy == 0 ? 1 : sqrt((double)dx*dx+(double)dy*dy);
+    int ed = (int) (dx+dy == 0 ? 1 : sqrt((double)dx*dx+(double)dy*dy));
     
     for ( ; ; ){                                         /* pixel loop */
         //setPixelAA(x0,y0, 255*abs(err-dx+dy)/ed);
@@ -283,21 +283,21 @@ void plotQuadBezier(int x0, int y0, int x1, int y1, int x2, int y2)
         t = (x0-x1)/t;
         r = (1-t)*((1-t)*y0+2.0*t*y1)+t*t*y2;                       /* By(t=P4) */
         t = (x0*x2-x1*x1)*t/(x0-x1);                       /* gradient dP4/dx=0 */
-        x = floor(t+0.5); y = floor(r+0.5);
+        x = (int) floor(t+0.5); y = (int) floor(r+0.5);
         r = (y1-y0)*(t-x0)/(x1-x0)+y0;                  /* intersect P3 | P0 P1 */
-        plotQuadBezierSeg(x0,y0, x,floor(r+0.5), x,y);
+        plotQuadBezierSeg(x0,y0, x, (int) floor(r+0.5), x,y);
         r = (y1-y2)*(t-x2)/(x1-x2)+y2;                  /* intersect P4 | P1 P2 */
-        x0 = x1 = x; y0 = y; y1 = floor(r+0.5);             /* P0 = P4, P1 = P8 */
+        x0 = x1 = x; y0 = y; y1 = (int) floor(r+0.5);             /* P0 = P4, P1 = P8 */
     }
     if ((long)(y0-y1)*(y2-y1) > 0) {                    /* vertical cut at P6? */
         t = y0-2*y1+y2; t = (y0-y1)/t;
         r = (1-t)*((1-t)*x0+2.0*t*x1)+t*t*x2;                       /* Bx(t=P6) */
         t = (y0*y2-y1*y1)*t/(y0-y1);                       /* gradient dP6/dy=0 */
-        x = floor(r+0.5); y = floor(t+0.5);
+        x = (int) floor(r+0.5); y = (int) floor(t+0.5);
         r = (x1-x0)*(t-y0)/(y1-y0)+x0;                  /* intersect P6 | P0 P1 */
-        plotQuadBezierSeg(x0,y0, floor(r+0.5),y, x,y);
+        plotQuadBezierSeg(x0,y0, (int) floor(r+0.5),y, x,y);
         r = (x1-x2)*(t-y2)/(y1-y2)+x2;                  /* intersect P7 | P1 P2 */
-        x0 = x; x1 = floor(r+0.5); y0 = y1 = y;             /* P0 = P6, P1 = P7 */
+        x0 = x; x1 = (int) floor(r+0.5); y0 = y1 = y;             /* P0 = P6, P1 = P7 */
     }
     plotQuadBezierSeg(x0,y0, x1,y1, x2,y2);                  /* remaining part */
 }
@@ -329,12 +329,12 @@ void plotQuadRationalBezierSeg(int x0, int y0, int x1, int y1,
         
         if (w < 0.5 && (dy > xy || dx < xy)) {   /* flat ellipse, algorithm fails */
             cur = (w+1.0)/2.0; w = sqrt(w); xy = 1.0/(w+1.0);
-            sx = floor((x0+2.0*w*x1+x2)*xy/2.0+0.5);    /* subdivide curve in half */
-            sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
+            sx = (int) floor((x0+2.0*w*x1+x2)*xy/2.0+0.5);    /* subdivide curve in half */
+            sy = (int) floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
             dx = floor((w*x1+x0)*xy+0.5); dy = floor((y1*w+y0)*xy+0.5);
-            plotQuadRationalBezierSeg(x0,y0, dx,dy, sx,sy, cur);/* plot separately */
+            plotQuadRationalBezierSeg(x0,y0, (int) dx, (int) dy, sx,sy, cur);/* plot separately */
             dx = floor((w*x1+x2)*xy+0.5); dy = floor((y1*w+y2)*xy+0.5);
-            plotQuadRationalBezierSeg(sx,sy, dx,dy, x2,y2, cur);
+            plotQuadRationalBezierSeg(sx,sy, (int) dx, (int) dy, x2,y2, cur);
             return;
         }
         err = dx+dy-xy;                                           /* error 1.step */
@@ -360,7 +360,7 @@ void plotQuadRationalBezier(int x0, int y0, int x1, int y1,
     if (xx*(x2-x1) > 0) {                             /* horizontal cut at P4? */
         if (yy*(y2-y1) > 0)                          /* vertical cut at P6 too? */
             if (fabs(xx*y) > fabs(yy*x)) {                       /* which first? */
-                x0 = x2; x2 = xx+x1; y0 = y2; y2 = yy+y1;          /* swap points */
+                x0 = x2; x2 = (int) (xx+x1); y0 = y2; y2 = (int) (yy+y1);          /* swap points */
             }                            /* now horizontal cut at P4 comes first */
         if (x0 == x2 || w == 1.0) t = (x0-x1)/(double)x;
         else {                                 /* non-rational or rational case */
@@ -373,11 +373,11 @@ void plotQuadRationalBezier(int x0, int y0, int x1, int y1,
         yy = (t*t*(y0-2.0*w*y1+y2)+2.0*t*(w*y1-y0)+y0)*q;
         ww = t*(w-1.0)+1.0; ww *= ww*q;                    /* squared weight P3 */
         w = ((1.0-t)*(w-1.0)+1.0)*sqrt(q);                         /* weight P8 */
-        x = floor(xx+0.5); y = floor(yy+0.5);                             /* P4 */
+        x = (int) floor(xx+0.5); y = (int) floor(yy+0.5);                             /* P4 */
         yy = (xx-x0)*(y1-y0)/(x1-x0)+y0;                /* intersect P3 | P0 P1 */
-        plotQuadRationalBezierSeg(x0,y0, x,floor(yy+0.5), x,y, ww);
+        plotQuadRationalBezierSeg(x0,y0, x, (int) floor(yy+0.5), x,y, ww);
         yy = (xx-x2)*(y1-y2)/(x1-x2)+y2;                /* intersect P4 | P1 P2 */
-        y1 = floor(yy+0.5); x0 = x1 = x; y0 = y;            /* P0 = P4, P1 = P8 */
+        y1 = (int) floor(yy+0.5); x0 = x1 = x; y0 = y;            /* P0 = P4, P1 = P8 */
     }
     if ((y0-y1)*(long)(y2-y1) > 0) {                    /* vertical cut at P6? */
         if (y0 == y2 || w == 1.0) t = (y0-y1)/(y0-2.0*y1+y2);
@@ -391,11 +391,11 @@ void plotQuadRationalBezier(int x0, int y0, int x1, int y1,
         yy = (t*t*(y0-2.0*w*y1+y2)+2.0*t*(w*y1-y0)+y0)*q;
         ww = t*(w-1.0)+1.0; ww *= ww*q;                    /* squared weight P5 */
         w = ((1.0-t)*(w-1.0)+1.0)*sqrt(q);                         /* weight P7 */
-        x = floor(xx+0.5); y = floor(yy+0.5);                             /* P6 */
+        x = (int) floor(xx+0.5); y = (int) floor(yy+0.5);                             /* P6 */
         xx = (x1-x0)*(yy-y0)/(y1-y0)+x0;                /* intersect P6 | P0 P1 */
-        plotQuadRationalBezierSeg(x0,y0, floor(xx+0.5),y, x,y, ww);
+        plotQuadRationalBezierSeg(x0,y0, (int) floor(xx+0.5),y, x,y, ww);
         xx = (x1-x2)*(yy-y2)/(y1-y2)+x2;                /* intersect P7 | P1 P2 */
-        x1 = floor(xx+0.5); x0 = x; y0 = y1 = y;            /* P0 = P6, P1 = P7 */
+        x1 = (int) floor(xx+0.5); x0 = x; y0 = y1 = y;            /* P0 = P6, P1 = P7 */
     }
     plotQuadRationalBezierSeg(x0,y0, x1,y1, x2,y2, w*w);          /* remaining */
 }
@@ -405,7 +405,7 @@ void plotRotatedEllipse(int x, int y, int a, int b, double angle)
     double xd = (long)a*a, yd = (long)b*b;
     double s = sin(angle), zd = (xd-yd)*s;                  /* ellipse rotation */
     xd = sqrt(xd-zd*s), yd = sqrt(yd+zd*s);           /* surrounding rectangle */
-    a = xd+0.5; b = yd+0.5; zd = zd*a*b/(xd*yd);           /* scale to integer */
+    a = (int) (xd+0.5); b = (int) (yd+0.5); zd = zd*a*b/(xd*yd);           /* scale to integer */
     plotRotatedEllipseRect(x-a,y-b, x+a,y+b, (long)(4*zd*cos(angle)));
 }
 
@@ -416,7 +416,7 @@ void plotRotatedEllipseRect(int x0, int y0, int x1, int y1, long zd)
     if (zd == 0) return plotEllipseRect(x0,y0, x1,y1);          /* looks nicer */
     if (w != 0.0) w = (w-zd)/(w+w);                    /* squared weight of P1 */
     assert(w <= 1.0 && w >= 0.0);                /* limit angle to |zd|<=xd*yd */
-    xd = floor(xd*w+0.5); yd = floor(yd*w+0.5);           /* snap xe,ye to int */
+    xd = (int) floor(xd*w+0.5); yd = (int) floor(yd*w+0.5);           /* snap xe,ye to int */
     plotQuadRationalBezierSeg(x0,y0+yd, x0,y0, x0+xd,y0, 1.0-w);
     plotQuadRationalBezierSeg(x0,y0+yd, x0,y1, x1-xd,y1, w);
     plotQuadRationalBezierSeg(x1,y1-yd, x1,y1, x1-xd,y1, 1.0-w);
@@ -437,7 +437,7 @@ void plotCubicBezierSeg(int x0, int y0, double x1, double y1,
     assert((y1-y0)*(y2-y3) < EP && ((y3-y0)*(y1-y2) < EP || yb*yb < ya*yc+EP));
     
     if (xa == 0 && ya == 0) {                              /* quadratic Bezier */
-        sx = floor((3*x1-x0+1)/2); sy = floor((3*y1-y0+1)/2);   /* new midpoint */
+        sx = (int) floor((3*x1-x0+1)/2); sy = (int) floor((3*y1-y0+1)/2);   /* new midpoint */
         return plotQuadBezierSeg(x0,y0, sx,sy, x3,y3);
     }
     x1 = (x1-x0)*(x1-x0)+(y1-y0)*(y1-y0)+1;                    /* line lengths */
@@ -445,7 +445,7 @@ void plotCubicBezierSeg(int x0, int y0, double x1, double y1,
     do {                                                /* loop over both ends */
         ab = xa*yb-xb*ya; ac = xa*yc-xc*ya; bc = xb*yc-xc*yb;
         ex = ab*(ab+ac-3*bc)+ac*ac;       /* P0 part of self-intersection loop? */
-        f = ex > 0 ? 1 : sqrt(1+1024/x1);               /* calculate resolution */
+        f = (int) (ex > 0 ? 1 : sqrt(1+1024/x1));               /* calculate resolution */
         ab *= f; ac *= f; bc *= f; ex *= f*f;            /* increase resolution */
         xy = 9*(ab+ac+bc)/8; cb = 8*(xa-ya);  /* init differences of 1st degree */
         dx = 27*(8*ab*(yb*yb-ya*yc)+ex*(ya+2*yb+yc))/64-ya*ya*(xy-ya);
@@ -478,8 +478,8 @@ void plotCubicBezierSeg(int x0, int y0, double x1, double y1,
             if (2*fy <= f) { y0 += sy; fy += f; }                      /* y step */
             if (pxy == &xy && dx < 0 && dy > 0) pxy = &EP;  /* pixel ahead valid */
         }
-    exit: xx = x0; x0 = x3; x3 = xx; sx = -sx; xb = -xb;             /* swap legs */
-        yy = y0; y0 = y3; y3 = yy; sy = -sy; yb = -yb; x1 = x2;
+    exit: xx = x0; x0 = x3; x3 = (int) xx; sx = -sx; xb = -xb;             /* swap legs */
+        yy = y0; y0 = y3; y3 = (int) yy; sy = -sy; yb = -yb; x1 = x2;
     } while (leg--);                                          /* try other end */
     plotLine(x0,y0, x3,y3);       /* remaining part in case of cusp or crunode */
 }
@@ -522,7 +522,7 @@ void plotCubicBezier(int x0, int y0, int x1, int y1,
         fy2 = (t2*(t2*yb-2*yc)-t1*(t2*(t2*ya-2*yb)+yc)+yd)/8-fy0;
         fx0 -= fx3 = (t2*(t2*(3*xb-t2*xa)-3*xc)+xd)/8;
         fy0 -= fy3 = (t2*(t2*(3*yb-t2*ya)-3*yc)+yd)/8;
-        x3 = floor(fx3+0.5); y3 = floor(fy3+0.5);        /* scale bounds to int */
+        x3 = (int) floor(fx3+0.5); y3 = (int) floor(fy3+0.5);        /* scale bounds to int */
         if (fx0 != 0.0) { fx1 *= fx0 = (x0-x3)/fx0; fx2 *= fx0; }
         if (fy0 != 0.0) { fy1 *= fy0 = (y0-y3)/fy0; fy2 *= fy0; }
         if (x0 != x3 || y0 != y3)                            /* segment t1 - t2 */
@@ -646,18 +646,18 @@ void plotQuadRationalBezierSegAA(int x0, int y0, int x1, int y1,
         
         if (w < 0.5 && dy > dx) {              /* flat ellipse, algorithm fails */
             cur = (w+1.0)/2.0; w = sqrt(w); xy = 1.0/(w+1.0);
-            sx = floor((x0+2.0*w*x1+x2)*xy/2.0+0.5); /* subdivide curve in half  */
-            sy = floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
+            sx = (int) floor((x0+2.0*w*x1+x2)*xy/2.0+0.5); /* subdivide curve in half  */
+            sy = (int) floor((y0+2.0*w*y1+y2)*xy/2.0+0.5);
             dx = floor((w*x1+x0)*xy+0.5); dy = floor((y1*w+y0)*xy+0.5);
-            plotQuadRationalBezierSegAA(x0,y0, dx,dy, sx,sy, cur); /* plot apart */
+            plotQuadRationalBezierSegAA(x0,y0, (int) dx, (int) dy, sx,sy, cur); /* plot apart */
             dx = floor((w*x1+x2)*xy+0.5); dy = floor((y1*w+y2)*xy+0.5);
-            return plotQuadRationalBezierSegAA(sx,sy, dx,dy, x2,y2, cur);
+            return plotQuadRationalBezierSegAA(sx,sy, (int) dx, (int) dy, x2,y2, cur);
         }
         err = dx+dy-xy;                                       /* error 1st step */
         do {                                                      /* pixel loop */
             cur = fmin(dx-xy,xy-dy); ed = fmax(dx-xy,xy-dy);
             ed += 2*ed*cur*cur/(4.*ed*ed+cur*cur); /* approximate error distance */
-            x1 = 255*fabs(err-dx-dy+xy)/ed;    /* get blend value by pixel error */
+            x1 = (int) (255*fabs(err-dx-dy+xy)/ed);    /* get blend value by pixel error */
             if (x1 < 256)
                 ;//setPixelAA(x0,y0, x1);                   /* plot curve */
             if ((f = 2*err+dy < 0)) {                                    /* y step */
@@ -692,7 +692,7 @@ void plotCubicBezierSegAA(int x0, int y0, double x1, double y1,
     assert((y1-y0)*(y2-y3) < EP && ((y3-y0)*(y1-y2) < EP || yb*yb < ya*yc+EP));
     
     if (xa == 0 && ya == 0) {                              /* quadratic Bezier */
-        sx = floor((3*x1-x0+1)/2); sy = floor((3*y1-y0+1)/2);   /* new midpoint */
+        sx = (int) floor((3*x1-x0+1)/2); sy = (int) floor((3*y1-y0+1)/2);   /* new midpoint */
         return plotQuadBezierSegAA(x0,y0, sx,sy, x3,y3);
     }
     x1 = (x1-x0)*(x1-x0)+(y1-y0)*(y1-y0)+1;                    /* line lengths */
@@ -701,7 +701,7 @@ void plotCubicBezierSegAA(int x0, int y0, double x1, double y1,
         ab = xa*yb-xb*ya; ac = xa*yc-xc*ya; bc = xb*yc-xc*yb;
         ip = 4*ab*bc-ac*ac;                   /* self intersection loop at all? */
         ex = ab*(ab+ac-3*bc)+ac*ac;       /* P0 part of self-intersection loop? */
-        f = ex > 0 ? 1 : sqrt(1+1024/x1);               /* calculate resolution */
+        f = (int) (ex > 0 ? 1 : sqrt(1+1024/x1));               /* calculate resolution */
         ab *= f; ac *= f; bc *= f; ex *= f*f;            /* increase resolution */
         xy = 9*(ab+ac+bc)/8; ba = 8*(xa-ya);  /* init differences of 1st degree */
         dx = 27*(8*ab*(yb*yb-ya*yc)+ex*(ya+2*yb+yc))/64-ya*ya*(xy-ya);
@@ -762,8 +762,8 @@ void plotCubicBezierSegAA(int x0, int y0, double x1, double y1,
                 ;//setPixelAA(x0, y2+sy, 255*px/ed);         /* plot curve */
             x0 += sx;
         }
-        xx = x0; x0 = x3; x3 = xx; sx = -sx; xb = -xb;             /* swap legs */
-        yy = y0; y0 = y3; y3 = yy; sy = -sy; yb = -yb; x1 = x2;
+        xx = x0; x0 = x3; x3 = (int) xx; sx = -sx; xb = -xb;             /* swap legs */
+        yy = y0; y0 = y3; y3 = (int) yy; sy = -sy; yb = -yb; x1 = x2;
     } while (leg--);                                          /* try other end */
     plotLineAA(x0,y0, x3,y3);     /* remaining part in case of cusp or crunode */
 }
@@ -784,16 +784,16 @@ void plotQuadSpline(int n, int x[], int y[])
     
     for (i = 2; i < n; i++) {                                 /* forward sweep */
         if (i-2 < M_MAX) m[i-2] = mi = 1.0/(6.0-mi);
-        x[i] = x0 = floor(8*x[i]-x0*mi+0.5);                        /* store yi */
-        y[i] = y0 = floor(8*y[i]-y0*mi+0.5);
+        x[i] = x0 = (int) floor(8*x[i]-x0*mi+0.5);                        /* store yi */
+        y[i] = y0 = (int) floor(8*y[i]-y0*mi+0.5);
     }
-    x1 = floor((x0-2*x2)/(5.0-mi)+0.5);                 /* correction last row */
-    y1 = floor((y0-2*y2)/(5.0-mi)+0.5);
+    x1 = (int) floor((x0-2*x2)/(5.0-mi)+0.5);                 /* correction last row */
+    y1 = (int) floor((y0-2*y2)/(5.0-mi)+0.5);
     
     for (i = n-2; i > 0; i--) {                           /* back substitution */
         if (i <= M_MAX) mi = m[i-1];
-        x0 = floor((x[i]-x1)*mi+0.5);                            /* next corner */
-        y0 = floor((y[i]-y1)*mi+0.5);
+        x0 = (int) floor((x[i]-x1)*mi+0.5);                            /* next corner */
+        y0 = (int) floor((y[i]-y1)*mi+0.5);
         plotQuadBezier((x0+x1)/2,(y0+y1)/2, x1,y1, x2,y2);
         x2 = (x0+x1)/2; x1 = x0;
         y2 = (y0+y1)/2; y1 = y0;
@@ -815,31 +815,31 @@ void plotCubicSpline(int n, int x[], int y[])
     
     for (i = 2; i < n; i++) {                                /* foreward sweep */
         if (i-2 < M_MAX) m[i-2] = mi = 0.25/(2.0-mi);
-        x[i] = x0 = floor(12*x[i]-2*x0*mi+0.5);
-        y[i] = y0 = floor(12*y[i]-2*y0*mi+0.5);
+        x[i] = x0 = (int) floor(12*x[i]-2*x0*mi+0.5);
+        y[i] = y0 = (int) floor(12*y[i]-2*y0*mi+0.5);
     }
-    x2 = floor((x0-3*x4)/(7-4*mi)+0.5);                    /* correct last row */
-    y2 = floor((y0-3*y4)/(7-4*mi)+0.5);
+    x2 = (int) floor((x0-3*x4)/(7-4*mi)+0.5);                    /* correct last row */
+    y2 = (int) floor((y0-3*y4)/(7-4*mi)+0.5);
     plotCubicBezier(x3,y3, (x2+x4)/2,(y2+y4)/2, x4,y4, x4,y4);
     
     if (n-3 < M_MAX) mi = m[n-3];
-    x1 = floor((x[n-2]-2*x2)*mi+0.5);
-    y1 = floor((y[n-2]-2*y2)*mi+0.5);
+    x1 = (int) floor((x[n-2]-2*x2)*mi+0.5);
+    y1 = (int) floor((y[n-2]-2*y2)*mi+0.5);
     for (i = n-3; i > 0; i--) {                           /* back substitution */
         if (i <= M_MAX) mi = m[i-1];
-        x0 = floor((x[i]-2*x1)*mi+0.5);
-        y0 = floor((y[i]-2*y1)*mi+0.5);
-        x4 = floor((x0+4*x1+x2+3)/6.0);                     /* reconstruct P[i] */
-        y4 = floor((y0+4*y1+y2+3)/6.0);
+        x0 = (int) floor((x[i]-2*x1)*mi+0.5);
+        y0 = (int) floor((y[i]-2*y1)*mi+0.5);
+        x4 = (int) floor((x0+4*x1+x2+3)/6.0);                     /* reconstruct P[i] */
+        y4 = (int) floor((y0+4*y1+y2+3)/6.0);
         plotCubicBezier(x4,y4,
-                        floor((2*x1+x2)/3+0.5),floor((2*y1+y2)/3+0.5),
-                        floor((x1+2*x2)/3+0.5),floor((y1+2*y2)/3+0.5),
+                (int) floor((2*x1+x2)/3+0.5), (int) floor((2*y1+y2)/3+0.5),
+                (int) floor((x1+2*x2)/3+0.5), (int) floor((y1+2*y2)/3+0.5),
                         x3,y3);
         x3 = x4; y3 = y4; x2 = x1; y2 = y1; x1 = x0; y1 = y0;
     }
-    x0 = x[0]; x4 = floor((3*x0+7*x1+2*x2+6)/12.0);        /* reconstruct P[1] */
-    y0 = y[0]; y4 = floor((3*y0+7*y1+2*y2+6)/12.0);
-    plotCubicBezier(x4,y4, floor((2*x1+x2)/3+0.5),floor((2*y1+y2)/3+0.5),
-                    floor((x1+2*x2)/3+0.5),floor((y1+2*y2)/3+0.5), x3,y3);
+    x0 = x[0]; x4 = (int) floor((3*x0+7*x1+2*x2+6)/12.0);        /* reconstruct P[1] */
+    y0 = y[0]; y4 = (int) floor((3*y0+7*y1+2*y2+6)/12.0);
+    plotCubicBezier(x4,y4, (int) floor((2*x1+x2)/3+0.5), (int) floor((2*y1+y2)/3+0.5),
+            (int) floor((x1+2*x2)/3+0.5), (int) floor((y1+2*y2)/3+0.5), x3,y3);
     plotCubicBezier(x0,y0, x0,y0, (x0+x1)/2,(y0+y1)/2, x4,y4);
 }

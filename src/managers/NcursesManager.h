@@ -37,7 +37,7 @@ public:
     
 protected:
     
-    friend Shell;
+    friend class Shell;
     
 
     

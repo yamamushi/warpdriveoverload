@@ -34,7 +34,7 @@ void NavigationInterface::init(){
     m_graphX = 1;
     m_graphY = 1;
     lotteryLimit = 100;
-    graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 0, 0));
+    graphController = _SharedPtr<GraphChartWidget>(new GraphChartWidget(m_mainWindow, 0, 0));
     //m_widgetManager->addWidget(graphController);
     graphController->setSize(6, 4);
     
@@ -265,8 +265,8 @@ void NavigationInterface::randDirection(){
     
     int lottery = rand() % lotteryLimit;
     if(lottery > lotteryLimit - 50 ){
-        int number = rand() % graphController->getAllChartPoints().size();
-        _SharedPtr<GraphChartPoint> point1 = graphController->getAllChartPoints().at(number);
+        int number = (int) (rand() % graphController->getAllChartPoints().size());
+        _SharedPtr<GraphChartPoint> point1 = graphController->getAllChartPoints().at((unsigned long) number);
         if(point1){
             
             int direction = rand() % 9 + 1;
@@ -322,6 +322,8 @@ void NavigationInterface::randDirection(){
                         point1->m_X++;
                     if(point1->m_Y > 0)
                         point1->m_Y--;
+                    break;
+                default:
                     break;
             }
             

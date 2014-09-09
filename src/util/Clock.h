@@ -80,7 +80,7 @@ class Interval
     
 public:
     // Ctor
-    inline Interval() : initial_(Clock::tickCount())
+    inline Interval() : initial_((unsigned int) Clock::tickCount())
     {
     }
     
@@ -91,7 +91,7 @@ public:
     
     inline unsigned int value() const
     {
-        return Clock::tickCount()-initial_;
+        return (unsigned int) (Clock::tickCount()-initial_);
     }
     
 private:

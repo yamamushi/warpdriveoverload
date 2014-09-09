@@ -72,7 +72,7 @@ public:
     {
         char header[header_length + 1] = "";
         std::strncat(header, data_, header_length);
-        body_length_ = std::atoi(header);
+        body_length_ = (size_t) std::atoi(header);
         if (body_length_ > max_body_length)
         {
             body_length_ = 0;

@@ -89,7 +89,7 @@ void NcursesManager::setmaxfps(int fps){
 _SharedPtr<GenericWindow> NcursesManager::getNewWindow(){
     
     
-    return _SharedPtr<ncursesWindow>(new ncursesWindow(getHeight(), getWidth(), 0, 0));
+    return _SharedPtr<NcursesWindow>(new NcursesWindow(getHeight(), getWidth(), 0, 0));
     
 }
 
@@ -111,14 +111,14 @@ void NcursesManager::shutdown(){
 }
 
 
+void NcursesManager::startRawInputFeed() {
 
+    GraphicsDriverManager::startRawInputFeed();
 
+}
 
+void NcursesManager::stopRawInputFeed() {
 
+    GraphicsDriverManager::stopRawInputFeed();
 
-
-
-
-
-
-
+}

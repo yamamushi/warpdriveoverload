@@ -133,7 +133,7 @@ bool sqliteDB::openDB(std::string pathname){
 void sqliteDB::resultcontainer(std::vector<std::pair<std::string, std::string> > output){
     
     for(int x = 0; x < output.size(); x++){
-        m_dataContainer.push_back(output.at(x));
+        m_dataContainer.push_back(output.at((unsigned long) x));
     }
     
     

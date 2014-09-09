@@ -2,6 +2,9 @@
 // Written by Ian R Clauser (Fall3nSp0rk
 // WarpDriveOverloaded by Jonathan Rumion (Yamamushi)
 
+#include <string>
+#include <vector>
+
 class db {
 	public:
 		db( const std::string &dbname, const std::string &dbuser, const std::string &dbpass, const std::string &initfile ); //constructor for database class.

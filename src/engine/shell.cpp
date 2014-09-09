@@ -239,8 +239,6 @@ void Shell::disableRaw(){
 bool Shell::checkForResize(){
     
     int newRows, newCols;
-    
-    //getmaxyx(stdscr, newRows, newCols);
 
     newRows = m_graphicsManager->getHeight();
     newCols = m_graphicsManager->getWidth();

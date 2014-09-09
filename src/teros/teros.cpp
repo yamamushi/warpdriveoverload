@@ -161,10 +161,10 @@ void TerosWindow::loadfromvector (vector<char> input, int column)
                     m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, " ")));
                 }
                 else{
-                    if(input [(i*l_width) + j] == '@'){
+                    if((input [(i*l_width) + j]) == '@'){
                         m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, output)));
                     }
-                    else if(input [(i*l_width) + j] == 'F'){
+                    else if((input [(i*l_width) + j]) == 'F'){
                         m_display.push_back(_SharedPtr<GraphChartPoint>(new GraphChartPoint(j+m_xpos, i+m_ypos, output)));
                     }
                     else{
@@ -327,7 +327,7 @@ string TerosWindow::putactivetext (int index)
 
 
 
-TerosScreen::TerosScreen (_SharedPtr<GenericWindow> owner, int xpos, int ypos, _SharedPtr<GraphChart> renderObject) : Widget(owner)
+TerosScreen::TerosScreen (_SharedPtr<GenericWindow> owner, int xpos, int ypos, _SharedPtr<GraphChartWidget> renderObject) : Widget(owner)
 {
 	m_xpos = xpos;
     m_ypos = ypos;
@@ -361,13 +361,13 @@ void TerosScreen::buildscr ()
     m_display.clear();
     
     for(int x = 0; x < layers.size(); x++){
-        std::vector<_SharedPtr<GraphChartPoint> > points = layers.at(x)->getDisplay();
+        std::vector<_SharedPtr<GraphChartPoint> > points = layers.at((unsigned long) x)->getDisplay();
         for(int y = 0; y < points.size(); y++){
-            m_display.push_back(points.at(y));
+            m_display.push_back(points.at((unsigned long) y));
         }
     }
     for(int y = 0; y < m_display.size(); y++){
-        m_graphChart->addRawChartPoint(m_display.at(y));
+        m_graphChart->addRawChartPoint(m_display.at((unsigned long) y));
     }
     
 }
@@ -433,10 +433,10 @@ int roundnum (double toround)
 {
 	if (toround - floor(toround) >= 0.5)
 	{
-		return ceil(toround);
+		return (int) ceil(toround);
 	}
     
-	return floor(toround);
+	return (int) floor(toround);
 }
 
 double dist (double a, double b, double c, double x, double y, double z)
@@ -512,7 +512,7 @@ string doubletostring (double num)
 		num *= -1;
 	}
     
-	while (int(num) > 0)
+	while ((int(num)) > 0)
 	{
 		if (lcounter == 6)
 		{
@@ -520,8 +520,8 @@ string doubletostring (double num)
 			tripdec = true;
 		}
         
-		rstring += char(int(num) % 10 + 48);
-		num = int(num)/10;
+		rstring += char((char) (int((int) num) % 10 + 48));
+		num = int((int) num)/10;
         
 		lcounter++;
 	}

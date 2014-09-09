@@ -14,7 +14,7 @@
 SphereModel::SphereModel(int smoothness) : TRModel() {
     
     int recursion = smoothness;
-    initialize_sphere(m_spherePoints, recursion);  // where DEPTH should be the subdivision depth
+    initialize_sphere(m_spherePoints, (unsigned int const) recursion);  // where DEPTH should be the subdivision depth
 
 
     // This prepares our mesh as m_model (TRObject)
@@ -99,7 +99,7 @@ void SphereModel::initialize_sphere(std::vector<Vector3D> &sphere_points, const 
 
     for(int i = 0; i < 20; i++){
         
-        subdivide(*m_mesh->m_points.at(m_mesh->m_indices.at(i)->x()), *m_mesh->m_points.at(m_mesh->m_indices.at(i)->y()), *m_mesh->m_points.at(m_mesh->m_indices.at(i)->z()), m_mesh->m_points, depth);
+        subdivide(*m_mesh->m_points.at((unsigned long) m_mesh->m_indices.at((unsigned long) i)->x()), *m_mesh->m_points.at((unsigned long) m_mesh->m_indices.at((unsigned long) i)->y()), *m_mesh->m_points.at((unsigned long) m_mesh->m_indices.at((unsigned long) i)->z()), m_mesh->m_points, depth);
         m_mesh->m_colors.push_back(_SharedPtr<ColorIndice>(new ColorIndice(i, 'D', COLOR_YELLOW, COLOR_BLACK, 0)));
     }
     
@@ -142,18 +142,18 @@ void SphereModel::subdivide( Vector3D v1,  Vector3D v2, Vector3D v3, std::vector
 
 
 
-int SphereModel::findIntersectIndex(double x, double y, double length){
+int SphereModel::findIntersectIndex(double dirx, double diry, double length){
     
     
     int index = 0;
     
     vmml::vector<3, double> center(0,0,0);
-    vmml::vector<3, double> direction(x,y,length);
+    vmml::vector<3, double> direction(dirx,diry,length);
     Vector3D intersect;
 
     for(int x = 0; x < m_mesh->m_indices.size(); x++){
         
-        if(rayIntersectsTriangle( center, direction, *m_mesh->m_points.at(m_mesh->m_indices.at(x)->x()), *m_mesh->m_points.at(m_mesh->m_indices.at(x)->y()), *m_mesh->m_points.at(m_mesh->m_indices.at(x)->z()))){
+        if(rayIntersectsTriangle( center, direction, *m_mesh->m_points.at((unsigned long) m_mesh->m_indices.at((unsigned long) x)->x()), *m_mesh->m_points.at((unsigned long) m_mesh->m_indices.at((unsigned long) x)->y()), *m_mesh->m_points.at((unsigned long) m_mesh->m_indices.at((unsigned long) x)->z()))){
          
             //logangle.logToFile("Intersection at: " + std::to_string(x), 0);
             
@@ -194,7 +194,7 @@ bool SphereModel::rayIntersectsTriangle(Vector3D point, Vector3D direction, Vect
 	Vector3D e1 = pt2 - pt1;
 	Vector3D e2 = pt3 - pt1;
 
-    Vector3D h = direction.cross(e2);
+    Vector3D h = direction.cross((Vector3D) e2);
 	a = e1.dot(h);
     
 	if (a > -0.00001 && a < 0.00001)
@@ -208,7 +208,7 @@ bool SphereModel::rayIntersectsTriangle(Vector3D point, Vector3D direction, Vect
 		return(false);
     
 	//crossProduct(q,s,e1);
-    Vector3D q = s.cross(e1);
+    Vector3D q = s.cross((Vector3D) e1);
 	v = f * direction.dot(q);
     
 	if (v < 0.0 || u + v > 1.0)

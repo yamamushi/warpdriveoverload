@@ -47,7 +47,7 @@ private:
     void doNothing(){};
     
     _SharedPtr<TerosScreen> m_terosScreen;
-    _SharedPtr<GraphChart> m_graphController;
+    _SharedPtr<GraphChartWidget> m_graphController;
     
     _SharedPtr<TerosCam> m_terosCam;
 

@@ -411,7 +411,7 @@ void TerosObject::modbasis (char basis, double nbasis [3])
 }
 void TerosObject::shiftctr (double sx, double sy, double sz)
 {
-	for (int n = -1; n < int(olink.size ()); n++)
+	for (int n = -1; n < int((int) olink.size ()); n++)
 	{
 		TerosObject * cobj;
         
@@ -809,7 +809,7 @@ void TerosObject::saveobj (std::string filename)
 		outfile << int (putside (i) -> puttranspid ()) << "\n";
 		outfile << putside (i) -> puttexturemode ();
         
-		if (!(i + 1 == sidenum ()))
+		if (i + 1 != sidenum ())
 		{
 			outfile << "\n";
 		}
@@ -916,10 +916,10 @@ int TerosObject::loadobj (std::string filename)
 		}
         
 		infile >> intbuff;
-		loadsides [loadsides.size () - 1].setfill (char(intbuff));
+		loadsides [loadsides.size () - 1].setfill (char((char) intbuff));
         
 		infile >> intbuff;
-		loadsides [loadsides.size () - 1].settranspid (char(intbuff));
+		loadsides [loadsides.size () - 1].settranspid (char((char) intbuff));
         
 		infile >> txtmde;
 		loadsides [loadsides.size () - 1].settexturemode (txtmde);
@@ -1033,7 +1033,7 @@ std::vector <TerosPolygon> TerosObject::permcpy ()
 {
 	std::vector<TerosPolygon> newTerosPolygons (0);
     
-	newTerosPolygons.resize (sidenum ());
+	newTerosPolygons.resize ((unsigned long) sidenum ());
     
 	if (ctrscale)
 	{

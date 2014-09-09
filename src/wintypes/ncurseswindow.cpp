@@ -14,7 +14,7 @@
 
 #include "graphics/bresenham2d.h"
 
-ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : GenericWindow(height, length, ypos, xpos)
+NcursesWindow::NcursesWindow(int height, int length, int ypos, int xpos) : GenericWindow(height, length, ypos, xpos)
 {
     
     //m_window = newwin(height, length, ypos, xpos);
@@ -46,7 +46,7 @@ ncursesWindow::ncursesWindow(int height, int length, int ypos, int xpos) : Gener
 }
 
 
-void ncursesWindow::resize(int height, int length, int ypos, int xpos){
+void NcursesWindow::resize(int height, int length, int ypos, int xpos){
 
     if(!m_open)
         return;
@@ -61,7 +61,7 @@ void ncursesWindow::resize(int height, int length, int ypos, int xpos){
     
 }
 
-void ncursesWindow::close(){
+void NcursesWindow::close(){
     
     
     if(m_window){
@@ -82,7 +82,7 @@ void ncursesWindow::close(){
 
 
 
-void ncursesWindow::open(){
+void NcursesWindow::open(){
     
     if(!m_window){
         
@@ -92,13 +92,13 @@ void ncursesWindow::open(){
     m_open = true;
 }
 
-bool ncursesWindow::getOpened(){
+bool NcursesWindow::getOpened(){
     
     return m_open;
 }
 
 
-void ncursesWindow::clearScreen(){
+void NcursesWindow::clearScreen(){
     
     if(!m_open)
         return;
@@ -112,7 +112,7 @@ void ncursesWindow::clearScreen(){
 
 
 
-void ncursesWindow::drawBorder(){
+void NcursesWindow::drawBorder(){
     
     if(!m_open)
         return;
@@ -125,7 +125,7 @@ void ncursesWindow::drawBorder(){
         wattrset(m_window, COLOR_PAIR(m_borderColor));
         
         // Just showing how we can use this function to set border attributes
-        wborder(m_window, colored_chtype(m_border->m_ls, A_NORMAL, m_borderColor), m_border->m_rs, m_border->m_ts, m_border->m_bs, m_border->m_tl, m_border->m_tr, m_border->m_bl, m_border->m_br);
+        wborder(m_window, (chtype) colored_chtype(m_border->m_ls, A_NORMAL, m_borderColor), (chtype) m_border->m_rs, (chtype) m_border->m_ts, (chtype) m_border->m_bs, (chtype) m_border->m_tl, (chtype) m_border->m_tr, (chtype) m_border->m_bl, (chtype) m_border->m_br);
         
         wattroff(m_window, COLOR_PAIR(m_borderColor));
     }
@@ -133,12 +133,12 @@ void ncursesWindow::drawBorder(){
     wrefresh(m_window);
 }
 
-int ncursesWindow::colored_chtype(char ch, int attr, int colorPair){
+int NcursesWindow::colored_chtype(char ch, int attr, int colorPair){
     
     return ((ch) | (attr) | COLOR_PAIR(colorPair));
 }
 
-void ncursesWindow::render(){
+void NcursesWindow::render(){
     
     refresh();
     
@@ -148,7 +148,7 @@ void ncursesWindow::render(){
     drawBorder();
 }
 
-void ncursesWindow::refresh(){
+void NcursesWindow::refresh(){
     
     
     for(size_t x = 0; x < m_widgetList.size(); x++){
@@ -156,12 +156,12 @@ void ncursesWindow::refresh(){
     }
 }
 
-void ncursesWindow::handleKeys(int input){
+void NcursesWindow::handleKeys(int input){
     return;
 }
 
 
-void ncursesWindow::drawAt(int x, int y, std::string output){
+void NcursesWindow::drawAt(int x, int y, std::string output){
     
     if(!m_open)
         return;
@@ -172,20 +172,20 @@ void ncursesWindow::drawAt(int x, int y, std::string output){
 }
 
 
-void ncursesWindow::drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg, int bg, int attr){
+void NcursesWindow::drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg, int bg, int attr){
     
-    bresenham2d(x1, y1, x2, y2, _STD_BIND(&ncursesWindow::drawLineCallBack, this, std::placeholders::_1, std::placeholders::_2, symbol, fg, bg, attr)); //STD_BIND(&ncursesWindow::drawAt, this, x1, y1, fg, bg, attr));
+    bresenham2d(x1, y1, x2, y2, _STD_BIND(&NcursesWindow::drawLineCallBack, this, std::placeholders::_1, std::placeholders::_2, symbol, fg, bg, attr)); //STD_BIND(&NcursesWindow::drawAt, this, x1, y1, fg, bg, attr));
     
 }
 
-void ncursesWindow::drawLineCallBack(int x, int y, std::string output, int fg, int bg, int attr){
+void NcursesWindow::drawLineCallBack(int x, int y, std::string output, int fg, int bg, int attr){
     
     drawAt(x, y, output, fg, bg, attr);
     
 }
 
 
-void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int attr){
+void NcursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int attr){
     
     if(!m_open)
         return;
@@ -203,7 +203,7 @@ void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int
     if(bg == 0)
         bg = m_bgColor;
     
-    int paircolor = ColorManager::Instance()->checkColorPair(fg, bg);
+    int paircolor = ColorManager::Instance()->checkColorPair((short) fg, bg);
     
     if(attr == 0)
         attr = A_NORMAL;
@@ -222,7 +222,7 @@ void ncursesWindow::drawAt(int x, int y, std::string output, int fg, int bg, int
 
 
 
-void ncursesWindow::drawAt(int x, int y, char c){
+void NcursesWindow::drawAt(int x, int y, char c){
     
     if(!m_open)
         return;
@@ -232,7 +232,7 @@ void ncursesWindow::drawAt(int x, int y, char c){
     wattroff(m_window, COLOR_PAIR(m_normalColor));
 }
 
-void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
+void NcursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
     
     if(!m_open)
         return;
@@ -246,7 +246,7 @@ void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
         bg = m_bgColor;
     
     
-    int paircolor = ColorManager::Instance()->checkColorPair(fg, bg);
+    int paircolor = ColorManager::Instance()->checkColorPair((short) fg, bg);
     
     if(attr == 0)
         attr = A_NORMAL;
@@ -263,7 +263,7 @@ void ncursesWindow::drawAt(int x, int y, char c, int fg, int bg, int attr){
     
 }
 
-void ncursesWindow::setNormalColor(int fg, int bg){
+void NcursesWindow::setNormalColor(int fg, int bg){
     
     if(!m_open)
         return;
@@ -274,14 +274,14 @@ void ncursesWindow::setNormalColor(int fg, int bg){
         bg = m_bgColor;
     
     
-    m_normalColor = ColorManager::Instance()->checkColorPair(fg, bg);
+    m_normalColor = ColorManager::Instance()->checkColorPair((short) fg, bg);
     
-    wbkgd(m_window, COLOR_PAIR(m_normalColor)); // Set the background color accordingly
+    wbkgd(m_window, (chtype) COLOR_PAIR(m_normalColor)); // Set the background color accordingly
     
 }
 
 
-void ncursesWindow::setSelectedColor(int fg, int bg){
+void NcursesWindow::setSelectedColor(int fg, int bg){
     
     
     if(fg == 0)
@@ -290,12 +290,12 @@ void ncursesWindow::setSelectedColor(int fg, int bg){
         bg = m_bgColor;
     
     
-    m_selectedColor = ColorManager::Instance()->checkColorPair(fg, bg);
+    m_selectedColor = ColorManager::Instance()->checkColorPair((short) fg, bg);
     
 }
 
 
-void ncursesWindow::setCursorColor(int fg, int bg){
+void NcursesWindow::setCursorColor(int fg, int bg){
     
     if(fg == 0)
         fg = m_fgColor;
@@ -303,10 +303,10 @@ void ncursesWindow::setCursorColor(int fg, int bg){
         bg = m_bgColor;
     
     
-    m_cursorColor = ColorManager::Instance()->checkColorPair(fg, bg);
+    m_cursorColor = ColorManager::Instance()->checkColorPair((short) fg, bg);
 }
 
-void ncursesWindow::setBorderColor(int fg, int bg){
+void NcursesWindow::setBorderColor(int fg, int bg){
     
     if(fg < 0)
         fg = m_fgColor;
@@ -314,12 +314,12 @@ void ncursesWindow::setBorderColor(int fg, int bg){
         bg = m_bgColor;
     
     
-    m_borderColor = ColorManager::Instance()->checkColorPair(fg, bg);
+    m_borderColor = ColorManager::Instance()->checkColorPair((short) fg, bg);
     
 }
 
 
-void ncursesWindow::putPixel(_SharedPtr<Pixel> point){
+void NcursesWindow::putPixel(_SharedPtr<Pixel> point){
     
     if(!m_open)
         return;
@@ -339,7 +339,7 @@ void ncursesWindow::putPixel(_SharedPtr<Pixel> point){
     if(l_bg == 0)
         l_bg = m_bgColor;
     
-    int paircolor = ColorManager::Instance()->checkColorPair(l_fg, l_bg);
+    int paircolor = ColorManager::Instance()->checkColorPair((short) l_fg, l_bg);
     
     
     wattrset(m_window, COLOR_PAIR(paircolor));
@@ -358,7 +358,7 @@ void ncursesWindow::putPixel(_SharedPtr<Pixel> point){
 
 
 
-void ncursesWindow::clearArea(int x1, int y1, int x2, int y2){
+void NcursesWindow::clearArea(int x1, int y1, int x2, int y2){
     
     int beginx, beginy;
     int endx, endy;
@@ -387,7 +387,7 @@ void ncursesWindow::clearArea(int x1, int y1, int x2, int y2){
 }
 
 
-void ncursesWindow::clearRowBetween(int x1, int x2, int row){
+void NcursesWindow::clearRowBetween(int x1, int x2, int row){
     
     if(x1 < 0){
         x1 = 0;
@@ -403,7 +403,7 @@ void ncursesWindow::clearRowBetween(int x1, int x2, int row){
 }
 
 
-void ncursesWindow::clearColumnBetween(int y1, int y2, int column){
+void NcursesWindow::clearColumnBetween(int y1, int y2, int column){
     
     if(y1 < 0){
         y1 = 0;
@@ -419,7 +419,7 @@ void ncursesWindow::clearColumnBetween(int y1, int y2, int column){
 }
 
 
-void ncursesWindow::clearRow(int row, int from){
+void NcursesWindow::clearRow(int row, int from){
     
     if(row < 0 || row > m_height)
         return;
@@ -429,7 +429,7 @@ void ncursesWindow::clearRow(int row, int from){
     }
 }
 
-void ncursesWindow::clearColumn(int column, int from){
+void NcursesWindow::clearColumn(int column, int from){
     
     if(column < 0 || column > m_length)
         return;

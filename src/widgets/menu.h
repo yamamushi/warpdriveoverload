@@ -22,7 +22,7 @@
 
 struct winBorder;
 
-class ncursesWindow;
+class NcursesWindow;
 
 enum class menuAlignment {
     LEFT,
