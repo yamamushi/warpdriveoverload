@@ -8,7 +8,7 @@
 //  A generic display template for rendering.
 //
 //
-#include "Window.h"
+#include "window.h"
 
 
 GenericWindow::GenericWindow(int height, int length, int ypos, int xpos) : m_height(height), m_length(length), m_ypos(ypos), m_xpos(xpos){
