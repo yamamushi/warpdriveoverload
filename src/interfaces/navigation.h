@@ -10,7 +10,6 @@
 #define __warpdriveoverloaded__navigation__
 
 #include "interface.h"
-#include "widgets/menu.h"
 #include "wintypes/window.h"
 
 #include "widgets/widget.h"
@@ -40,10 +39,9 @@ private:
     void randDirection();
     int lotteryLimit;
     
-    _SharedPtr<GraphChart> graphController;
+    _SharedPtr<GraphChartWidget> graphController;
     _SharedPtr<ConnectionWidget> connectionStatus;
-    _SharedPtr<ncursesMenu> menuNavigation;
-    
+
     int m_graphX;
     int m_graphY;
     
@@ -56,6 +54,12 @@ private:
     
     std::string testString;
     
+    void setTargetCenter(int x, int y);
+    void randomizeCenter();
+    int m_targetcenterX;
+    int m_targetcenterY;
+    int m_randomCenterX;
+    int m_randomCenterY;
     
 };
 

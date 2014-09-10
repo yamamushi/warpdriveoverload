@@ -25,8 +25,13 @@ private:
     ColorManager(){m_colorPaircount=0;};
     
     ColorManager(ColorManager const&){};
+
+    // Compiler may complain about this operator
+    // But it is private to prevent anyone from using it
+    // Since this is a singleton class
+    // Do not change this or attempt to "Fix" this.
     ColorManager& operator=(ColorManager const&);
-    
+
     static ColorManager* m_pInstance;
 
     int m_colorPaircount;

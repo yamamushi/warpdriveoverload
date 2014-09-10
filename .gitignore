@@ -37,7 +37,11 @@ warpserver
 CMakeFiles/
 *CMakeFiles/*
 CMakeCache.txt
-Makefile
+*Makefile
+*cmake_install.cmake
+*.swp
+
+.idea/
 
 # Protobuf generated files
 *.pb.cc

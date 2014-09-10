@@ -9,14 +9,13 @@
 #include "terostest.h"
 #include "teros/terospolygon.h"
 #include "util/logger.h"
-#include "wintypes/ncurseswindow.h"
+#include "managers/ColorManager.h"
 
 #include "terosmodels/SphereModel.h"
 
 
 void TerosTestInterface::init(){
     
-    m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_owner->getHeight(), m_owner->getWidth(), 0, 0)); // Initialize our root window
 
 
     // Our variable initialization
@@ -43,7 +42,7 @@ void TerosTestInterface::init(){
     // Set up our Widgets First
 
     // Create a graph controller widget which will take the smallest grid size by default.
-    m_graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 0, 0));
+    m_graphController = _SharedPtr<GraphChartWidget>(new GraphChartWidget(m_mainWindow, 0, 0));
 
     // We would add this widget to our parent window widget list
     // But we are rendering our graph controller by hand in our run() loop.
@@ -142,7 +141,7 @@ void TerosTestInterface::run(){
     update();
     
     //if(m_secondsElapsed < 3){
-        m_terosCam->rotateCamAroundAxis(vmml::vector<3, double>(0,0,1), 0.5);
+        m_terosCam->rotateCamAroundAxis(vmml::vector<3, double>(0,0,1), 1);
     //}
     
     resizeComponents();

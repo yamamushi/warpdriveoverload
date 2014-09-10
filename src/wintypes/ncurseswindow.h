@@ -9,10 +9,13 @@
 #ifndef __warpdriveoverloaded__ncurseswindow__
 #define __warpdriveoverloaded__ncurseswindow__
 
-#include <ncurses.h>
+
+#include "managers/NcursesManager.h"
+
+
+#ifdef _WARPDRIVE_NCURSESCLIENT_
 #include <vector>
 #include <string>
-
 
 #include "tr1/tr1_wrapper.h"
 #include "managers/ColorManager.h"
@@ -23,19 +26,18 @@
 class Widget;
 
 
-class ncursesWindow : public GenericWindow {
+class NcursesWindow : public GenericWindow {
     
 public:
     
-    ncursesWindow(int height, int length, int ypos, int xpos);
+    NcursesWindow(int height, int length, int ypos, int xpos);
     
     void render();
     void refresh();
     void close();
+    void open();
     void clearScreen();
-
-    void addWidget(_SharedPtr<Widget> target);
-    void removeWidget(_SharedPtr<Widget> target);
+    bool getOpened();
     
     void clearArea(int x1, int y1, int x2, int y2);
     void clearRowBetween(int x1, int x2, int row);
@@ -69,11 +71,15 @@ public:
 private:
     
     WINDOW *m_window;
-    
+        
     int m_colorPaircount;
     void drawLineCallBack(int x, int y, std::string output, int fg=0, int bg=0, int attr=0);
     
 };
+
+
+#endif // _WARPDRIVE_NCURSESCLIENT_ definition
+
 
 
 

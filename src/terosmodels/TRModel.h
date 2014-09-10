@@ -11,9 +11,9 @@
 
 #include "tr1/tr1_wrapper.h"
 
-#include "teros.h"
-#include "terospolygon.h"
-#include "terosobject.h"
+#include "teros/teros.h"
+#include "teros/terospolygon.h"
+#include "teros/terosobject.h"
 
 #include <vector>
 #include <cmath>

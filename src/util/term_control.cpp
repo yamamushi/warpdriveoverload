@@ -5,10 +5,11 @@
 //  Created by Jonathan Rumion on 8/28/14.
 //  Copyright (c) 2014 TAP. All rights reserved.
 //
-
+#include <ncurses.h>
 #include "term_control.h"
 
 void term_clear(){
+    /*
     if (!cur_term)
     {
         int result;
@@ -18,5 +19,6 @@ void term_clear(){
     
     char clear[] = {"clear"};
     putp( tigetstr( clear ) );
+    */
 }
 

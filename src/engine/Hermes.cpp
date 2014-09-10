@@ -208,7 +208,7 @@ bool Hermes::parseNextNetworkMessage(){
         m_logger->logToFile("Message length is: " + std::to_string(message.body_length()), 0);
 
         WarpDriveOverloaded::User testUser;
-        if(!testUser.ParseFromArray(message.body(), message.body_length())){
+        if(!testUser.ParseFromArray(message.body(), (int) message.body_length())){
            
             m_logger->logToFile("Message Parse Failure", 0);
 

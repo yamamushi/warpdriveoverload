@@ -34,14 +34,14 @@ short ColorManager::checkColorPair(short wanted_fore, int wanted_back){
     
     for (i = 0; i < m_colorPaircount; i++)
     {
-        pair_content(i, &fore, &back);
+        pair_content((short) i, &fore, &back);
         if ( (fore == wanted_fore) && (back == wanted_back) )
-            return i;
+            return (short) i;
     }
     
-    init_pair( m_colorPaircount, wanted_fore, wanted_back);
+    init_pair((short) m_colorPaircount, wanted_fore, (short) wanted_back);
     m_colorPaircount++;
     
-    return m_colorPaircount - 1;
+    return (short) (m_colorPaircount - 1);
     
 }

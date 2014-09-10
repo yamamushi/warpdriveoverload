@@ -15,7 +15,7 @@
 #include "widgets/connectionwidget.h"
 #include "widgets/TimeWidget.h"
 #include "engine/shell.h"
-#include "wintypes/ncurseswindow.h"
+#include "managers/ColorManager.h"
 
 #include <vector>
 
@@ -24,8 +24,6 @@
 
 void NavigationInterface::init(){
     
-    m_mainWindow = _SharedPtr<ncursesWindow>(new ncursesWindow(m_owner->getHeight(), m_owner->getWidth(), 0, 0)); // Initialize our root window
-
     // By the time we get here, we should have already have had a window created and ready for us.
     m_mainWindow->clearScreen();
 
@@ -36,11 +34,21 @@ void NavigationInterface::init(){
     m_graphX = 1;
     m_graphY = 1;
     lotteryLimit = 100;
-    graphController = _SharedPtr<GraphChart>(new GraphChart(m_mainWindow, 0, 0));
-    m_widgetManager->addWidget(graphController);
+    graphController = _SharedPtr<GraphChartWidget>(new GraphChartWidget(m_mainWindow, 0, 0));
+    //m_widgetManager->addWidget(graphController);
+    graphController->setSize(6, 4);
     
     _SharedPtr<TimeWidget> w_timeWidget = _SharedPtr<TimeWidget> (new TimeWidget(m_mainWindow, (graphController->getCols()/2)-(int)getName().length()+18, 1));
     m_widgetManager->addWidget(w_timeWidget);
+    
+    
+    m_targetcenterX = m_width/2;
+    m_targetcenterY = m_height/2;
+    
+    m_randomCenterY = m_targetcenterY;
+    m_randomCenterX = m_targetcenterX;
+    
+    setTargetCenter(m_targetcenterX, m_targetcenterY);
 
     // Here we populate our random points
 //    _STD_FUNCTION(void(int,int)) pass = _STD_BIND(&NavigationInterface::drawAt, this, std::placeholders::_1, std::placeholders::_2);
@@ -90,6 +98,9 @@ void NavigationInterface::init(){
     
     m_initialized = true;
     
+    
+    run();
+    
 }
 
 
@@ -109,6 +120,21 @@ void NavigationInterface::drawAt(int x, int y){
 void NavigationInterface::run(){
     
     // Print our name out to the Interface
+    m_mainWindow->clearScreen();
+    
+    if( m_targetcenterX > m_randomCenterX)
+        m_targetcenterX--;
+    if( m_targetcenterX < m_randomCenterX)
+        m_targetcenterX++;
+    if( m_targetcenterY > m_randomCenterY)
+        m_targetcenterY--;
+    if( m_targetcenterY < m_randomCenterY)
+        m_targetcenterY++;
+    
+    graphController->refresh();
+
+    graphController->render();
+    
     m_mainWindow->drawAt( (m_height - (int)getName().size())/2, 1, getName(), COLOR_WHITE, COLOR_BLACK, A_BOLD | A_BLINK);
     
     std::string rowMessage = std::to_string(graphController->getRows()) + " : Rows";
@@ -121,6 +147,8 @@ void NavigationInterface::run(){
     m_mainWindow->drawAt((m_mainWindow->getX()-2)-(int)fpscount.length(), 1, fpscount);
 
     m_mainWindow->drawAt((m_mainWindow->getX()/2), (m_mainWindow->getY()/2), testString);
+
+    setTargetCenter(m_targetcenterX, m_targetcenterY);
 
     m_mainWindow->render();
     
@@ -146,12 +174,61 @@ void NavigationInterface::handleKeys(int input){
         case 'u':
             lotteryLimit = lotteryLimit - 100000;
             break;
+        case 'r':
+            randomizeCenter();
+            break;
+        case KEY_UP:
+            setTargetCenter(m_targetcenterX, m_targetcenterY-1);
+            break;
+        case KEY_DOWN:
+            setTargetCenter(m_targetcenterX, m_targetcenterY+1);
+            break;
+        case KEY_LEFT:
+            setTargetCenter(m_targetcenterX-1, m_targetcenterY);
+            break;
+        case KEY_RIGHT:
+            setTargetCenter(m_targetcenterX+1, m_targetcenterY);
+            break;
         default:
             m_widgetManager->handleKeys(input);
             break;
     }
     
 }
+
+void NavigationInterface::randomizeCenter(){
+    
+    
+    int centerX = rand() % m_width;
+    int centerY = rand() % m_height;
+    
+    m_randomCenterX = centerX;
+    m_randomCenterY = centerY;
+    
+}
+
+
+void NavigationInterface::setTargetCenter(int x, int y){
+    
+    if(x < 0)
+        x = 0;
+    if(x > m_width)
+        x = m_width;
+    if(y < 0)
+        y = 0;
+    if(y > m_height)
+        y = m_height;
+    
+    m_targetcenterX = x;
+    m_targetcenterY = y;
+    
+    m_mainWindow->drawLine((x), 1, (x), (m_height), "|", m_mainWindow->getBorderColorfg(), m_mainWindow->getBorderColorbg());
+    m_mainWindow->drawLine(1, y, (m_width), y, "-", m_mainWindow->getBorderColorfg(), m_mainWindow->getBorderColorbg());
+    
+    m_mainWindow->drawAt(x, y, "#", m_mainWindow->getBorderColorfg(), m_mainWindow->getBorderColorbg());
+    
+}
+
 
 
 void NavigationInterface::getInput(){
@@ -188,8 +265,8 @@ void NavigationInterface::randDirection(){
     
     int lottery = rand() % lotteryLimit;
     if(lottery > lotteryLimit - 50 ){
-        int number = rand() % graphController->getAllChartPoints().size();
-        _SharedPtr<GraphChartPoint> point1 = graphController->getAllChartPoints().at(number);
+        int number = (int) (rand() % graphController->getAllChartPoints().size());
+        _SharedPtr<GraphChartPoint> point1 = graphController->getAllChartPoints().at((unsigned long) number);
         if(point1){
             
             int direction = rand() % 9 + 1;
@@ -245,6 +322,8 @@ void NavigationInterface::randDirection(){
                         point1->m_X++;
                     if(point1->m_Y > 0)
                         point1->m_Y--;
+                    break;
+                default:
                     break;
             }
             

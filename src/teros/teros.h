@@ -127,7 +127,7 @@ class TerosScreen : public Widget
 {
     
 public:
-    TerosScreen (_SharedPtr<GenericWindow> owner, int xpos, int ypos, _SharedPtr<GraphChart> renderObject);
+    TerosScreen (_SharedPtr<GenericWindow> owner, int xpos, int ypos, _SharedPtr<GraphChartWidget> renderObject);
     
     
     // New Functions
@@ -168,7 +168,7 @@ private:
     int m_xpos;
     int m_ypos;
     
-    _SharedPtr<GraphChart> m_graphChart;
+    _SharedPtr<GraphChartWidget> m_graphChart;
 
 };
 

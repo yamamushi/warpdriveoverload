@@ -1,0 +1,8 @@
+# Changelog
+
+Please list any changes in descending order for clarity.
+
+
+* 9/10/2014
+  - Added ifdef's for SDL Windowing.
+  - Added SDL checks in CMake

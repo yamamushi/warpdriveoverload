@@ -11,10 +11,16 @@
 #define __warpdriveoverloaded__GraphicsDriverManager__
 
 #include "engine/shell.h"
+#include "wintypes/window.h"
+#include "tr1/tr1_wrapper.h"
+
+#include <string>
 
 class GraphicsDriverManager {
     
 public:
+    
+    GraphicsDriverManager(){m_rawStarted = false;}
     
     virtual bool start(){return false;};
     
@@ -25,15 +31,31 @@ public:
     virtual int getfps(){return 0;};
     virtual void setmaxfps(int fps){};
     
+    virtual _SharedPtr<GenericWindow> getNewWindow(){return _SharedPtr<GenericWindow>(new GenericWindow(getHeight(), getWidth(), 0, 0));}
+    
+    virtual int getInput(){return -1;}
+    
+    virtual bool getRawStatus(){return m_rawStarted;};
+    virtual void startRawInputFeed(){m_rawStarted = true;};
+    virtual void stopRawInputFeed(){m_rawStarted = false;};
+
+    
+    virtual void shutdown(){};
+    
 protected:
     
     friend class Shell;
     
     bool m_started;
+    bool m_inputInitialized;
+
     int m_rows, m_cols;
     int m_width, m_height;
     
     int m_maxfps;
+    
+    bool m_rawStarted;
+
 };
 
 

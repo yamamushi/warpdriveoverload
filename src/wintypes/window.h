@@ -32,7 +32,7 @@ struct winBorder {
 struct Pixel {
     
     int x, y;
-    int attr;
+    unsigned int attr;
     int fg;
     int bg;
     char c;
@@ -66,6 +66,8 @@ public:
     virtual void refresh(){};
     virtual void clearScreen(){};
     virtual void close(){};
+    virtual void open(){};
+    virtual bool getOpened(){return false;}
 
     virtual void clearArea(int x1, int y1, int x2, int y2){};
     virtual void clearRowBetween(int x1, int x2, int row){};
@@ -148,6 +150,7 @@ protected:
 
     // Data only our child classes should ever touch
     int m_height, m_length, m_ypos, m_xpos;
+    bool m_open;
     
     std::vector<_SharedPtr<GenericWindow>> m_windowList;
     std::vector<_SharedPtr<Widget>> m_widgetList;

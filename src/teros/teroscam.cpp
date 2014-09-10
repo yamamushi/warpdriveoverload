@@ -446,10 +446,10 @@ void TerosCam::basisreset ()
 
 void TerosCam::setViewMatrix(){
     
-    viewMatrix.set_row(0,  vmml::vector<4, double>(cambasisx[0], cambasisx[1], cambasisx[2], 0.0));
-    viewMatrix.set_row(1,  vmml::vector<4, double>(cambasisy[0], cambasisy[1], cambasisy[2], 0.0));
-    viewMatrix.set_row(2,  vmml::vector<4, double>(cambasisz[0], cambasisz[1], cambasisz[2], 0.0));
-    viewMatrix.set_row(3,  vmml::vector<4, double>(m_camx,       m_camy,       m_camz,       1.0));
+    viewMatrix.set_row(0, (vmml::vector<4, double> const &) vmml::vector<4, double>(cambasisx[0], cambasisx[1], cambasisx[2], 0.0));
+    viewMatrix.set_row(1, (vmml::vector<4, double> const &) vmml::vector<4, double>(cambasisy[0], cambasisy[1], cambasisy[2], 0.0));
+    viewMatrix.set_row(2, (vmml::vector<4, double> const &) vmml::vector<4, double>(cambasisz[0], cambasisz[1], cambasisz[2], 0.0));
+    viewMatrix.set_row(3, (vmml::vector<4, double> const &) vmml::vector<4, double>(m_camx,       m_camy,       m_camz,       1.0));
 
 }
 
@@ -482,7 +482,7 @@ void TerosCam::setviewsize (int rows, int column)
 	if (column > 0 && rows > 0)
 	{
 		m_viewcolumns = column;
-		view.resize (column*rows);
+		view.resize ((unsigned long) (column*rows));
 		viewdepth.resize (view.size ());
 	}
     clearview();
@@ -577,8 +577,8 @@ void TerosCam::texturepolygon (TerosPolygon cTerosPolygon, TerosObject obj)
 		miny = 0;
 	}
     
-	int x = minx;
-	int y = maxy;
+	int x = (int) minx;
+	int y = (int) maxy;
     
 	double a = ((p2 [1] - p1 [1])*(p3 [2] - p1 [2]) - (p3 [1] - p1 [1])*(p2 [2] - p1 [2]));
 	double b = ((p2 [2] - p1 [2])*(p3 [0] - p1 [0]) - (p3 [2] - p1 [2])*(p2 [0] - p1 [0]));
@@ -627,7 +627,7 @@ void TerosCam::texturepolygon (TerosPolygon cTerosPolygon, TerosObject obj)
         
 		if (x > maxx && y > miny)
 		{
-			x = minx;
+			x = (int) minx;
 			y--;
 		}
 	}
@@ -916,7 +916,7 @@ void TerosCam::moveUp( double speed, double distance){
 void TerosCam::rotateCamAroundAxis(vmml::vector<3, double> axis, double radians){
 
     
-    vmml::vector<3, double> l_newposition = rotatePointAroundAxis(axis, m_position, radians);
+    vmml::vector<3, double> l_newposition = rotatePointAroundAxis(axis, (vmml::vector<3, double>) m_position, radians);
     
     
     m_camx = l_newposition.x();

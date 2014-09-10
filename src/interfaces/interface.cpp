@@ -49,9 +49,8 @@ void InterfaceHandler::removeInterface(_SharedPtr<Interface> target){
 
 Interface::Interface(_SharedPtr<Shell> owner) : m_owner(owner){
     
-    // Remember to override this if you want your interface to you know, do something..
-    m_mainWindow = _SharedPtr<GenericWindow>(new GenericWindow(owner->m_rows, owner->m_cols, 0, 0)); // Initialize our root window
-
+    m_mainWindow = m_owner->createWindow();
+    
     
     m_initialized = false;
     m_height = m_mainWindow->getY();

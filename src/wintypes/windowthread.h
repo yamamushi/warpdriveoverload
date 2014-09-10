@@ -9,11 +9,11 @@
 #ifndef __warpdriveoverloaded__windowthread__
 #define __warpdriveoverloaded__windowthread__
 
+#include "tr1/tr1_wrapper.h"
 #include "tr1/tr1_threading.h"
 
+#include "window.h"
 #include "windowthread.h"
-
-#include <ncurses.h>
 
 
 // The idea is not to stop other threads from writing to the window completely
@@ -50,7 +50,7 @@ private:
     
     bool m_started;
     
-    WINDOW *m_window;
+    _SharedPtr<GenericWindow> m_window;
     
     _THREAD m_thread;
     _MUTEX(m_processing);

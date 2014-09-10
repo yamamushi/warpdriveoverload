@@ -72,6 +72,8 @@ endif()
 
 #-----------------------------------------------------------------------------
 # Third party libraries
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+include(cmake/Modules/submodules.cmake)
 
 include (FindPkgConfig)
 if (PKG_CONFIG_FOUND)
@@ -85,6 +87,7 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_COMPONENTS system random filesystem chrono)
 
 find_package(Boost 1.53 REQUIRED ${Boost_COMPONENTS})
+
 
 #find_package(OpenSSL REQUIRED)
 #find_package(XMLRPC REQUIRED c++2 libwww-client)
@@ -125,7 +128,7 @@ set(CMAKE_FIND_LIBRARY_PREFIXES ${CMAKE_FIND_LIBRARY_PREFIXES} "")
 set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} "")
 
 
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
 #set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /usr/local/lib/)
 #LINK_DIRECTORIES(/usr/local/lib)
 

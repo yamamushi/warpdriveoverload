@@ -14,6 +14,7 @@
 GenericWindow::GenericWindow(int height, int length, int ypos, int xpos) : m_height(height), m_length(length), m_ypos(ypos), m_xpos(xpos){
     
     m_border = _SharedPtr<winBorder>(new winBorder);
+    m_open = false;
 
 }
 
