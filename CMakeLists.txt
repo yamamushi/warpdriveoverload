@@ -73,7 +73,7 @@ endif()
 # Third party libraries
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 include(cmake/Modules/submodules.cmake)
-
+include(CheckIncludeFiles)
 include (FindPkgConfig)
 if (PKG_CONFIG_FOUND)
   pkg_check_modules(Protobuf protobuf)
