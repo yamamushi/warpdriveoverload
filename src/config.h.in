@@ -1,0 +1,7 @@
+//
+// Uncomment one of the defines below to compile support for that rendering type
+//
+
+
+//#cmakedefine _WARPDRIVE_SDLCLIENT_
+#cmakedefine _WARPDRIVE_NCURSESCLIENT_

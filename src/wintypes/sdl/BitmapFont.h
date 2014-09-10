@@ -14,6 +14,10 @@
 
  */
 
+#include "managers/SDLManager.h"
+
+#ifdef _WARPDRIVE_SDLCLIENT_
+
 #include <string>
 #include "SDL/SDL.h"
 
@@ -58,3 +62,6 @@ public:
 
 
 };
+
+
+#endif

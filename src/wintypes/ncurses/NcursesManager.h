@@ -14,16 +14,14 @@
 #ifdef _WARPDRIVE_NCURSESCLIENT_
 
 
-#include "GraphicsDriverManager.h"
-
-
-#include "wintypes/ncurseswindow.h"
+#include "managers/GraphicsDriverManager.h"
+#include "wintypes/ncurses/ncurseswindow.h"
 #include <ncurses.h>
 
 class NcursesManager : public GraphicsDriverManager {
     
 public:
-    
+
     bool start();
     
     int getWidth();

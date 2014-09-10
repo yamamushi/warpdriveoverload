@@ -9,6 +9,8 @@
 
 #include "BitmapFont.h"
 
+#ifdef _WARPDRIVE_SDLCLIENT_
+
 #include "SDL.h"
 #include "SDL_image.h"
 
@@ -276,3 +278,6 @@ void BitmapFont::Apply_Surface( int x, int y, SDL_Surface *source, SDL_Surface *
 
 
 
+
+
+#endif

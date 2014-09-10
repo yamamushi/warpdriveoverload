@@ -13,6 +13,7 @@
 
 #ifdef _WARPDRIVE_SDLCLIENT_
 
+#include "graphics/sdl/BitmapFont.h"
 
 
 class SDLWindow : public GenericWindow{
@@ -62,9 +63,25 @@ public:
     void setBorderColor(int fg, int bg=0);
 
 
-protected:
+private:
+
+    // Note: this is NOT the same as SDLManager.h's m_window member
+    // This is the surface we draw to, which we then pass to
+    // SDL Manager to finally draw on the "Window"
+    // Screen/Window, trying to emphasize that this class is a
+    // Container for finally rendering to the screen
+
+    SDL_Surface* m_window;
 
 
+    /*
+
+        Constructing our fonts locally allows us to do things like add a custom
+        Fontfile for each Window.
+
+    */
+
+    _SharedPtr<BitmapFont> m_fontmember;
 
 };
 

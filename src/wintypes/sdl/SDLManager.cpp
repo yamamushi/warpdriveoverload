@@ -9,6 +9,8 @@ bool SDLManager::start(){
 
     std::cout << "SDL Mode Started" << std::endl;
 
+
+
     return GraphicsDriverManager::start();
 
 }
