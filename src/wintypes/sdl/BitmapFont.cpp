@@ -42,7 +42,7 @@ void BitmapFont::Build_Font( SDL_Surface *surface){
         return;
     }
 
-
+/*
 
     // Load our bitmap font
     bitmap = surface;
@@ -86,6 +86,7 @@ void BitmapFont::Build_Font( SDL_Surface *surface){
     // Calculate space
     space = cellW;
     newLine = cellH;
+    */
 
 }
 
@@ -204,7 +205,7 @@ void BitmapFont::Print_Colored_Character( wchar_t character, SDL_Color ForeColor
 
     int index = character;
 
-
+/*
     SDL_Surface *tmpSurface = SDL_CreateRGBSurface( SDL_SWSURFACE, chars[index]->w, chars[index]->h, bitmap->format->BitsPerPixel, bitmap->format->Rmask, bitmap->format->Gmask, bitmap->format->Bmask, 0);
 
     SDL_LockSurface( bitmap );
@@ -258,14 +259,14 @@ void BitmapFont::Print_Colored_Character( wchar_t character, SDL_Color ForeColor
 
     Apply_Surface( X, Y, tmpSurface, destination);
     SDL_FreeSurface( tmpSurface );
-
+*/
 }
 
 
 
 
 void BitmapFont::Apply_Surface( int x, int y, SDL_Surface *source, SDL_Surface *destination, SDL_Rect *clip){
-
+/*
     SDL_Rect offset;
     offset.x = x;
     offset.y = y;
@@ -273,7 +274,7 @@ void BitmapFont::Apply_Surface( int x, int y, SDL_Surface *source, SDL_Surface *
     if( SDL_BlitSurface( source, clip, destination, &offset) < 0 ){
         std::cout << "Apply Surface: Blit Error" << std::endl;
     }
-
+*/
 }
 
 

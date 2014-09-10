@@ -1,3 +1,4 @@
+#pragma once
 //
 //  NcursesManager.h
 //  warpdriveoverloaded
@@ -10,17 +11,15 @@
 #define __warpdriveoverloaded__NcursesManager__
 
 #include "config.h"
-
 #ifdef _WARPDRIVE_NCURSESCLIENT_
-
-
 #include "managers/GraphicsDriverManager.h"
-#include "wintypes/ncurses/ncurseswindow.h"
+#include "ncurseswindow.h"
 #include <ncurses.h>
 
 class NcursesManager : public GraphicsDriverManager {
     
 public:
+
 
     bool start();
     
@@ -37,20 +36,13 @@ public:
     void stopRawInputFeed();
     
     void shutdown();
-    
-    
-protected:
-    
-    friend class Shell;
-    
 
-    
-private:
     
     
 };
 
-#endif // #ifdef _WARPDRIVE_NCURSESCLIENT_
 
-
+#endif // _WARPDRIVE_NCURSESCLIENT_
 #endif /* defined(__warpdriveoverloaded__NcursesManager__) */
+
+

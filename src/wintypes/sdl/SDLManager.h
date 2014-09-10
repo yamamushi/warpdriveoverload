@@ -12,7 +12,6 @@ An SDL Driver Management handler
 #include "config.h"
 
 #ifdef _WARPDRIVE_SDLCLIENT_
-
 #include "managers/GraphicsDriverManager.h"
 #include "SDL.h" // Header inclusion follows the current standard, which is “SDL.h”, not <SDL2/SDL.h>
 #include "SDL_image.h"
@@ -54,6 +53,7 @@ private:
 
 
 };
+
 
 
 #endif

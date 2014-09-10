@@ -28,12 +28,16 @@
 #include <algorithm>
 
 #include "config.h"
+
+
 #ifdef _WARPDRIVE_NCURSESCLIENT_
-#include "managers/NcursesManager.h"
+#include "wintypes/ncurses/NcursesManager.h"
 #endif
+
 #ifdef _WARPDRIVE_SDLCLIENT_
-#include "managers/SDLManager.h"
+#include "wintypes/sdl/SDLManager.h"
 #endif
+
 
 
 void Shell::boot(){

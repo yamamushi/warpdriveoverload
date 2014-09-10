@@ -14,10 +14,9 @@
 
  */
 
-#include "managers/SDLManager.h"
+#include "SDLManager.h"
 
 #ifdef _WARPDRIVE_SDLCLIENT_
-
 #include <string>
 #include "SDL/SDL.h"
 

@@ -18,7 +18,6 @@ endif()
 message(STATUS "CMake version:   ${CMAKE_VERSION}")
 message(STATUS "System:          ${CMAKE_SYSTEM}")
 message(STATUS "Processor:       ${CMAKE_SYSTEM_PROCESSOR}")
-
 message(STATUS "Verbose:         ${WARPDRIVEOVERLOADED_BUILD_VERBOSE}")
 
 
@@ -86,11 +85,25 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_COMPONENTS system random filesystem chrono)
 
-find_package(Boost 1.53 REQUIRED ${Boost_COMPONENTS})
+find_package(Boost 1.41 REQUIRED ${Boost_COMPONENTS})
 
 
 #find_package(OpenSSL REQUIRED)
 #find_package(XMLRPC REQUIRED c++2 libwww-client)
+
+#-----------------------------------------------------------------------------
+# Configure our Build Options
+
+set(_WARPDRIVE_SDLCLIENT_ ON BOOL "SDL Client") # Configurable by user
+set(_WARPDRIVE_NCURSESCLIENT_ ON BOOL "Ncurses Client") # Configurable by user
+
+configure_file(src/config.h.in src/config.h)
+
+PKG_SEARCH_MODULE(SDL2 OPTIONAL sdl2)
+PKG_SEARCH_MODULE(SDL2IMAGE OPTIONAL SDL2_image>=2.0.0)
+PKG_SEARCH_MODULE(SDL2TTF OPTIONAL SDL2_ttf>=2.0.0)
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIR} ${SDL2TTF_INCLUDE_DIR})
+
 
 
 #-----------------------------------------------------------------------------

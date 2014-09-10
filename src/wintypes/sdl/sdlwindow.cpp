@@ -7,9 +7,8 @@
 //
 
 #include "sdlwindow.h"
+
 #ifdef _WARPDRIVE_SDLCLIENT_
-
-
 
 SDLWindow::SDLWindow(int height, int length, int ypos, int xpos)  : GenericWindow(height, length, ypos, xpos) {
 
@@ -114,6 +113,4 @@ void SDLWindow::setBorderColor(int fg, int bg) {
 
 
 
-
-
-#endif // #ifdef _WARPDRIVE_SDLCLIENT_
+#endif

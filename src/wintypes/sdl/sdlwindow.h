@@ -9,12 +9,11 @@
 #ifndef __warpdriveoverloaded__sdlwindow__
 #define __warpdriveoverloaded__sdlwindow__
 
-#include "managers/SDLManager.h"
+#include "SDLManager.h"
 
 #ifdef _WARPDRIVE_SDLCLIENT_
-
-#include "graphics/sdl/BitmapFont.h"
-
+#include "BitmapFont.h"
+#include "sdlwindow.h"
 
 class SDLWindow : public GenericWindow{
 
@@ -87,6 +86,6 @@ private:
 
 
 
-#endif // #ifdef _WARPDRIVE_SDLCLIENT_
+#endif // _WARPDRIVE_SDLCLIENT_
 
 #endif /* defined(__warpdriveoverloaded__sdlwindow__) */

@@ -9,13 +9,14 @@
 #include "NcursesManager.h"
 
 #ifdef _WARPDRIVE_NCURSESCLIENT_
-
 #include "util/term_control.h"
 #include "util/Clock.h"
 #include <iostream>
 
+
+
 bool NcursesManager::start(){
-    
+
     std::cout << "Welcome to Warp Core Overloaded" << std::endl;
     sleep(1);
     std::cout << "Please standby for Nostradamus OS boot" << std::endl;
@@ -56,7 +57,7 @@ bool NcursesManager::start(){
 int NcursesManager::getfps(){
     
     int fps = FpsCounter::Instance()->get();
-    
+
     return fps;
     
 }
@@ -77,12 +78,12 @@ void NcursesManager::setmaxfps(int fps){
     
         if(fps < 1)
             fps = 1;
-        
+
         if(fps > 1000)
             fps = 1000;
-        
+
         m_maxfps = fps;
-        
+
         timeout(1000/m_maxfps);
 
 }
@@ -110,7 +111,7 @@ int NcursesManager::getInput(){
 void NcursesManager::shutdown(){
     
     endwin();
-    
+
 }
 
 

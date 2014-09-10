@@ -87,9 +87,8 @@ public:
     // Resize is Virtual because some drivers may handle this differently .
     virtual void resize(int height, int length, int ypos=0, int xpos=0){};
     virtual void drawLine(int x1, int y1, int x2, int y2, std::string symbol, int fg=0, int bg=0, int attr=0){};
-    
-    
-    
+
+
     // Border Management
     void showBorder(){m_showBorder = true;}
     void hideBorder(){m_showBorder = false;}

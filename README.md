@@ -49,14 +49,15 @@ This is currently the default mode built:
     sdl2
     sdl2_image
     sdl2_mixer
+    sdl2_ttf
 
 **OS X Users** 
 
 If you are on OSX using [homebrew](http://brew.sh/), you can install all of these dependencies with: 
 
-    brew install ncurses sdl2 sdl2_mixer sdl2_image ncurses 
+    brew install ncurses sdl2 sdl2_mixer sdl2_image sdl2_ttf
     brew install sqlite protobuf boost pkgconfig  
-    brew link ncurses --force
+    brew install ncurses && link ncurses --force
 
 
 

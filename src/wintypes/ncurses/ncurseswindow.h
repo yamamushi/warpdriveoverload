@@ -6,14 +6,17 @@
 //  Copyright (c) 2014 TAP. All rights reserved.
 //
 
+
+
 #ifndef __warpdriveoverloaded__ncurseswindow__
 #define __warpdriveoverloaded__ncurseswindow__
 
 
-#include "managers/NcursesManager.h"
-
+#include "NcursesManager.h"
 
 #ifdef _WARPDRIVE_NCURSESCLIENT_
+
+
 #include <vector>
 #include <string>
 
@@ -78,7 +81,7 @@ private:
 };
 
 
-#endif // _WARPDRIVE_NCURSESCLIENT_ definition
+#endif // #ifdef _WARPDRIVE_NCURSESCLIENT_
 
 
 
