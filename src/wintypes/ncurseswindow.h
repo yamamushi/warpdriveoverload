@@ -9,10 +9,13 @@
 #ifndef __warpdriveoverloaded__ncurseswindow__
 #define __warpdriveoverloaded__ncurseswindow__
 
-#include <ncurses.h>
+
+#include "managers/NcursesManager.h"
+
+
+#ifdef _WARPDRIVE_NCURSESCLIENT_
 #include <vector>
 #include <string>
-
 
 #include "tr1/tr1_wrapper.h"
 #include "managers/ColorManager.h"
@@ -73,6 +76,10 @@ private:
     void drawLineCallBack(int x, int y, std::string output, int fg=0, int bg=0, int attr=0);
     
 };
+
+
+#endif // _WARPDRIVE_NCURSESCLIENT_ definition
+
 
 
 

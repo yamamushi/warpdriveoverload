@@ -12,7 +12,7 @@
 
 #include <string>
 #include <unistd.h>
-#include <term.h>
+//#include <term.h>
 
 const std::string ansi_escape = "\033[";
 const std::string ansi_term_reset = "\033[0m";

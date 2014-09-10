@@ -14,26 +14,37 @@
 #include "engine/shell.h"
 #include "util/term_control.h"
 #include <locale.h>
+#include "config.h"
 
-int main(int argc, char **argv){
-    
+
+//#ifdef _WARPDRIVE_NCURSESCLIENT_
+
+#ifdef __APPLE__
+extern "C" int main(int argc, char **argv){
+#else
+    int main(int argc, char **argv){
+#endif
+
+
     setlocale(LC_ALL, "en_US.UTF-8");
-    
+
     term_clear();
-    
+
     sqliteDB::instance()->run();
-    
+
+
     _SharedPtr<Nostradamus> nostradamus(new Nostradamus);
     _SharedPtr<Shell>shell(new Shell(nostradamus));
 
     shell->boot();
     shell->loadInterfaces(shell);
     shell->run();
-    
+
     while(shell->running()){
-    
+
     }
 
+
     return 0;
-    
+
 }

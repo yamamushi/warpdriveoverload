@@ -23,18 +23,29 @@
 
 #include "messages/shipdata.pb.h"
 
-
 #include "util/logger.h"
 
 #include <algorithm>
 
-
+#include "config.h"
+#ifdef _WARPDRIVE_NCURSESCLIENT_
 #include "managers/NcursesManager.h"
+#endif
+#ifdef _WARPDRIVE_SDLCLIENT_
+#include "managers/SDLManager.h"
+#endif
+
 
 void Shell::boot(){
-    
+
+#ifdef _WARPDRIVE_SDLCLIENT_
+    m_graphicsManager = new SDLManager;
+#else
+#ifdef _WARPDRIVE_NCURSESCLIENT_
     m_graphicsManager = new NcursesManager;
-    
+#endif
+#endif
+
     if(!m_graphicsManager->start()){
         std::cout << "Error Starting Graphics Manager" << std::endl;
         exit(1);

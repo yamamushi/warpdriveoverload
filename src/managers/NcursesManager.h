@@ -9,7 +9,13 @@
 #ifndef __warpdriveoverloaded__NcursesManager__
 #define __warpdriveoverloaded__NcursesManager__
 
+#include "config.h"
+
+#ifdef _WARPDRIVE_NCURSESCLIENT_
+
+
 #include "GraphicsDriverManager.h"
+
 
 #include "wintypes/ncurseswindow.h"
 #include <ncurses.h>
@@ -45,6 +51,8 @@ private:
     
     
 };
+
+#endif // #ifdef _WARPDRIVE_NCURSESCLIENT_
 
 
 #endif /* defined(__warpdriveoverloaded__NcursesManager__) */

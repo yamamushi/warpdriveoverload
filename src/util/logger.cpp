@@ -24,7 +24,7 @@ logger::logger( const std::string lfile, const int llvl ) {
 
 
 void logger::logToFile(  const int msglvl ) {
-    
+    /*
     std::string logtext = logstream.str();
     
     
@@ -62,13 +62,14 @@ void logger::logToFile(  const int msglvl ) {
 			// placeholder for error handler.
 			exit(1);
 			break;
-	}*/
+	}
 	logstream << " " << std::endl;
 	std::string logmsg = logstream.str();
 	if ( msglvl >= L_loglevel ) {
 		writeToFile( logmsg );
 	}
     logstream.clear();
+    */
 }
 
 void logger::logToFile( std::string output, const int msglvl ) {
@@ -81,13 +82,17 @@ void logger::logToFile( std::string output, const int msglvl ) {
 
 
 unsigned long logger::getThreadID() {
+    /*
 	std::string threadID = boost::lexical_cast<std::string>(std::this_thread::get_id() );
 	unsigned long threadnum = 0;
 	sscanf( threadID.c_str(), "%lx", &threadnum );
 	return threadnum;
+	*/
+    return 0;
 }
 
 void logger::logException( const int errornumber, const std::string ctext ) {
+    /*
 	std::stringstream exstream;
 	int elvl;
 	switch( errornumber ) {
@@ -113,9 +118,11 @@ void logger::logException( const int errornumber, const std::string ctext ) {
 	if ( elvl > 4 ) {
 		exit(1);
 	}
+	*/
 }
 
 std::string logger::tStamp() {
+    /*
 	time_t now = time(0);
 	struct tm tstruct;
 	char buf[80];
@@ -124,9 +131,13 @@ std::string logger::tStamp() {
 	std::stringstream stampstream(buf);
 	std::string tstamp = stampstream.str();
 	return tstamp;
+	*/
+    return "";
 }
 
 void logger::writeToFile( const std::string filetext ) {
+    /*
 	std::ofstream log_file( L_logfile, std::ofstream::app );
 	log_file << filetext;
+	*/
 }

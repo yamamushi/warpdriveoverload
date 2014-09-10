@@ -7,6 +7,9 @@
 //
 
 #include "NcursesManager.h"
+
+#ifdef _WARPDRIVE_NCURSESCLIENT_
+
 #include "util/term_control.h"
 #include "util/Clock.h"
 #include <iostream>
@@ -45,7 +48,7 @@ bool NcursesManager::start(){
     // Enable non-blocking input
     keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
     nodelay(stdscr, true);
-
+    std::cout << std::string() << std::flush;
     return true;
     
 }
@@ -96,7 +99,7 @@ _SharedPtr<GenericWindow> NcursesManager::getNewWindow(){
 
 
 int NcursesManager::getInput(){
-    
+
     return getch();
     
 }
@@ -122,3 +125,7 @@ void NcursesManager::stopRawInputFeed() {
     GraphicsDriverManager::stopRawInputFeed();
 
 }
+
+
+
+#endif

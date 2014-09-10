@@ -7,6 +7,9 @@
 //
 
 #include "ncurseswindow.h"
+
+#ifdef _WARPDRIVE_NCURSESCLIENT_
+
 #include "tr1/tr1_threading.h"
 #include "tr1/tr1_wrapper.h"
 #include <algorithm>
@@ -441,3 +444,4 @@ void NcursesWindow::clearColumn(int column, int from){
 
 
 
+#endif
