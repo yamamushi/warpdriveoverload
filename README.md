@@ -14,7 +14,7 @@ Players will not not limited to flying around on spacecraft as there will also b
 
 # The Library
 
-In order to facilitate the user interfaces ideal for this project, an extensible 2D graphics library for terminal applications is being developed that supports the rendering of 3D objects in a 2D environment. A short demo of this capability can be seen here: [https://www.youtube.com/watch?v=WhxibkLnjdE](https://www.youtube.com/watch?v=WhxibkLnjdE) . 
+In order to facilitate the user interfaces ideal for this project, an extensible 2D graphics library for terminal applications is being developed that supports the rendering of 3D objects in a 2D environment based on prior work done by [TEROS Engine](https://github.com/SighoftheSecond/TEROS-ENGINE). A short demo of this capability can be seen here: [https://www.youtube.com/watch?v=WhxibkLnjdE](https://www.youtube.com/watch?v=WhxibkLnjdE) .
 
 Aims for the library are cross-platform support, a reusable widgets library, and an extensive windowing system. 
 
