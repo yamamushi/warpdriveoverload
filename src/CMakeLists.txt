@@ -49,7 +49,6 @@ target_link_libraries(warpclient messages ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARY}
 
 
 
-
 SET_TARGET_PROPERTIES(warpclient PROPERTIES  LINK_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncursesw -lprotobuf")
 
 if(UNIX AND NOT APPLE)

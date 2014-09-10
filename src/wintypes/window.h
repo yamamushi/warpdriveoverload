@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #include "tr1/tr1_wrapper.h"
 #include "widgets/widget.h"

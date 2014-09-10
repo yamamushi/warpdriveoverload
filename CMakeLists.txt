@@ -94,17 +94,21 @@ find_package(Boost 1.41 REQUIRED ${Boost_COMPONENTS})
 #-----------------------------------------------------------------------------
 # Configure our Build Options
 
-set(_WARPDRIVE_SDLCLIENT_ ON BOOL "SDL Client") # Configurable by user
-set(_WARPDRIVE_NCURSESCLIENT_ ON BOOL "Ncurses Client") # Configurable by user
 
-configure_file(src/config.h.in src/config.h)
 
 PKG_SEARCH_MODULE(SDL2 OPTIONAL sdl2)
 PKG_SEARCH_MODULE(SDL2IMAGE OPTIONAL SDL2_image>=2.0.0)
 PKG_SEARCH_MODULE(SDL2TTF OPTIONAL SDL2_ttf>=2.0.0)
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIR} ${SDL2TTF_INCLUDE_DIR})
 
+#set(_WARPDRIVE_SDLCLIENT_ ON BOOL "SDL Client") # Configurable by user
+CHECK_INCLUDE_FILES("${SDL2_INCLUDE_DIRS}/SDL.h;${SDL2_INCLUDE_DIRS}/SDL_image.h;${SDL2_INCLUDE_DIRS}/SDL_ttf.h" _WARPDRIVE_SDLCLIENT_)
 
+
+set(_WARPDRIVE_NCURSESCLIENT_ ON BOOL "Ncurses Client") # Configurable by user
+
+
+configure_file(src/config.h.in src/config.h)
 
 #-----------------------------------------------------------------------------
 # Force out-of-source build
