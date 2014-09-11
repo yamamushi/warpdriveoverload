@@ -16,6 +16,8 @@ SDLTextureWrapper::SDLTextureWrapper(SDL_Renderer *renderer){
 
     mTexture = NULL;
 
+    m_undrawnTexture = nullptr;
+
 }
 
 SDLTextureWrapper::~SDLTextureWrapper() {
@@ -150,20 +152,20 @@ _SharedPtr<SDLBitmapFont> SDLTextureWrapper::getBitmapFont(){
 
 }
 
-/*
+
 SDL_Texture *SDLTextureWrapper::getTexture(){
 
-    return mTexture;
+    return m_undrawnTexture;
 
 }
 
 
 void SDLTextureWrapper::setDrawOn(SDL_Texture *surface){
 
-    mTexture = surface;
+    m_undrawnTexture = surface;
 
 }
-*/
+
 
 void SDLTextureWrapper::free() {
     //Free texture if it exists
@@ -176,6 +178,7 @@ void SDLTextureWrapper::free() {
         mPixels = NULL;
         mPitch = 0;
     }
+
 }
 
 void SDLTextureWrapper::setColor(Uint8 red, Uint8 green, Uint8 blue) {
@@ -211,7 +214,18 @@ void SDLTextureWrapper::render(int x, int y, SDL_Rect *clip, double angle, SDL_P
     }
 
     //Render to screen
-    SDL_RenderCopyEx( m_renderer, mTexture, clip, &renderQuad, angle, center, flip );
+    //SDL_RenderCopyEx( m_renderer, mTexture, clip, &renderQuad, angle, center, flip );
+    if(m_undrawnTexture != nullptr) {
+        SDL_SetTextureBlendMode(m_undrawnTexture, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderTarget(m_renderer, m_undrawnTexture);
+        //SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+        SDL_RenderCopyEx( m_renderer, mTexture, clip, &renderQuad, angle, center, flip );
+        SDL_SetRenderTarget(m_renderer, NULL);
+    }
+    else{
+        SDL_RenderCopyEx( m_renderer, mTexture, clip, &renderQuad, angle, center, flip );
+    }
+
 
 }
 

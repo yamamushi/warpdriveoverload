@@ -19,7 +19,7 @@ DebugInterface::DebugInterface(_SharedPtr<Shell> owner) : Interface(owner){
 void DebugInterface::init(){
     
     m_mainWindow->hideBorder();
-    m_mainWindow->refresh();
+    //m_mainWindow->refresh();
 
     m_mainWindow->setNormalColor(COLOR_GREEN, COLOR_BLACK);
     
@@ -42,7 +42,7 @@ void DebugInterface::init(){
 void DebugInterface::run(){
     
     std::string welcome = "Welcome to Nostradamus OS";
-    m_mainWindow->drawAt((int)(m_width - global_version_string.size())/2, 9, global_version_string, 0, 0, A_BLINK);
+    m_mainWindow->drawAt((int)(m_width - welcome.size())/2, 8, welcome);
     m_mainWindow->drawAt((int)(m_width - global_version_string.size())/2, 9, global_version_string);
 
     std::string pleasecontinue = "Press Tab to Continue";

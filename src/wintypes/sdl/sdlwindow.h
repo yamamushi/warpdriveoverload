@@ -72,6 +72,7 @@ public:
 
 private:
 
+    void drawLineCallBack(int x, int y, std::string output, int fg=0, int bg=0, int attr=0);
     // Note: this is NOT the same as SDLManager.h's m_window member
     // This is the surface we draw to, which we then pass to
     // SDL Manager to finally draw on the "Window"
@@ -82,9 +83,15 @@ private:
 
     SDLManager *m_owner;
 
+    SDL_Renderer *m_renderer;
+
     _SharedPtr<SDLBitmapFont> m_mainFontObject;
 
-    _SharedPtr<SDLTextureWrapper> m_fontController;
+    _SharedPtr<SDLTextureWrapper> m_mainTexture;
+    SDL_Texture* m_localTexture;
+
+    int m_sdlWidth;
+    int m_sdlHeight;
 
 };
 

@@ -163,7 +163,7 @@ bool Shell::run(){
     int keyInput;
     while(m_running)
 	{
-        
+
         if((keyInput = m_graphicsManager->getInput()) == -1){
             execute();
         }
@@ -171,8 +171,8 @@ bool Shell::run(){
             handleKeys(keyInput);
             execute();
         }
-        m_topInterface->getWindow()->refresh();
         m_topInterface->getWindow()->render();
+        m_topInterface->getWindow()->refresh();
 
         FpsCounter::Instance()->update();
     }
@@ -215,6 +215,7 @@ void Shell::handleKeys(int input){
     {
         // This is defined in asciicodes.h
         case KEY_TAB:
+            std::cout << "TAB Pressed" << std::endl;
             m_topInterface->getWindow()->clearScreen();
             m_topInterface->getWindow()->refresh();
             

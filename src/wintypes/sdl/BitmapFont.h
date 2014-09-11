@@ -41,8 +41,8 @@ public:
     int getsizeX(std::string text);
     int getsizeY(std::string text);
 
-    int getsizeX(char character);
-    int getsizeY(char character);
+    int getsizeX();
+    int getsizeY();
 
 private:
     //The font texture

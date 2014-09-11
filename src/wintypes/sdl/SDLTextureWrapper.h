@@ -27,10 +27,10 @@ public:
     // We actually shouldn't need to grab this information because this object
     // Will handle our rendering for us by talking to m_renderer (the renderer
     // in the constructor)
-/*
+
     SDL_Texture *getTexture();
     void setDrawOn(SDL_Texture *surface);
-*/
+
     //Loads image at specified path
     bool loadFromFile( std::string path );
 
@@ -73,12 +73,16 @@ private:
 
     //The actual hardware texture
     SDL_Texture* mTexture;
+    // Our local undrawn texture
+    SDL_Texture* m_undrawnTexture;
+
     void* mPixels;
     int mPitch;
 
     //Image dimensions
     int mWidth;
     int mHeight;
+
 };
 
 

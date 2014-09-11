@@ -45,7 +45,8 @@ public:
 
     void shutdown();
 
-
+    int getSDLWidth();
+    int getSDLHeight();
 
 protected:
 
@@ -58,7 +59,11 @@ protected:
 
     SDL_Renderer *getRenderer();
 
+    void renderToMainScreen(SDL_Texture *texture);
+    void render();
+
 private:
+
 
     // The screen that ultimately pops up on the display
     SDL_Window *m_window;
@@ -73,6 +78,9 @@ private:
     _SharedPtr<SDLBitmapFont> m_fontFile;
 
     _SharedPtr<SDLTextureWrapper> m_mainFontObject;
+
+    int m_frameCounter;
+    SDL_Event m_event;
 
 };
 

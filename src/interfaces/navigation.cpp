@@ -120,8 +120,11 @@ void NavigationInterface::drawAt(int x, int y){
 void NavigationInterface::run(){
     
     // Print our name out to the Interface
-    m_mainWindow->clearScreen();
-    
+    //m_mainWindow->clearScreen();
+    //m_mainWindow->refresh();
+    m_mainWindow->clearArea(0, 0, m_mainWindow->getX(), m_mainWindow->getY());
+
+
     if( m_targetcenterX > m_randomCenterX)
         m_targetcenterX--;
     if( m_targetcenterX < m_randomCenterX)
@@ -150,8 +153,8 @@ void NavigationInterface::run(){
 
     setTargetCenter(m_targetcenterX, m_targetcenterY);
 
-    m_mainWindow->render();
-    
+    //m_mainWindow->render();
+
 }
 
 

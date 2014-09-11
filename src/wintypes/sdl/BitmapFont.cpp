@@ -304,7 +304,7 @@ int SDLBitmapFont::getsizeY(std::string text){
         return 0;
     }
 
-    int sizeY = mNewLine;
+    int sizeY = 0;
     //Go through the text
     for( int i = 0; i < text.length(); ++i )
     {
@@ -320,26 +320,21 @@ int SDLBitmapFont::getsizeY(std::string text){
 }
 
 
-int SDLBitmapFont::getsizeX(char character){
+int SDLBitmapFont::getsizeX(){
     if(mBitmap == NULL){
         return 0;
     }
-    //Get the ASCII value of the character
-    int ascii = character;
 
-    return mChars[ ascii ].w + 1;
+    return mBitmap->getWidth() / 16;
 }
 
-int SDLBitmapFont::getsizeY(char character){
+int SDLBitmapFont::getsizeY(){
+
     if(mBitmap == NULL){
         return 0;
     }
 
-    if(character == ' '){
-        return 0;
-    }
-
-    return mNewLine;
+    return mBitmap->getHeight() / 16;
 }
 
 #endif
