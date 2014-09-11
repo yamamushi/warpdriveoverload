@@ -27,6 +27,9 @@ void NavigationInterface::init(){
     // By the time we get here, we should have already have had a window created and ready for us.
     m_mainWindow->clearScreen();
 
+    m_ticks = 0;
+
+
     // Set our Interface NAme
     setName("Navigation");
     
@@ -124,15 +127,18 @@ void NavigationInterface::run(){
     //m_mainWindow->refresh();
     m_mainWindow->clearArea(0, 0, m_mainWindow->getX(), m_mainWindow->getY());
 
+    update();
 
-    if( m_targetcenterX > m_randomCenterX)
-        m_targetcenterX--;
-    if( m_targetcenterX < m_randomCenterX)
-        m_targetcenterX++;
-    if( m_targetcenterY > m_randomCenterY)
-        m_targetcenterY--;
-    if( m_targetcenterY < m_randomCenterY)
-        m_targetcenterY++;
+    if(m_ticks % 2) {
+        if (m_targetcenterX > m_randomCenterX)
+            m_targetcenterX--;
+        if (m_targetcenterX < m_randomCenterX)
+            m_targetcenterX++;
+        if (m_targetcenterY > m_randomCenterY)
+            m_targetcenterY--;
+        if (m_targetcenterY < m_randomCenterY)
+            m_targetcenterY++;
+    }
     
     graphController->refresh();
 
@@ -198,6 +204,36 @@ void NavigationInterface::handleKeys(int input){
     }
     
 }
+
+
+
+void NavigationInterface::update(){
+
+    // increase the counter by one
+    m_ticks++;
+
+    // one second elapsed? (= 1000 milliseconds)
+    if (m_timeKeeper.value() > 1000)
+    {
+        // save the current counter value to m_fps
+        m_secondsElapsed++;
+
+        // reset the counter and the interval
+        m_ticks    = 0;
+        m_timeKeeper = Interval();
+    }
+
+    if(m_secondsElapsed > 3){
+
+        // Do stuff
+
+        m_secondsElapsed = 0;
+
+    }
+
+}
+
+
 
 void NavigationInterface::randomizeCenter(){
     

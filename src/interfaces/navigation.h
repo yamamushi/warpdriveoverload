@@ -34,7 +34,9 @@ protected:
     void resizeComponents(){};
     
 private:
-    
+
+    void update();
+
     //std::vector<_SharedPtr<Widget> > m_widgetList;
     void randDirection();
     int lotteryLimit;
@@ -60,6 +62,10 @@ private:
     int m_targetcenterY;
     int m_randomCenterX;
     int m_randomCenterY;
+
+    Interval m_timeKeeper;
+    int m_ticks;
+    int m_secondsElapsed;
     
 };
 

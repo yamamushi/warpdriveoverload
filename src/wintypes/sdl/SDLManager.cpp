@@ -13,11 +13,11 @@ bool SDLManager::start(){
 
     std::cout << "SDL Mode Started" << std::endl;
 
-    m_width = 1024;
-    m_height = 768;
+    m_width = 640;
+    m_height = 480;
 
     m_frameCounter = 0;
-    m_maxfps = 1000;
+    m_maxfps = 60;
 
     if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
     {
@@ -169,7 +169,6 @@ SDL_Renderer *SDLManager::getRenderer(){
 
 int SDLManager::getInput() {
 
-    //SDL_Delay( m_maxfps );
 
 //    SDL_StartTextInput();
 
@@ -204,6 +203,9 @@ int SDLManager::getInput() {
         }
     }
     else{
+        /*if(FpsCounter::Instance()->get() > m_maxfps){
+            SDL_Delay( 100 );
+        }*/
         return -1;
 
     }
@@ -225,12 +227,14 @@ void SDLManager::shutdown() {
 
 void SDLManager::render(){
 
+
     SDL_SetRenderTarget(m_renderer, NULL);
     SDL_RenderPresent( m_renderer );
 
 }
 
 void SDLManager::renderToMainScreen(SDL_Texture *texture){
+
 
     SDL_RenderCopy(m_renderer, texture, NULL, NULL);
     SDL_RenderPresent( m_renderer );

@@ -23,7 +23,7 @@ SDLWindow::SDLWindow(int height, int length, int ypos, int xpos, SDLManager *own
     m_renderer = m_owner->getRenderer();
     m_mainTexture = _SharedPtr<SDLTextureWrapper>(new SDLTextureWrapper(m_renderer));
 
-    m_mainTexture->loadFromFile("data/fonts/terminal8x8_aa_ro.png");
+    m_mainTexture->loadFromFile("data/fonts/terminal8x8_gs_ro.png");
 
     m_mainFontObject = m_mainTexture->getBitmapFont();
     m_mainFontObject->buildFont( m_mainTexture.get() );
@@ -31,6 +31,8 @@ SDLWindow::SDLWindow(int height, int length, int ypos, int xpos, SDLManager *own
     m_localTexture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, m_sdlWidth, m_sdlHeight);
 
     m_mainTexture->setDrawOn(m_localTexture);
+
+    //m_mainTexture->setColor(128, 128, 0 );
 
     std::cout << "SDL Window Loaded" << std::endl;
     clearScreen();
@@ -52,12 +54,13 @@ void SDLWindow::render() {
 
     //m_mainFontObject->renderText( 10, 10,  "TEST");
     SDL_SetRenderTarget(m_renderer, NULL);
-    //SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(m_renderer, 128, 128, 128, 255);
 
+    SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_NONE);
     //m_owner->render();
     //clearScreen();
     //clearScreen();
+    //SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
+
     m_owner->renderToMainScreen(m_localTexture);
 
     /*
@@ -81,7 +84,7 @@ void SDLWindow::refresh() {
 
 
     SDL_SetRenderTarget(m_renderer, m_localTexture);
-    SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+    //SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
     SDL_RenderClear( m_renderer );
     SDL_SetRenderTarget(m_renderer, NULL);
 
@@ -94,7 +97,7 @@ void SDLWindow::clearScreen() {
     m_mainTexture->setDrawOn(m_localTexture);
 
     SDL_SetRenderTarget(m_renderer, NULL);
-    SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+    //SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
     SDL_RenderClear( m_renderer );
     m_owner->render();
 }

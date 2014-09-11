@@ -163,6 +163,7 @@ bool Shell::run(){
     int keyInput;
     while(m_running)
 	{
+        FpsCounter::Instance()->update();
 
         if((keyInput = m_graphicsManager->getInput()) == -1){
             execute();
@@ -174,7 +175,6 @@ bool Shell::run(){
         m_topInterface->getWindow()->render();
         m_topInterface->getWindow()->refresh();
 
-        FpsCounter::Instance()->update();
     }
     
     shutdown();

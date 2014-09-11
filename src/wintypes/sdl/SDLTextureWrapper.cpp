@@ -45,7 +45,12 @@ bool SDLTextureWrapper::loadFromFile(std::string path) {
     else
     {
         //Convert surface to display format
+        //loadedSurface->format->Amask = 0xFF000000;
+        //loadedSurface->format->Ashift = 24;
+        SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0, 0 ) );
+
         SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat( loadedSurface, SDL_PIXELFORMAT_RGBA8888, 0 );
+
         if( formattedSurface == NULL )
         {
             printf( "Unable to convert loaded surface to display format! %s\n", SDL_GetError() );
@@ -105,6 +110,8 @@ bool SDLTextureWrapper::loadFromFile(std::string path) {
 
     //Return success
     mTexture = newTexture;
+
+
     return mTexture != NULL;
 
 }
@@ -218,7 +225,17 @@ void SDLTextureWrapper::render(int x, int y, SDL_Rect *clip, double angle, SDL_P
     if(m_undrawnTexture != nullptr) {
         SDL_SetTextureBlendMode(m_undrawnTexture, SDL_BLENDMODE_BLEND);
         SDL_SetRenderTarget(m_renderer, m_undrawnTexture);
-        //SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+        //SDL_SetRenderDrawColor( m_renderer, 0xFF, 100, 0xFF, 0xFF );
+        ///
+
+        //setAlpha(128);
+        //SDL_SetTextureColorMod( m_undrawnTexture, 0, 0, 0);
+        //SDL_SetRenderDrawColor(m_renderer, 0, 128, 128, 0);
+
+        //SDL_RenderFillRect(m_renderer, &renderQuad);
+
+        setColor(255-x,255-y,y+x);
+
         SDL_RenderCopyEx( m_renderer, mTexture, clip, &renderQuad, angle, center, flip );
         SDL_SetRenderTarget(m_renderer, NULL);
     }
