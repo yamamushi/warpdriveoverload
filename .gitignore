@@ -46,3 +46,6 @@ CMakeCache.txt
 # Protobuf generated files
 *.pb.cc
 *.pb.h
+
+# Our generated files
+*.log

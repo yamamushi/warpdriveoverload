@@ -19,266 +19,327 @@
 
 
 
-BitmapFont::BitmapFont(){
-
-    bitmap = nullptr;
-    newLine = 0;
-    space = 0;
-
+SDLBitmapFont::SDLBitmapFont()
+{
+    //Initialize variables
+    mBitmap = NULL;
+    mNewLine = 0;
+    mSpace = 0;
 }
 
 
-BitmapFont::BitmapFont( SDL_Surface *surface){
+bool SDLBitmapFont::buildFont( SDLTextureWrapper *bitmap ){
 
-    Build_Font( surface );
+    bool success = true;
 
-}
-
-
-void BitmapFont::Build_Font( SDL_Surface *surface){
-
-
-    if( surface == nullptr){
-        return;
-    }
-
-/*
-
-    // Load our bitmap font
-    bitmap = surface;
-    uint32_t bgColor = SDL_MapRGB( bitmap->format, 0x00, 0x00, 0x00);
-    backColor = pixels::Get_Pixel32( 0, 0, bitmap);
-    foreColor = 0xFFFFFF;
-
-    SDL_SetColorKey( bitmap, SDL_SRCCOLORKEY, SDL_MapRGB( bitmap->format, 0, 0, 0) );
-
-    // Character Cell dimensions
-    int cellW = bitmap->w / 32;
-    int cellH = bitmap->h / 2048;
-
-    // New Line Variables
-    int top = cellH;
-    int baseA = cellH;
-
-    // The current chars[%] value we're setting
-    int currentChar = 0;
-
-    // Start by cell rows
-    for( int rows = 0; rows < 2048; rows++){
-        for( int cols = 0; cols < 32; cols++){
-
-            chars[currentChar] = new SDL_Rect;
-
-            // Start by setting our Character offsets
-            chars[currentChar]->x = cellW * cols;
-            chars[currentChar]->y = cellH * rows;
-
-            // Set character dimensions
-            chars[currentChar]->w = cellW;
-            chars[currentChar]->h = cellH;
-
-            // Go to next character
-            currentChar++;
-
-        }
-    }
-
-    // Calculate space
-    space = cellW;
-    newLine = cellH;
-    */
-
-}
-
-
-
-void BitmapFont::Show_Text( int x, int y, std::wstring source, SDL_Surface *surface){
-
-    //Temp offsets
-    int X = x, Y = y;
-
-    //If the font has been built
-    if( bitmap != NULL )
+    //Lock pixels for access
+    if( !bitmap->lockTexture() )
     {
+        printf( "Unable to lock bitmap font texture!\n" );
+        success = false;
+    }
+    else
+    {
+        //Set the background color
+        Uint32 bgColor = bitmap->getPixel32( 0, 0 );
+
+        //Set the cell dimensions
+        int cellW = bitmap->getWidth() / 16;
+        int cellH = bitmap->getHeight() / 16;
+
+        //New line variables
+        int top = cellH;
+        int baseA = cellH;
+
+        //The current character we're setting
+        int currentChar = 0;
+
+        //Go through the cell rows
+        for( int rows = 0; rows < 16; ++rows )
+        {
+            //Go through the cell columns
+            for( int cols = 0; cols < 16; ++cols )
+            {
+                //Set the character offset
+                mChars[ currentChar ].x = cellW * cols;
+                mChars[ currentChar ].y = cellH * rows;
+
+                //Set the dimensions of the character
+                mChars[ currentChar ].w = cellW;
+                mChars[ currentChar ].h = cellH;
+
+                //Find Left Side
+                //Go through pixel columns
+                for( int pCol = 0; pCol < cellW; ++pCol )
+                {
+                    //Go through pixel rows
+                    for( int pRow = 0; pRow < cellH; ++pRow )
+                    {
+                        //Get the pixel offsets
+                        int pX = ( cellW * cols ) + pCol;
+                        int pY = ( cellH * rows ) + pRow;
+
+                        //If a non colorkey pixel is found
+                        if( bitmap->getPixel32( pX, pY ) != bgColor )
+                        {
+                            //Set the x offset
+                            mChars[ currentChar ].x = pX;
+
+                            //Break the loops
+                            pCol = cellW;
+                            pRow = cellH;
+                        }
+                    }
+                }
+
+                //Find Right Side
+                //Go through pixel columns
+                for( int pColW = cellW - 1; pColW >= 0; --pColW )
+                {
+                    //Go through pixel rows
+                    for( int pRowW = 0; pRowW < cellH; ++pRowW )
+                    {
+                        //Get the pixel offsets
+                        int pX = ( cellW * cols ) + pColW;
+                        int pY = ( cellH * rows ) + pRowW;
+
+                        //If a non colorkey pixel is found
+                        if( bitmap->getPixel32( pX, pY ) != bgColor )
+                        {
+                            //Set the width
+                            mChars[ currentChar ].w = ( pX - mChars[ currentChar ].x ) + 1;
+
+                            //Break the loops
+                            pColW = -1;
+                            pRowW = cellH;
+                        }
+                    }
+                }
+
+                //Find Top
+                //Go through pixel rows
+                for( int pRow = 0; pRow < cellH; ++pRow )
+                {
+                    //Go through pixel columns
+                    for( int pCol = 0; pCol < cellW; ++pCol )
+                    {
+                        //Get the pixel offsets
+                        int pX = ( cellW * cols ) + pCol;
+                        int pY = ( cellH * rows ) + pRow;
+
+                        //If a non colorkey pixel is found
+                        if( bitmap->getPixel32( pX, pY ) != bgColor )
+                        {
+                            //If new top is found
+                            if( pRow < top )
+                            {
+                                top = pRow;
+                            }
+
+                            //Break the loops
+                            pCol = cellW;
+                            pRow = cellH;
+                        }
+                    }
+                }
+
+                //Find Bottom of A
+                if( currentChar == 'A' )
+                {
+                    //Go through pixel rows
+                    for( int pRow = cellH - 1; pRow >= 0; --pRow )
+                    {
+                        //Go through pixel columns
+                        for( int pCol = 0; pCol < cellW; ++pCol )
+                        {
+                            //Get the pixel offsets
+                            int pX = ( cellW * cols ) + pCol;
+                            int pY = ( cellH * rows ) + pRow;
+
+                            //If a non colorkey pixel is found
+                            if( bitmap->getPixel32( pX, pY ) != bgColor )
+                            {
+                                //Bottom of a is found
+                                baseA = pRow;
+
+                                //Break the loops
+                                pCol = cellW;
+                                pRow = -1;
+                            }
+                        }
+                    }
+                }
+
+                //Go to the next character
+                ++currentChar;
+            }
+        }
+
+        //Calculate space
+        mSpace = cellW / 2;
+
+        //Calculate new line
+        mNewLine = baseA - top;
+
+        //Lop off excess top pixels
+        for( int i = 0; i < 256; ++i )
+        {
+            mChars[ i ].y += top;
+            mChars[ i ].h -= top;
+        }
+
+        bitmap->unlockTexture();
+        mBitmap = bitmap;
+    }
+
+    return success;
+
+}
+
+//Shows the text
+void SDLBitmapFont::renderText( int x, int y, std::string text ){
+
+//If the font has been built
+    if( mBitmap != NULL )
+    {
+        //Temp offsets
+        int curX = x, curY = y;
+
         //Go through the text
-        for( int show = 0; show < source.length(); show++ )
+        for( int i = 0; i < text.length(); ++i )
         {
             //If the current character is a space
-            /*  if( source[ show ] == ' ' )
-              {
+            if( text[ i ] == ' ' )
+            {
                 //Move over
-                X += space;
-              } */
-            //If the current character is a newline
-            if( source[ show ] == '\n' )
+                curX += mSpace;
+            }
+                //If the current character is a newline
+            else if( text[ i ] == '\n' )
             {
                 //Move down
-                Y += newLine;
+                curY += mNewLine;
 
                 //Move back
-                X = x - chars[0]->w;
+                curX = x;
             }
-            else{
+            else
+            {
                 //Get the ASCII value of the character
-                int ascii = (wchar_t)source[ show ];
+                int ascii = (unsigned char)text[ i ];
 
                 //Show the character
-                Apply_Surface( X, Y, bitmap, surface, chars[ ascii ] );
+                mBitmap->render( curX, curY, &mChars[ ascii ] );
+
+                //Move over the width of the character with one pixel of padding
+                curX += mChars[ ascii ].w + 1;
             }
-
-            //Move over the width of the character with one pixel of padding
-            X += chars[ 0 ]->w;
-
         }
     }
+    else{
+
+        std::cout << "BitmapFont.cpp : Selected bitmap is NULL" << std::endl;
+    }
+
+
 }
 
 
+int SDLBitmapFont::getsizeX(std::string text){
 
-void BitmapFont::Show_Colored_Text( int x, int y, SDL_Color ForeColor, SDL_Color BackColor, std::wstring source, SDL_Surface *destination){
+    if(mBitmap == NULL){
+        return 0;
+    }
 
-    //Temp offsets
-    int X = x, Y = y;
+    if(text.length() == 0){
+        return 0;
+    }
+    int sizeX = 0;
 
-    //If the font has been built
-    if( bitmap != NULL )
+    int maxX = 0;
+    for( int i = 0; i < text.length(); ++i )
     {
-        //Go through the text
-        for( int show = 0; show < source.length(); show++ )
+//If the current character is a space
+        if( text[ i ] == ' ' )
         {
+            //Move over
+            sizeX += mSpace;
+        }
             //If the current character is a newline
-            if( source[ show ] == '\n' )
-            {
-                //Move down
-                Y += newLine;
-
+        else if( text[ i ] == '\n' )
+        {
+            if(maxX < sizeX) {
                 //Move back
-                X = x - chars[0]->w;
+                maxX = sizeX;
+                sizeX = 0;
             }
-            else{
-                //Show the character
-                Print_Colored_Character( (wchar_t)source[ show ], ForeColor, BackColor, X, Y, destination);
-            }
+
+        }
+        else
+        {
+            //Get the ASCII value of the character
+            int ascii = (unsigned char)text[ i ];
+
 
             //Move over the width of the character with one pixel of padding
-            X += chars[ 0 ]->w;
-
+            sizeX += mChars[ ascii ].w + 1;
         }
     }
+    if(maxX > sizeX){
+        return maxX;
+    }
+    else{
+        return sizeX;
+    }
+
 }
 
+int SDLBitmapFont::getsizeY(std::string text){
 
-/*
-void BitmapFont::Set_Font_Color(SDL_Color color, bool fore){
-
-  uint32_t *pixels = (uint32_t *)bitmap->pixels;
-
-  SDL_LockSurface( bitmap );
-
-  if(fore){
-    for(int i = 0; i < bitmap->w * bitmap->h; i++){
-      if( pixels[i] !=  backColor ){
-
-        pixels[i] = SDL_MapRGB( bitmap->format, color.r, color.g, color.b);
-
-      }
+    if(mBitmap == NULL){
+        return 0;
     }
-    foreColor = SDL_MapRGB( bitmap->format, color.r, color.g, color.b);
-  }
-  else{
-    for(int i = 0; i < bitmap->w * bitmap->h; i++){
-      if( pixels[i] != foreColor ){
 
-        pixels[i] = SDL_MapRGB( bitmap->format, color.r, color.g, color.b);
-
-      }
+    if(text.length() == 0){
+        return 0;
     }
-    backColor = SDL_MapRGB( bitmap->format, color.r, color.g, color.b);
-  }
 
-    SDL_UnlockSurface( bitmap );
-}
-*/
-
-
-void BitmapFont::Print_Colored_Character( wchar_t character, SDL_Color ForeColor, SDL_Color BackColor, int X, int Y, SDL_Surface *destination){
-
-    int index = character;
-
-/*
-    SDL_Surface *tmpSurface = SDL_CreateRGBSurface( SDL_SWSURFACE, chars[index]->w, chars[index]->h, bitmap->format->BitsPerPixel, bitmap->format->Rmask, bitmap->format->Gmask, bitmap->format->Bmask, 0);
-
-    SDL_LockSurface( bitmap );
-    SDL_LockSurface( tmpSurface );
-
-    int changey = 0;
-    int changex = 0;
-
-    for ( int y = chars[index]->y; y < (chars[index]->h + chars[index]->y); ++y)
+    int sizeY = mNewLine;
+    //Go through the text
+    for( int i = 0; i < text.length(); ++i )
     {
-
-        for ( int x = chars[index]->x; x < (chars[index]->w + chars[index]->x); ++x)
+        if( text[ i ] == '\n' )
         {
+            //Move down
+            sizeY += mNewLine;
 
-            uint32_t copyPixel = pixels::Get_Pixel32( x, y, bitmap);
-            pixels::Put_Pixel32( changex, changey, copyPixel, tmpSurface);
-            changex++;
         }
-        changex = 0;
-        changey++;
+
     }
-
-
-    // Afterwards, we color tmpSurface and apply it
-    // To the screen at the requested x, y offsets
-
-    uint32_t *pixels = (uint32_t *)tmpSurface->pixels;
-
-
-    for(int i = 0; i < tmpSurface->w * tmpSurface->h; i++){
-        if( pixels[i] !=  backColor ){
-
-            pixels[i] = SDL_MapRGB( tmpSurface->format, ForeColor.r, ForeColor.g, ForeColor.b);
-        }
-
-        uint32_t newColor = SDL_MapRGB( tmpSurface->format, ForeColor.r, ForeColor.g, ForeColor.b);
-
-        if( pixels[i] != newColor ){
-
-            pixels[i] = SDL_MapRGB( tmpSurface->format, BackColor.r, BackColor.g, BackColor.b);
-
-        }
-    }
-
-    SDL_UnlockSurface( bitmap );
-    SDL_UnlockSurface( tmpSurface );
-
-    SDL_Rect offset;
-    offset.x = X;
-    offset.y = Y;
-
-    Apply_Surface( X, Y, tmpSurface, destination);
-    SDL_FreeSurface( tmpSurface );
-*/
+    return sizeY;
 }
 
 
-
-
-void BitmapFont::Apply_Surface( int x, int y, SDL_Surface *source, SDL_Surface *destination, SDL_Rect *clip){
-/*
-    SDL_Rect offset;
-    offset.x = x;
-    offset.y = y;
-
-    if( SDL_BlitSurface( source, clip, destination, &offset) < 0 ){
-        std::cout << "Apply Surface: Blit Error" << std::endl;
+int SDLBitmapFont::getsizeX(char character){
+    if(mBitmap == NULL){
+        return 0;
     }
-*/
+    //Get the ASCII value of the character
+    int ascii = character;
+
+    return mChars[ ascii ].w + 1;
 }
 
+int SDLBitmapFont::getsizeY(char character){
+    if(mBitmap == NULL){
+        return 0;
+    }
 
+    if(character == ' '){
+        return 0;
+    }
 
-
+    return mNewLine;
+}
 
 #endif

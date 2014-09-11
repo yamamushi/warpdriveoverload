@@ -12,10 +12,17 @@ An SDL Driver Management handler
 #include "config.h"
 
 #ifdef _WARPDRIVE_SDLCLIENT_
+
 #include "managers/GraphicsDriverManager.h"
+#include "sdlwindow.h"
 #include "SDL.h" // Header inclusion follows the current standard, which is “SDL.h”, not <SDL2/SDL.h>
 #include "SDL_image.h"
 #include "SDL_ttf.h"
+#include "BitmapFont.h"
+#include "SDLTextureWrapper.h"
+
+class SDLTextureWrapper;
+
 
 
 class SDLManager : public GraphicsDriverManager {
@@ -39,18 +46,33 @@ public:
     void shutdown();
 
 
+
 protected:
 
+    friend class SDLWindow;
 
+    _SharedPtr<SDLTextureWrapper> getBitmapFontHandler();
+    _SharedPtr<SDLBitmapFont> getMainFont();
+
+    SDL_Surface *getMainScreen();
+
+    SDL_Renderer *getRenderer();
 
 private:
-
-    // Our "Global" Font file (font.png as used here)
-    SDL_Surface *fontFile;
 
     // The screen that ultimately pops up on the display
     SDL_Window *m_window;
 
+    SDL_Surface *m_mainScreen;
+
+    SDL_Texture *m_mainTexture;
+
+    SDL_Renderer *m_renderer;
+
+    // Our Font file (unicode.png as used here)
+    _SharedPtr<SDLBitmapFont> m_fontFile;
+
+    _SharedPtr<SDLTextureWrapper> m_mainFontObject;
 
 };
 

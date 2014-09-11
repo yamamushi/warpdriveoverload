@@ -23,6 +23,7 @@
 #include "tr1/tr1_wrapper.h"
 #include "engine/shell.h"
 #include "wintypes/window.h"
+#include "managers/GraphicsDriverManager.h"
 
 #include "managers/WidgetManager.h"
 
@@ -34,6 +35,7 @@ class GenericWindow;
 class Widget;
 class Shell;
 class WidgetManager;
+class GraphicsDriverManager;
 
 class InterfaceHandler {
     
@@ -72,6 +74,7 @@ public:
     //void unqueueCommand(_STD_FUNCTION(void()) target);
     
     _SharedPtr<GenericWindow> getWindow(){return m_mainWindow;}
+    GraphicsDriverManager *getGraphicsDriver();
     
     virtual void run();
     virtual void init(){};

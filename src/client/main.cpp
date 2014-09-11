@@ -15,6 +15,7 @@
 #include "util/term_control.h"
 #include <locale.h>
 #include "config.h"
+#include "util/logger.h"
 
 
 //#ifdef _WARPDRIVE_NCURSESCLIENT_
@@ -32,6 +33,8 @@ extern "C" int main(int argc, char **argv){
 
     sqliteDB::instance()->run();
 
+    //GlobalLogger::Instance()->writeToLogFile("debug.log", "Main");
+    //GlobalLogger::Instance()->writeToLogFile("debug.log", "Started");
 
     _SharedPtr<Nostradamus> nostradamus(new Nostradamus);
     _SharedPtr<Shell>shell(new Shell(nostradamus));

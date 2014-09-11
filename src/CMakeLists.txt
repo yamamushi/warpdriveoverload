@@ -45,7 +45,8 @@ set_source_files_properties(${PROTO_SRC} ${PROTO_HEADER} PROPERTIES GENERATED TR
 
 add_executable(warpclient ${WARPDRIVEOVERLOADED_CLIENT_SOURCE} ${WARPDRIVEOVERLOADED_CLIENT_HEADERS})
 
-target_link_libraries(warpclient messages ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARY} ${SDL2TTF_LIBRARY})
+# TTF MUST come before Image, or else this may cause problems on some platforms so I discovered the hard way
+target_link_libraries(warpclient messages ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2MIXER_LIBRARIES})
 
 
 

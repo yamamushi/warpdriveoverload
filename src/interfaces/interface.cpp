@@ -50,8 +50,7 @@ void InterfaceHandler::removeInterface(_SharedPtr<Interface> target){
 Interface::Interface(_SharedPtr<Shell> owner) : m_owner(owner){
     
     m_mainWindow = m_owner->createWindow();
-    
-    
+
     m_initialized = false;
     m_height = m_mainWindow->getY();
     m_width = m_mainWindow->getX();
@@ -66,6 +65,12 @@ void Interface::resizeConsole(int width, int height){
     
     resizeComponents();
     
+}
+
+GraphicsDriverManager * Interface::getGraphicsDriver(){
+
+    return m_owner->getGraphicsDriver();
+
 }
 
 

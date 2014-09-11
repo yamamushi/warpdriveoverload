@@ -1,3 +1,4 @@
+#pragma once
 //
 //  sdlwindow.h
 //  warpdriveoverloaded
@@ -12,14 +13,21 @@
 #include "SDLManager.h"
 
 #ifdef _WARPDRIVE_SDLCLIENT_
+
+#include "SDL.h"
 #include "BitmapFont.h"
 #include "sdlwindow.h"
+#include "SDLTextureWrapper.h"
+
+class SDLBitmapFont;
+class SDLManager;
+class SDLTextureWrapper;
 
 class SDLWindow : public GenericWindow{
 
 public:
 
-    SDLWindow(int height, int length, int ypos, int xpos);
+    SDLWindow(int height, int length, int ypos, int xpos, SDLManager *owner);
 
 
     // Screen Drawing
@@ -72,15 +80,11 @@ private:
 
     SDL_Surface* m_window;
 
+    SDLManager *m_owner;
 
-    /*
+    _SharedPtr<SDLBitmapFont> m_mainFontObject;
 
-        Constructing our fonts locally allows us to do things like add a custom
-        Fontfile for each Window.
-
-    */
-
-    _SharedPtr<BitmapFont> m_fontmember;
+    _SharedPtr<SDLTextureWrapper> m_fontController;
 
 };
 

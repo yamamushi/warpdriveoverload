@@ -1,143 +1,107 @@
 #include"logger.h"
-#include<cstdlib>
-#include<string>
-#include<iostream>
-#include<sstream>
-#include<fstream>
-#include<ctime>
-#include<sys/types.h>
-#include<unistd.h>
-#include<boost/lexical_cast.hpp>
 
 #include "tr1/tr1_threading.h"
 
-#ifndef _GetPid
-#define _GetPid getpid
-#endif
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
-logger::logger( const std::string lfile, const int llvl ) {
-	L_logfile = lfile;
-	L_loglevel = llvl;
-	//logstream << "Logger Initialized.";
-	logToFile(  0 );
+#include "util/Clock.h"
+
+
+GlobalLogger* GlobalLogger::m_pInstance = NULL;
+
+
+GlobalLogger *GlobalLogger::Instance() {
+
+    if (!m_pInstance)   // Only allow one instance of class to be generated.
+        m_pInstance = new GlobalLogger;
+
+    return m_pInstance;
 }
 
 
-void logger::logToFile(  const int msglvl ) {
-    /*
-    std::string logtext = logstream.str();
-    
-    
-	L_pid = _GetPid();
-	unsigned long TID = getThreadID();
-	std::string date = tStamp();
-    /*
-	logstream << date << " [" << L_pid << "] (" << TID << ") [";
-	switch ( msglvl ) {
-		case 0:
-			logstream << "DEBUG] :";
-			break;
-		case 1:
-			logstream << "INFO] :";
-			break;
-		case 2:
-			logstream << "WARNING] :";
-			break;
-		case 3:
-			logstream << "ERROR] :";
-			break;
-		case 4:
-			logstream << "CRIT] :";
-			break;
-		case 5:
-			logstream << "FATAL] :";
-			break;
-		case 6:
-			logstream << "INFO] :";
-			break;
-		default:
-			logstream << "FATAL] : No message level passed to logger. Shutting down." << std::endl;
-			//std::string errstr = mstream.str();
-			//writeToFile( errstr );
-			// placeholder for error handler.
-			exit(1);
-			break;
-	}
-	logstream << " " << std::endl;
-	std::string logmsg = logstream.str();
-	if ( msglvl >= L_loglevel ) {
-		writeToFile( logmsg );
-	}
-    logstream.clear();
-    */
+void GlobalLogger::writeToLogFile(std::string logFile, std::string output) {
+
+    std::pair<std::string, std::string> logOutput(logFile, output);
+    addToCommandQueue(logOutput);
 }
 
-void logger::logToFile( std::string output, const int msglvl ) {
-    
-    logstream.clear();
-    logstream << output;
-    logToFile( msglvl);
-    
+void GlobalLogger::addToCommandQueue(std::pair<std::string, std::string> command) {
+    CommandQueue.push(command);
+    startCommandQueue();
 }
 
-
-unsigned long logger::getThreadID() {
-    /*
-	std::string threadID = boost::lexical_cast<std::string>(std::this_thread::get_id() );
-	unsigned long threadnum = 0;
-	sscanf( threadID.c_str(), "%lx", &threadnum );
-	return threadnum;
-	*/
-    return 0;
+bool GlobalLogger::processingCommand() {
+    return _ATOMIC_ISTRUE(m_commandQueueworking);
 }
 
-void logger::logException( const int errornumber, const std::string ctext ) {
-    /*
-	std::stringstream exstream;
-	int elvl;
-	switch( errornumber ) {
-		case 1000:
-			exstream << "Error 1000: Invalid data passed to function, but was handled. " << ctext; // ctext should say something like "In function ___, line ___'
-			elvl = 2;
-			break;
-		case 1001:
-			exstream << "Error 1001: Invalid data passed to function was unhandled. " << ctext;
-			elvl = 5;
-			break;
-		case 5000:
-			exstream << "Error 5000: Thread Exited prematurely. " << ctext;
-			elvl = 5;
-			break;
-		default:
-			exstream << "Unhandled Error: An unhandled error code has been passed. " << ctext;
-			elvl = 5;
-			break;
-	}
-	std::string otext = exstream.str();
-	logToFile( elvl );
-	if ( elvl > 4 ) {
-		exit(1);
-	}
-	*/
+void GlobalLogger::runCommandQueue() {
+    while(m_commandQueuerunning){
+        if(!parseNextCommand()){
+            break;
+        }
+    }
 }
 
-std::string logger::tStamp() {
-    /*
-	time_t now = time(0);
-	struct tm tstruct;
-	char buf[80];
-	tstruct = *localtime( &now );
-	strftime( buf, sizeof(buf), "%Y-%m-%d %X", &tstruct );
-	std::stringstream stampstream(buf);
-	std::string tstamp = stampstream.str();
-	return tstamp;
-	*/
-    return "";
+void GlobalLogger::logToFileCommand(std::string logFile, std::string output) {
+
+    std::ofstream log_file( logFile, std::ofstream::app );
+    log_file << Clock::getTimeString() << " : " << output << std::endl;
+
+    //log_file.close(); // Called automatically when log_file is destroyed
+
 }
 
-void logger::writeToFile( const std::string filetext ) {
-    /*
-	std::ofstream log_file( L_logfile, std::ofstream::app );
-	log_file << filetext;
-	*/
+void GlobalLogger::startCommandQueue() {
+
+    if(!m_commandQueuerunning){
+        m_commandQueuerunning = true;
+        m_commandQueuethread = _THREAD(&GlobalLogger::runCommandQueue, this);
+        return;
+    }
+}
+
+void GlobalLogger::stopCommandQueue() {
+    if(!m_commandQueuerunning){
+        INSTANTIATE_MLOCK(m_commandQueueprocessing); // Don't stop the thread in the middle of processing
+        m_commandQueuerunning = false;
+        m_commandQueuethread.join();
+        mlock.unlock();
+        return;
+    }
+}
+
+bool GlobalLogger::parseNextCommand() {
+    if(getCommandQueueSize() == 0){
+        return false;
+    }
+
+    INSTANTIATE_MLOCK(m_commandQueueprocessing);  // Don't let other functions interfere with our message parsing
+
+    m_commandQueueworking = true; // Notify our atomic boolean that we are in the middle of a process
+
+    std::pair<std::string, std::string> message = CommandQueue.pop();  // Pull out our function to run
+
+    logToFileCommand(message.first, message.second);
+
+    mlock.unlock();
+    m_commandQueueconditional.notify_one(); // Let other functions know that we're done and they can continue.
+    // This is primarily for when a request comes in to shut down the queue
+    // While an action is in progress. This will notify our stop handler that it is safe
+    // To shut down the thread.
+
+    m_commandQueueworking = false; // Notify our atomic boolean that we are done with our processing
+    //m_logger->logToFile("Command Processed", 0);
+
+    return true;
+}
+
+int GlobalLogger::getCommandQueueSize() {
+    return CommandQueue.size();
+}
+
+void GlobalLogger::clearCommandQueue() {
+    CommandQueue.clear();
+
 }

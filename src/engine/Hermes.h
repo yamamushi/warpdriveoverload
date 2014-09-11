@@ -49,12 +49,11 @@ protected:
     
 private:
     
-    logger *m_logger;
     // Constructor
     Hermes();
     
     Hermes(Hermes const&){};
-    Hermes& operator=(Hermes const&);
+    Hermes& operator=(Hermes const&); //Ignore the compiler! This Assignment operator is private!
     
     static Hermes* m_pInstance;
 

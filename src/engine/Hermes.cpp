@@ -28,8 +28,7 @@ Hermes* Hermes::Instance()
 
 Hermes::Hermes(){
     
-    m_logger = new logger("hermes.log", 0);
-    
+
 }
 
 // Command Queue Commands
@@ -205,17 +204,17 @@ bool Hermes::parseNextNetworkMessage(){
     if(message.decode_header()){
         
         //boost::asio::buffer(read_msg_.body(), read_msg_.body_length())
-        m_logger->logToFile("Message length is: " + std::to_string(message.body_length()), 0);
+        //m_logger->logToFile("Message length is: " + std::to_string(message.body_length()), 0);
 
         WarpDriveOverloaded::User testUser;
         if(!testUser.ParseFromArray(message.body(), (int) message.body_length())){
            
-            m_logger->logToFile("Message Parse Failure", 0);
+            //m_logger->logToFile("Message Parse Failure", 0);
 
         }
         else{
             std::string username = testUser.name();
-            m_logger->logToFile("Message Body is: " + username, 0);
+            //m_logger->logToFile("Message Body is: " + username, 0);
         }
 
 

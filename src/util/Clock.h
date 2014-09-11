@@ -19,6 +19,8 @@
 #ifndef __warpdriveoverloaded__Clock__
 #define __warpdriveoverloaded__Clock__
 
+#include <ctime>
+
 #include <time.h>
 #include <sys/time.h>
 
@@ -27,7 +29,7 @@
 #include <mach/mach.h>
 #endif
 
-
+#include <string>
 
 class Clock {
     
@@ -58,7 +60,19 @@ public:
         
         return now.tv_sec * 1000.0 + now.tv_nsec / 1000000.0;
     }
-    
+
+    static std::string getTimeString()
+    {
+
+        time_t rawtime;
+        struct tm * timeinfo;
+        std::time(&rawtime);
+        timeinfo = std::localtime(&rawtime);
+        char buffer[80];
+        std::strftime(buffer,80,"%d-%m-%Y %I:%M:%S",timeinfo);
+        return std::string(buffer);
+
+    }
 };
 
 

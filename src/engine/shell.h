@@ -71,6 +71,8 @@ public:
     
     _SharedPtr<Interface> getRootInterface(){return m_interfaceList.at(0);};
 
+    GraphicsDriverManager *getGraphicsDriver(){return m_graphicsManager;}
+
     void quit();
 
     void doNothing(){};
