@@ -63,6 +63,12 @@ private:
     int m_randomCenterX;
     int m_randomCenterY;
 
+    void setNextPoint();
+    int m_waveTicker;
+    int m_waveCenterX;
+    int m_waveCenterY;
+
+
     Interval m_timeKeeper;
     int m_ticks;
     int m_secondsElapsed;

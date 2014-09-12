@@ -83,8 +83,8 @@ bool SDLTextureWrapper::loadFromFile(std::string path) {
                 int pixelCount = ( mPitch / 4 ) * mHeight;
 
                 //Map colors
-                Uint32 colorKey = SDL_MapRGB( formattedSurface->format, 0, 0xFF, 0xFF );
-                Uint32 transparent = SDL_MapRGBA( formattedSurface->format, 0x00, 0xFF, 0xFF, 0x00 );
+                Uint32 colorKey = SDL_MapRGB( formattedSurface->format, 0, 0, 0 );
+                Uint32 transparent = SDL_MapRGBA( formattedSurface->format, 0xFF, 0xFF, 0xFF, 0xFF );
 
                 //Color key pixels
                 for( int i = 0; i < pixelCount; ++i )

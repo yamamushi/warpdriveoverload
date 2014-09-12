@@ -140,9 +140,9 @@ void TerosTestInterface::run(){
 
     update();
     
-    //if(m_secondsElapsed < 3){
+    if(m_ticks == 1){
         m_terosCam->rotateCamAroundAxis(vmml::vector<3, double>(0,0,1), 1);
-    //}
+    }
     
     resizeComponents();
 
@@ -426,7 +426,7 @@ void TerosTestInterface::update(){
         m_ticks++;
         
         // one second elapsed? (= 1000 milliseconds)
-        if (m_timeKeeper.value() > 1000)
+        if (m_timeKeeper.value() > 10000)
         {
             // save the current counter value to m_fps
             m_secondsElapsed++;
@@ -437,7 +437,7 @@ void TerosTestInterface::update(){
         }
     
     
-    if(m_secondsElapsed > 3){
+    if(m_secondsElapsed > 60){
         
         // Do stuff
         

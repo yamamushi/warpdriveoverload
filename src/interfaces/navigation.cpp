@@ -16,6 +16,8 @@
 #include "widgets/TimeWidget.h"
 #include "engine/shell.h"
 #include "managers/ColorManager.h"
+#include <math.h>
+
 
 #include <vector>
 
@@ -29,6 +31,7 @@ void NavigationInterface::init(){
 
     m_ticks = 0;
 
+    m_waveTicker = 0;
 
     // Set our Interface NAme
     setName("Navigation");
@@ -99,8 +102,11 @@ void NavigationInterface::init(){
     
     testString = "";
     
+    setNextPoint();
     m_initialized = true;
-    
+
+    m_targetcenterY = m_waveCenterY;
+    m_targetcenterX = m_waveCenterX;
     
     run();
     
@@ -129,16 +135,38 @@ void NavigationInterface::run(){
 
     update();
 
-    if(m_ticks % 2) {
-        if (m_targetcenterX > m_randomCenterX)
+    //setNextPoint();
+
+    bool update = true;
+
+/*
+        if (m_targetcenterX > m_waveCenterX){
             m_targetcenterX--;
-        if (m_targetcenterX < m_randomCenterX)
+            update = false;
+            }
+        if (m_targetcenterX < m_waveCenterX){
             m_targetcenterX++;
-        if (m_targetcenterY > m_randomCenterY)
+            update = false;
+        }
+
+        if (m_targetcenterY > m_waveCenterY) {
             m_targetcenterY--;
-        if (m_targetcenterY < m_randomCenterY)
+            update = false;
+        }
+        if (m_targetcenterY < m_waveCenterY) {
             m_targetcenterY++;
-    }
+            update = false;
+        }
+
+        if(update){
+            setNextPoint();
+
+        }
+*/
+        setNextPoint();
+
+
+
     
     graphController->refresh();
 
@@ -159,9 +187,63 @@ void NavigationInterface::run(){
 
     setTargetCenter(m_targetcenterX, m_targetcenterY);
 
+
+
     //m_mainWindow->render();
 
 }
+
+
+
+void NavigationInterface::setNextPoint() {
+
+    int xMin = -m_mainWindow->getX() / 2;
+    int xMax = m_mainWindow->getX() / 2;
+    const double PI = 3.1415927;        // constant PI
+    double period = m_mainWindow->getX() / 2;
+    double amplitude = 20;
+    double phaseAngle = 5;
+    int y = 0;
+    int x = 1;
+
+
+    for (x = xMin; x <= xMax; x++)    // Add the for loop here, that creates the points (x,y)
+    {
+        y = (int) amplitude * cos((2 * (PI) / period) * x - (2 * (PI) / period) * phaseAngle); //Calculate the sine wave
+        m_mainWindow->drawAt(x + m_mainWindow->getX() / 2, y + m_mainWindow->getY() / 2, "X");
+    }
+
+
+    y = 0;
+
+    if (!(m_ticks % 3)) {
+        int loopCount = 0;
+        for (x = xMin; x <= xMax; x++)    // Add the for loop here, that creates the points (x,y)
+        {                                //one pixel at a time and then adds the points via the
+            y = (int) amplitude * cos((2 * (PI) / period) * x - (2 * (PI) / period) * phaseAngle); //Calculate the sine wave
+            m_mainWindow->drawAt(x + m_mainWindow->getX() / 2, y + m_mainWindow->getY() / 2, "X");
+
+            if (loopCount == m_waveTicker) {
+
+                m_targetcenterX = x + m_mainWindow->getX() / 2;
+                m_targetcenterY = y + m_mainWindow->getY() / 2;
+
+                if (x == xMax) {
+                    m_waveTicker = 0;
+                } else {
+                    m_waveTicker++;
+                }
+                return;
+            }
+            else {
+                loopCount++;
+            }
+
+        }
+
+    }
+}
+
 
 
 void NavigationInterface::handleKeys(int input){
@@ -213,7 +295,7 @@ void NavigationInterface::update(){
     m_ticks++;
 
     // one second elapsed? (= 1000 milliseconds)
-    if (m_timeKeeper.value() > 1000)
+    if (m_timeKeeper.value() > 250)
     {
         // save the current counter value to m_fps
         m_secondsElapsed++;
