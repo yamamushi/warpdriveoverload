@@ -88,6 +88,15 @@ set(Boost_COMPONENTS system random filesystem chrono)
 find_package(Boost 1.41 REQUIRED ${Boost_COMPONENTS})
 
 
+include(PkgConfig)
+
+PKG_CONFIG("opentxs" OPENTXS_FOUND OPENTXS_CFLAGS OPENTXS_LIBS)
+
+include(ManageString)
+
+STRING_TRIM(OPENTXS_LIBS ${OPENTXS_LIBS})
+
+
 #find_package(OpenSSL REQUIRED)
 #find_package(XMLRPC REQUIRED c++2 libwww-client)
 

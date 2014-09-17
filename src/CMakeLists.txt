@@ -46,11 +46,11 @@ set_source_files_properties(${PROTO_SRC} ${PROTO_HEADER} PROPERTIES GENERATED TR
 add_executable(warpclient ${WARPDRIVEOVERLOADED_CLIENT_SOURCE} ${WARPDRIVEOVERLOADED_CLIENT_HEADERS})
 
 # TTF MUST come before Image, or else this may cause problems on some platforms so I discovered the hard way
-target_link_libraries(warpclient messages ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2MIXER_LIBRARIES})
+target_link_libraries(warpclient messages ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2MIXER_LIBRARIES} ${OPENTXS_LIBS})
 
 
 
-SET_TARGET_PROPERTIES(warpclient PROPERTIES  LINK_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncursesw -lprotobuf")
+SET_TARGET_PROPERTIES(warpclient PROPERTIES  LINK_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncursesw -lprotobuf ${OPENTXS_CFLAGS}")
 
 if(UNIX AND NOT APPLE)
         set (CMAKE_CXX_FLAGS "-std=c++0x -lsqlite3 -lboost_system -lpthread -ltermcap -lncurses -lprotobuf -lrt")
