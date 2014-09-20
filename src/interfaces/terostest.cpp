@@ -15,8 +15,8 @@
 
 
 void TerosTestInterface::init(){
-    
 
+    m_widgetManager = _SharedPtr<WidgetManager>(new WidgetManager(this));
 
     // Our variable initialization
     m_rotspeed = 0.1;
@@ -56,7 +56,7 @@ void TerosTestInterface::init(){
     m_terosScreen = _SharedPtr<TerosScreen>(new TerosScreen(m_mainWindow, 0, 0, m_graphController));
     
     // Add our teros screen (Which handles our 3d object rendering) to the widget list of our parent.
-    m_widgetManager->addWidget(m_terosScreen);
+    //m_widgetManager->addWidget(m_terosScreen);
     
     
     
@@ -141,9 +141,9 @@ void TerosTestInterface::run(){
     update();
     
     if(m_ticks == 1){
-        m_terosCam->rotateCamAroundAxis(vmml::vector<3, double>(0,0,1), 1);
+        //m_terosCam->rotateCamAroundAxis(vmml::vector<3, double>(0,0,1), 1);
     }
-    
+
     resizeComponents();
 
     m_terosCam1->drawobjects();
@@ -153,9 +153,9 @@ void TerosTestInterface::run(){
     m_terosWindow2->loadfromvector(m_terosCam2->putview(), m_terosCam2->putviewcolumns());
 
     m_terosScreen->displayscr();
-    
+
     m_graphController->render();
-    
+    //m_widgetManager->render();
     draw();
 
 }
@@ -192,30 +192,37 @@ void TerosTestInterface::draw(){
 
 
     if(m_rotate){
-        if(m_direction == 0){
-            m_terosObject->rot('x', m_rotspeed);
-            m_mainWindow->drawAt((m_width-40), 9, "Rotating on X Axis");
-        }
-        else if(m_direction == 1){
-            m_terosObject->rot('x', -m_rotspeed);
-            m_mainWindow->drawAt((m_width-40), 9, "Rotating on reverse X Axis");
-        }
-        else if(m_direction == 2){
-            m_terosObject->rot('y', m_rotspeed);
-            m_mainWindow->drawAt((m_width-40), 9, "Rotating on Y Axis");
-        }
-        else if(m_direction == 3){
-            m_terosObject->rot('y', -m_rotspeed);
-            m_mainWindow->drawAt((m_width-40), 9, "Rotating on reverse Y Axis");
-        }
-        else if(m_direction == 4){
-            m_terosObject->rot('z', m_rotspeed);
-            m_mainWindow->drawAt((m_width-40), 9, "Rotating on Z Axis");
-        }
-        else if(m_direction == 5){
-            m_terosObject->rot('z', -m_rotspeed);
-            m_mainWindow->drawAt((m_width-40), 9, "Rotating on reverse Z Axis");
-        }
+            if (m_direction == 0) {
+                if(m_ticks == 1)
+                    m_terosObject->rot('x', m_rotspeed);
+                m_mainWindow->drawAt((m_width - 40), 9, "Rotating on X Axis");
+            }
+            else if (m_direction == 1) {
+                if(m_ticks == 1)
+                    m_terosObject->rot('x', -m_rotspeed);
+                m_mainWindow->drawAt((m_width - 40), 9, "Rotating on reverse X Axis");
+            }
+            else if (m_direction == 2) {
+                if(m_ticks == 1)
+                    m_terosObject->rot('y', m_rotspeed);
+                m_mainWindow->drawAt((m_width - 40), 9, "Rotating on Y Axis");
+            }
+            else if (m_direction == 3) {
+                if(m_ticks == 1)
+                    m_terosObject->rot('y', -m_rotspeed);
+                m_mainWindow->drawAt((m_width - 40), 9, "Rotating on reverse Y Axis");
+            }
+            else if (m_direction == 4) {
+                if(m_ticks == 1)
+                    m_terosObject->rot('z', m_rotspeed);
+                m_mainWindow->drawAt((m_width - 40), 9, "Rotating on Z Axis");
+            }
+            else if (m_direction == 5) {
+                if(m_ticks == 1)
+                    m_terosObject->rot('z', -m_rotspeed);
+                m_mainWindow->drawAt((m_width - 40), 9, "Rotating on reverse Z Axis");
+            }
+
     }
     else{
         m_mainWindow->drawAt((m_width-40), 9, "Rotation Paused");
@@ -426,7 +433,7 @@ void TerosTestInterface::update(){
         m_ticks++;
         
         // one second elapsed? (= 1000 milliseconds)
-        if (m_timeKeeper.value() > 10000)
+        if (m_timeKeeper.value() > 1000)
         {
             // save the current counter value to m_fps
             m_secondsElapsed++;

@@ -125,6 +125,7 @@ protected:
     std::string m_name;
     
     _SharedPtr<WidgetManager> m_widgetManager;
+    _SharedPtr<Widget> m_activeWidget;
     
 private:
     

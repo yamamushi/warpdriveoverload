@@ -19,7 +19,7 @@ bool NcursesManager::start(){
 
     std::cout << "Welcome to Warp Core Overloaded" << std::endl;
     sleep(1);
-    std::cout << "Please standby for Nostradamus OS boot" << std::endl;
+    std::cout << "Please standby" << std::endl;
     sleep(1);
     term_clear();
     

@@ -20,9 +20,8 @@ void TimeWidget::render(){
     
     std::string timeString(buf);
     std::string timeMessage = "Time: " + timeString;
-    
-    
-    m_parent->drawAt(m_parent->getX()/2 , 1, timeMessage);
+
+    m_parent->drawAt(m_xpos, m_ypos, timeMessage);
     
 }
 

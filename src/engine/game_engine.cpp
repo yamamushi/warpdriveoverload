@@ -25,6 +25,6 @@ void Nostradamus::init(){
         m_rooms.push_back(l_room);
     }
     
-    std::cout << "Rooms Generated" << std::endl;
+    //std::cout << "Rooms Generated" << std::endl;
     
 }

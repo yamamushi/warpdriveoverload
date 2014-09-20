@@ -25,7 +25,8 @@
 
 
 void NavigationInterface::init(){
-    
+
+    m_widgetManager = _SharedPtr<WidgetManager>(new WidgetManager(this));
     // By the time we get here, we should have already have had a window created and ready for us.
     m_mainWindow->clearScreen();
 
@@ -41,7 +42,7 @@ void NavigationInterface::init(){
     m_graphY = 1;
     lotteryLimit = 100;
     graphController = _SharedPtr<GraphChartWidget>(new GraphChartWidget(m_mainWindow, 0, 0));
-    //m_widgetManager->addWidget(graphController);
+    m_widgetManager->addWidget(graphController);
     graphController->setSize(6, 4);
     
     _SharedPtr<TimeWidget> w_timeWidget = _SharedPtr<TimeWidget> (new TimeWidget(m_mainWindow, (graphController->getCols()/2)-(int)getName().length()+18, 1));
@@ -167,11 +168,12 @@ void NavigationInterface::run(){
 
 
 
-    
-    graphController->refresh();
+    //graphController->hideBars();
+    //graphController->refresh();
 
     graphController->render();
-    
+    //m_widgetManager->render();
+
     m_mainWindow->drawAt( (m_height - (int)getName().size())/2, 1, getName(), COLOR_WHITE, COLOR_BLACK, A_BOLD | A_BLINK);
     
     std::string rowMessage = std::to_string(graphController->getRows()) + " : Rows";
@@ -187,9 +189,6 @@ void NavigationInterface::run(){
 
     setTargetCenter(m_targetcenterX, m_targetcenterY);
 
-
-
-    //m_mainWindow->render();
 
 }
 
@@ -353,7 +352,7 @@ void NavigationInterface::setTargetCenter(int x, int y){
 
 
 void NavigationInterface::getInput(){
-   
+
     while(int input = getch() ){
         
         if(input == '\n' || input == 27)

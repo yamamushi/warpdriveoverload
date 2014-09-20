@@ -23,7 +23,7 @@ void DebugInterface::init(){
 
     m_mainWindow->setNormalColor(COLOR_GREEN, COLOR_BLACK);
     
-    std::string welcome = "Welcome to Nostradamus OS";
+    std::string welcome = "The ASCII Project Rendering Framework";
     m_mainWindow->drawAt((int)(m_width - welcome.size())/2, 8, welcome);
     m_mainWindow->drawAt((int)(m_width - global_version_string.size())/2, 9, global_version_string);
 
@@ -41,7 +41,7 @@ void DebugInterface::init(){
 
 void DebugInterface::run(){
     
-    std::string welcome = "Welcome to Nostradamus OS";
+    std::string welcome = "The ASCII Project Rendering Framework";
     m_mainWindow->drawAt((int)(m_width - welcome.size())/2, 8, welcome);
     m_mainWindow->drawAt((int)(m_width - global_version_string.size())/2, 9, global_version_string);
 

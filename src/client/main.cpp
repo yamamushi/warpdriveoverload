@@ -16,6 +16,7 @@
 #include <locale.h>
 #include "config.h"
 #include "util/logger.h"
+#include "opentxs/opentxs.hpp"
 
 
 //#ifdef _WARPDRIVE_NCURSESCLIENT_
@@ -47,6 +48,7 @@ extern "C" int main(int argc, char **argv){
 
     }
 
+    Opentxs::Instance()->stop();
 
     return 0;
 

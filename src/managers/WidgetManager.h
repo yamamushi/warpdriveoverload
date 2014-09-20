@@ -34,7 +34,18 @@ public:
     void selectWidget(_SharedPtr<Widget> target);
     
     void handleKeys(int input);
-    
+
+    _SharedPtr<Widget> getWidgetForID(int ID);
+    _SharedPtr<Widget> getPrevWidget();
+    _SharedPtr<Widget> getNextWidget();
+    _SharedPtr<Widget> getActiveWidget();
+
+    int getActiveWidgetID(){return m_activeWidgetID;}
+    int getActiveWidgetIndex(){return m_activeWidgetIndex;}
+
+    void render();
+
+
 private:
     
     
@@ -44,7 +55,10 @@ private:
     
     _SharedPtr<GenericWindow> m_mainWindow;
     Interface *m_owner;
-    
+
+    int m_activeWidgetID;
+    int m_activeWidgetIndex;
+
 };
 
 

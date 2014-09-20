@@ -11,8 +11,9 @@
 
 #include <string>
 
-const std::string global_version_string = "0.0.1";
-const int global_version_int = 1;
-
+const std::string global_version_string = "0.0.4";
+const int global_version_release = 0;
+const int global_version_major = 0;
+const int global_version_minor = 4;
 
 #endif

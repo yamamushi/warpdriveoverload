@@ -14,6 +14,7 @@
 #include "tr1/tr1_threading.h"
 #include "interfaces/navigation.h"
 #include "interfaces/debugWindow.h"
+#include "interfaces/otdemo.h"
 
 #include "util/asciicodes.h"
 #include "interfaces/terostest.h"
@@ -172,8 +173,8 @@ bool Shell::run(){
             handleKeys(keyInput);
             execute();
         }
-        m_topInterface->getWindow()->render();
         m_topInterface->getWindow()->refresh();
+        m_topInterface->getWindow()->render();
 
     }
     
@@ -215,7 +216,6 @@ void Shell::handleKeys(int input){
     {
         // This is defined in asciicodes.h
         case KEY_TAB:
-            std::cout << "TAB Pressed" << std::endl;
             m_topInterface->getWindow()->clearScreen();
             m_topInterface->getWindow()->refresh();
             
@@ -288,6 +288,9 @@ void Shell::loadInterfaces(_SharedPtr<Shell> parent){
     // Launch our debug Interface which will attach to the root Interface on this shell
     _SharedPtr<DebugInterface> debugInterface(new DebugInterface(parent));
     addToInterfaceList(debugInterface);
+
+    _SharedPtr<OpenTxsInterface> opentxsInterface(new OpenTxsInterface(parent));
+    addToInterfaceList(opentxsInterface);
     
     _SharedPtr<TerosTestInterface> terosTest(new TerosTestInterface(parent));
     addToInterfaceList(terosTest);

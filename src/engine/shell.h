@@ -79,6 +79,10 @@ public:
     void printDebug();
     
     _SharedPtr<GenericWindow> createWindow();
+
+    // For Linemode and grabbing key input
+    void enableRaw();
+    void disableRaw();
     
 
 protected:
@@ -98,8 +102,7 @@ protected:
     void execute();
     
     void handleKeys(int input);
-    void enableRaw();
-    void disableRaw();
+
     
     void initMainWindow();
     _SharedPtr<GenericWindow> getLastWindow(){return m_windows.back();}

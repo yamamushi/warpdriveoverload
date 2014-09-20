@@ -20,7 +20,7 @@ class TimeWidget: public Widget {
     
 public:
     
-    TimeWidget(_SharedPtr<GenericWindow> parent, int xpos, int ypos) : Widget(parent){};
+    TimeWidget(_SharedPtr<GenericWindow> parent, int xpos, int ypos) : Widget(parent, xpos, ypos){};
     
     void render();
     void refresh();
